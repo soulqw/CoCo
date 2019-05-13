@@ -1,2 +1,2 @@
 # SoulPhotoTaker
-a Android  library for capture or pick photo
+an android  library for capture or pick photo
