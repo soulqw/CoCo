@@ -13,18 +13,27 @@ class CoCo {
     companion object {
 
         @JvmStatic
-        fun with(activity: Activity): RequestManager {
-            return RequestManager(activity)
+        fun with(activity: Activity): FunctionManager {
+            return FunctionManager(activity)
         }
 
         @JvmStatic
-        fun with(fragment: Fragment): RequestManager {
+        fun with(fragment: Fragment): FunctionManager {
             val activity = fragment.activity
             if (activity == null || activity.isFinishing) {
                 throw IllegalStateException("activity is destroyed ")
             }
-            return RequestManager(activity)
+            return FunctionManager(activity)
         }
 
+        @Suppress("DEPRECATION")
+        @JvmStatic
+        fun with(fragment: android.app.Fragment): FunctionManager {
+            val activity = fragment.activity
+            if (activity == null || activity.isFinishing) {
+                throw IllegalStateException("activity is destroyed ")
+            }
+            return FunctionManager(activity)
+        }
     }
 }

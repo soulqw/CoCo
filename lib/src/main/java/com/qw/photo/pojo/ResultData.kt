@@ -9,5 +9,6 @@ import android.graphics.Bitmap
  * @date 2019/5/6
  */
 class ResultData {
-    lateinit var thumbnailData: Bitmap
+    var thumbnailData: Bitmap? = null
+    var path: String? = null
 }

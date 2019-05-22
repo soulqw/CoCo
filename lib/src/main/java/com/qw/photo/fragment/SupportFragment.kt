@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment
 import com.qw.photo.callback.BaseCallBack
 import com.qw.photo.pojo.Action
 import com.qw.photo.pojo.BaseParams
+import com.qw.photo.pojo.CaptureParams
 import com.qw.photo.pojo.ResultData
 
 
@@ -18,11 +19,11 @@ import com.qw.photo.pojo.ResultData
  */
 class SupportFragment : Fragment(), IWorker {
 
-    lateinit var mAction: Action
+    private lateinit var mAction: Action
 
-    lateinit var mParam: BaseParams
+    private lateinit var mParam: BaseParams
 
-    lateinit var mCallBack: BaseCallBack
+    private lateinit var mCallBack: BaseCallBack
 
     override fun setActions(action: Action) {
         this.mAction = action
@@ -66,19 +67,19 @@ class SupportFragment : Fragment(), IWorker {
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == PERMISSION_CODE) {
-
-        }
-    }
-
     private fun takePhoto() {
-        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent: Intent ->
-            takePictureIntent.resolveActivity(activity!!.packageManager)?.also {
-                startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE)
-            }
+        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (null === takePictureIntent.resolveActivity(activity!!.packageManager)) {
+            mCallBack.onFailed(IllegalStateException("activity status error"))
+            return
         }
+        val params: CaptureParams = mParam as CaptureParams
+        var uri = params.uri
+        if (null === uri) {
+
+        }
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE)
     }
 
     companion object {
@@ -86,8 +87,6 @@ class SupportFragment : Fragment(), IWorker {
         private const val REQUEST_CODE_IMAGE_CAPTURE = 1
 
         private const val REQUEST_CODE_IMAGE_PICK = 2
-
-        private const val PERMISSION_CODE = 11
 
     }
 }
