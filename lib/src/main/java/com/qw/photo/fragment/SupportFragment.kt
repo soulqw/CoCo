@@ -3,9 +3,12 @@ package com.qw.photo.fragment
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.support.v4.content.FileProvider
 import com.qw.photo.callback.BaseCallBack
 import com.qw.photo.pojo.Action
 import com.qw.photo.pojo.BaseParams
@@ -73,10 +76,13 @@ class SupportFragment : Fragment(), IWorker {
             mCallBack.onFailed(IllegalStateException("activity status error"))
             return
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
         val params: CaptureParams = mParam as CaptureParams
         var uri = params.uri
         if (null === uri) {
-
+            //todo
         }
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE)

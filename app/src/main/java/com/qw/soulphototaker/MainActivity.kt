@@ -1,8 +1,11 @@
 package com.qw.soulphototaker
 
 import android.net.Uri
+import android.os.Build
+import android.os.Build.VERSION_CODES.N
 import android.os.Bundle
 import android.os.Environment
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
@@ -20,31 +23,32 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-//        findViewById<View>(R.id.btn_capture).setOnClickListener {
-//            View.OnClickListener {
-                CoCo.with(this@MainActivity)
-                    .take()
-                    .uri(createUri())
-                    .apply()
-                    .start(object : BaseCallBack {
-                        override fun onSuccess(data: ResultData) {
-                            Toast.makeText(this@MainActivity, "拍照成功: ${data.path}", Toast.LENGTH_SHORT).show()
-                            iv_image.setImageBitmap(data.thumbnailData)
-                        }
+        btn_capture.setOnClickListener {
+            CoCo.with(this@MainActivity)
+                .take()
+                .uri(createUri())
+                .apply()
+                .start(object : BaseCallBack {
+                    override fun onSuccess(data: ResultData) {
+                        Toast.makeText(this@MainActivity, "拍照成功: ${data.path}", Toast.LENGTH_SHORT).show()
+                        iv_image.setImageBitmap(data.thumbnailData)
+                    }
 
-                        override fun onFailed(exception: Exception) {
-                            Toast.makeText(this@MainActivity, "拍照异常", Toast.LENGTH_SHORT).show()
-                        }
-                    })
-            }
-//        }
+                    override fun onFailed(exception: Exception) {
+                        Toast.makeText(this@MainActivity, "拍照异常", Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
 
+    }
 
 
     fun createUri(): Uri? {
         try {
             val file = createImageFile()
-            file.also {
+            if (Build.VERSION.SDK_INT > N) {
+                return FileProvider.getUriForFile(this, "coco.fileprovider", file)
+            } else {
                 return Uri.fromFile(file)
             }
         } catch (ex: java.lang.Exception) {
@@ -65,7 +69,7 @@ class MainActivity : AppCompatActivity() {
             ".jpg", /* suffix */
             storageDir /* directory */
         ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
+            // Save a file: xml for use with ACTION_VIEW intents
             currentPhotoPath = absolutePath
         }
     }
