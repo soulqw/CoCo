@@ -10,6 +10,8 @@ interface BaseCallBack {
 
     fun onSuccess(data: ResultData)
 
+    fun onCancel()
+
     fun onFailed(exception: Exception)
 
 }

@@ -3,12 +3,12 @@ package com.qw.photo.fragment
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
+import com.qw.photo.Constant
+import com.qw.photo.Utils
 import com.qw.photo.callback.BaseCallBack
 import com.qw.photo.pojo.Action
 import com.qw.photo.pojo.BaseParams
@@ -53,18 +53,25 @@ class SupportFragment : Fragment(), IWorker {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode != Activity.RESULT_OK) {
+        if (!Utils.isDefinedRequestCode(requestCode)) {
+            return
+        }
+        if (resultCode == Activity.RESULT_CANCELED) {
+            mCallBack.onCancel()
             return
         }
         when (requestCode) {
-            REQUEST_CODE_IMAGE_CAPTURE -> {
-                data?.extras ?: return
+            Constant.REQUEST_CODE_IMAGE_CAPTURE -> {
+                if (data == null || data.extras == null) {
+                    mCallBack.onSuccess(ResultData())
+                    return
+                }
                 val imageBitmap = data.extras!!.get("data") as Bitmap
                 val result = ResultData()
                 result.thumbnailData = imageBitmap
                 mCallBack.onSuccess(result)
             }
-            REQUEST_CODE_IMAGE_PICK -> {
+            Constant.REQUEST_CODE_IMAGE_PICK -> {
 
             }
         }
@@ -80,19 +87,12 @@ class SupportFragment : Fragment(), IWorker {
             takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         val params: CaptureParams = mParam as CaptureParams
-        var uri = params.uri
+        val uri = params.uri
         if (null === uri) {
             //todo
         }
         takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-        startActivityForResult(takePictureIntent, REQUEST_CODE_IMAGE_CAPTURE)
+        startActivityForResult(takePictureIntent, Constant.REQUEST_CODE_IMAGE_CAPTURE)
     }
 
-    companion object {
-
-        private const val REQUEST_CODE_IMAGE_CAPTURE = 1
-
-        private const val REQUEST_CODE_IMAGE_PICK = 2
-
-    }
 }

@@ -29,10 +29,16 @@ class MainActivity : AppCompatActivity() {
                 .uri(createUri())
                 .apply()
                 .start(object : BaseCallBack {
+
                     override fun onSuccess(data: ResultData) {
                         Toast.makeText(this@MainActivity, "拍照成功: ${data.path}", Toast.LENGTH_SHORT).show()
                         iv_image.setImageBitmap(data.thumbnailData)
                     }
+
+                    override fun onCancel() {
+                        Toast.makeText(this@MainActivity, "拍照取消", Toast.LENGTH_SHORT).show()
+                    }
+
 
                     override fun onFailed(exception: Exception) {
                         Toast.makeText(this@MainActivity, "拍照异常", Toast.LENGTH_SHORT).show()
@@ -42,17 +48,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     fun createUri(): Uri? {
         try {
             val file = createImageFile()
             if (Build.VERSION.SDK_INT > N) {
-                return FileProvider.getUriForFile(this, "coco.fileprovider", file)
+                return FileProvider.getUriForFile(this, "coco.provider", file)
             } else {
                 return Uri.fromFile(file)
             }
         } catch (ex: java.lang.Exception) {
-            Toast.makeText(this, ex.toString(), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, ex.toString(), Toast.LENGTH_LONG).show()
         }
         return null
     }
