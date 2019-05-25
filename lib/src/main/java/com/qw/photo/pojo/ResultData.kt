@@ -1,6 +1,7 @@
 package com.qw.photo.pojo
 
 import android.graphics.Bitmap
+import java.io.File
 
 
 /**
@@ -10,5 +11,5 @@ import android.graphics.Bitmap
  */
 class ResultData {
     var thumbnailData: Bitmap? = null
-    var path: String? = null
+    var file: File? = null
 }

@@ -1,8 +1,9 @@
 package com.qw.photo.pojo
 
-import android.net.Uri
+import android.util.Log
 import com.qw.photo.Executor
 import com.qw.photo.fragment.IWorker
+import java.io.File
 
 
 /**
@@ -16,10 +17,11 @@ open class BaseParams(private val worker: IWorker) {
 }
 
 class CaptureParams(worker: IWorker) : BaseParams(worker) {
-    internal var uri: Uri? = null
+    internal var file: File? = null
 
-    fun uri(uri: Uri?): CaptureParams {
-        this.uri = uri
+    fun targetFile(file: File?): CaptureParams {
+        Log.d("qw", "FilePath: " + (file?.path ?: "uri is null"))
+        this.file = file
         return this
     }
 }

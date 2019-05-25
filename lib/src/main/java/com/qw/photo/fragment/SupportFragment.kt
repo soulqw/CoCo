@@ -1,12 +1,14 @@
 package com.qw.photo.fragment
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.util.Log
 import com.qw.photo.Constant
 import com.qw.photo.Utils
 import com.qw.photo.callback.BaseCallBack
@@ -14,6 +16,7 @@ import com.qw.photo.pojo.Action
 import com.qw.photo.pojo.BaseParams
 import com.qw.photo.pojo.CaptureParams
 import com.qw.photo.pojo.ResultData
+import java.io.File
 
 
 /**
@@ -28,6 +31,8 @@ class SupportFragment : Fragment(), IWorker {
 
     private lateinit var mCallBack: BaseCallBack
 
+    private var targetFile: File? = null
+
     override fun setActions(action: Action) {
         this.mAction = action
     }
@@ -37,6 +42,9 @@ class SupportFragment : Fragment(), IWorker {
     }
 
     override fun start(callBack: BaseCallBack) {
+        if (!Utils.isActivityAvailable(activity)) {
+            return
+        }
         this.mCallBack = callBack
         when (mAction) {
             Action.CAPTURE -> takePhoto()
@@ -62,13 +70,13 @@ class SupportFragment : Fragment(), IWorker {
         }
         when (requestCode) {
             Constant.REQUEST_CODE_IMAGE_CAPTURE -> {
-                if (data == null || data.extras == null) {
-                    mCallBack.onSuccess(ResultData())
-                    return
-                }
-                val imageBitmap = data.extras!!.get("data") as Bitmap
                 val result = ResultData()
-                result.thumbnailData = imageBitmap
+                if (null != targetFile) {
+                    result.file = targetFile
+                }
+                if (null != data && null != data.extras) {
+                    result.thumbnailData = data.extras!!.get("data") as Bitmap
+                }
                 mCallBack.onSuccess(result)
             }
             Constant.REQUEST_CODE_IMAGE_PICK -> {
@@ -87,12 +95,22 @@ class SupportFragment : Fragment(), IWorker {
             takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
         val params: CaptureParams = mParam as CaptureParams
-        val uri = params.uri
-        if (null === uri) {
-            //todo
+        targetFile = params.file
+        //用户指定了目标文件路径
+        if (null != targetFile) {
+            try {
+                takePictureIntent.putExtra(
+                    MediaStore.EXTRA_OUTPUT,
+                    Utils.createUriFromFile((this.activity) as Context, params.file!!)
+                )
+            } catch (e: Exception) {
+                Log.e("qw", e.toString())
+            }
         }
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-        startActivityForResult(takePictureIntent, Constant.REQUEST_CODE_IMAGE_CAPTURE)
+        try {
+            startActivityForResult(takePictureIntent, Constant.REQUEST_CODE_IMAGE_CAPTURE)
+        } catch (e: Exception) {
+            mCallBack.onFailed(e)
+        }
     }
-
 }

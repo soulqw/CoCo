@@ -1,17 +1,17 @@
 package com.qw.soulphototaker
 
-import android.net.Uri
-import android.os.Build
-import android.os.Build.VERSION_CODES.N
+import android.Manifest
 import android.os.Bundle
 import android.os.Environment
-import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import com.qw.photo.CoCo
 import com.qw.photo.callback.BaseCallBack
 import com.qw.photo.pojo.ResultData
+import com.qw.soul.permission.SoulPermission
+import com.qw.soul.permission.bean.Permission
+import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.IOException
@@ -23,43 +23,39 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        SoulPermission.getInstance().checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, object :
+            CheckRequestPermissionListener {
+
+            override fun onPermissionOk(permission: Permission?) {
+                Toast.makeText(this@MainActivity, "权限成功", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onPermissionDenied(permission: Permission?) {
+                Toast.makeText(this@MainActivity, "权限失败", Toast.LENGTH_SHORT).show()
+            }
+        })
         btn_capture.setOnClickListener {
             CoCo.with(this@MainActivity)
-                .take()
-                .uri(createUri())
+                .take(createImageFile())
                 .apply()
                 .start(object : BaseCallBack {
 
                     override fun onSuccess(data: ResultData) {
-                        Toast.makeText(this@MainActivity, "拍照成功: ${data.path}", Toast.LENGTH_SHORT).show()
-                        iv_image.setImageBitmap(data.thumbnailData)
+                        Toast.makeText(this@MainActivity, "拍照成功 path: ${data.file?.path}", Toast.LENGTH_SHORT).show()
+//                        iv_image.setImageBitmap(data.thumbnailData)
+                        Glide.with(this@MainActivity).load(data.file).into(iv_image)
                     }
 
                     override fun onCancel() {
                         Toast.makeText(this@MainActivity, "拍照取消", Toast.LENGTH_SHORT).show()
                     }
 
-
                     override fun onFailed(exception: Exception) {
-                        Toast.makeText(this@MainActivity, "拍照异常", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "拍照异常: " + exception.toString(), Toast.LENGTH_SHORT).show()
                     }
                 })
         }
 
-    }
-
-    fun createUri(): Uri? {
-        try {
-            val file = createImageFile()
-            if (Build.VERSION.SDK_INT > N) {
-                return FileProvider.getUriForFile(this, "coco.provider", file)
-            } else {
-                return Uri.fromFile(file)
-            }
-        } catch (ex: java.lang.Exception) {
-            Toast.makeText(this, ex.toString(), Toast.LENGTH_LONG).show()
-        }
-        return null
     }
 
     var currentPhotoPath: String = ""
