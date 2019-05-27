@@ -1,6 +1,8 @@
 package com.qw.soulphototaker
 
 import android.Manifest
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "拍照成功 path: ${data.file?.path}", Toast.LENGTH_SHORT).show()
 //                        iv_image.setImageBitmap(data.thumbnailData)
                         Glide.with(this@MainActivity).load(data.file).into(iv_image)
+                        galleryAddPic(data.file!!.absolutePath)
                     }
 
                     override fun onCancel() {
@@ -72,6 +75,14 @@ class MainActivity : AppCompatActivity() {
         ).apply {
             // Save a file: xml for use with ACTION_VIEW intents
             currentPhotoPath = absolutePath
+        }
+    }
+
+    private fun galleryAddPic(path:String) {
+        Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also { mediaScanIntent ->
+            val f = File(path)
+            mediaScanIntent.data = Uri.fromFile(f)
+            sendBroadcast(mediaScanIntent)
         }
     }
 }

@@ -16,6 +16,9 @@ class FunctionManager(containerActivity: Activity) {
 
     private val mWorker: IWorker = FragmentFactory.create(containerActivity)
 
+    /**
+     * 拍照
+     */
     fun take(): CaptureParams {
         val result = CaptureParams(mWorker)
         mWorker.setParams(result)
@@ -23,14 +26,17 @@ class FunctionManager(containerActivity: Activity) {
         return result
     }
 
+    /**
+     * 拍照
+     * @param targetFile 拍照完成后的存储路径
+     */
     fun take(targetFile: File): CaptureParams {
-        val result = CaptureParams(mWorker)
-        result.file = targetFile
-        mWorker.setParams(result)
-        mWorker.setActions(Action.CAPTURE)
-        return result
+        return take().apply { file = targetFile }
     }
 
+    /**
+     * 选择照片
+     */
     fun pick(): PickParams {
         val result = PickParams(mWorker)
         mWorker.setParams(result)
