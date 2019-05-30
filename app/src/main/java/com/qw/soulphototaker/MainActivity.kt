@@ -58,6 +58,27 @@ class MainActivity : AppCompatActivity() {
                     }
                 })
         }
+        btn_pick.setOnClickListener {
+            CoCo.with(this)
+                .pick().apply().start(object : BaseCallBack {
+
+                    override fun onSuccess(data: ResultData) {
+                        Toast.makeText(this@MainActivity, "选择成功 path: ${data.file?.path}", Toast.LENGTH_SHORT).show()
+                        iv_image.setImageBitmap(data.thumbnailData)
+//                        data.uri.
+//                        Glide.with(this@MainActivity).load(data.uri.absoluteFile).into(iv_image)
+//                        galleryAddPic(data.file!!.absolutePath)
+                    }
+
+                    override fun onCancel() {
+                        Toast.makeText(this@MainActivity, "选择取消", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                        Toast.makeText(this@MainActivity, "选择异常: " + exception.toString(), Toast.LENGTH_SHORT).show()
+                    }
+                })
+        }
 
     }
 

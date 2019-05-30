@@ -18,20 +18,14 @@ class FunctionManager(containerActivity: Activity) {
 
     /**
      * 拍照
+     * @param targetFile 拍照完成后的存储路径
      */
-    fun take(): CaptureParams {
+    fun take(targetFile: File? = null): CaptureParams {
         val result = CaptureParams(mWorker)
+        result.targetFile(targetFile)
         mWorker.setParams(result)
         mWorker.setActions(Action.CAPTURE)
         return result
-    }
-
-    /**
-     * 拍照
-     * @param targetFile 拍照完成后的存储路径
-     */
-    fun take(targetFile: File): CaptureParams {
-        return take().apply { file = targetFile }
     }
 
     /**

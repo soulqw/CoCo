@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -49,7 +50,7 @@ class SupportFragment : Fragment(), IWorker {
         when (mAction) {
             Action.CAPTURE -> takePhoto()
             else -> {
-
+                pickPhoto()
             }
         }
     }
@@ -80,10 +81,15 @@ class SupportFragment : Fragment(), IWorker {
                 mCallBack.onSuccess(result)
             }
             Constant.REQUEST_CODE_IMAGE_PICK -> {
-
+                val result = ResultData()
+                if (null != data) {
+                    result.thumbnailData = data.getParcelableExtra("data")
+                }
+                mCallBack.onSuccess(result)
             }
         }
     }
+
 
     private fun takePhoto() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -109,6 +115,20 @@ class SupportFragment : Fragment(), IWorker {
         }
         try {
             startActivityForResult(takePictureIntent, Constant.REQUEST_CODE_IMAGE_CAPTURE)
+        } catch (e: Exception) {
+            mCallBack.onFailed(e)
+        }
+    }
+
+    private fun pickPhoto() {
+        val pickIntent = Intent(Intent.ACTION_GET_CONTENT)
+        pickIntent.type = "image/*"
+        if (null === pickIntent.resolveActivity(activity!!.packageManager)) {
+            mCallBack.onFailed(IllegalStateException("activity status error"))
+            return
+        }
+        try {
+            startActivityForResult(pickIntent, Constant.REQUEST_CODE_IMAGE_PICK)
         } catch (e: Exception) {
             mCallBack.onFailed(e)
         }

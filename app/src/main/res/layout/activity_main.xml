@@ -11,6 +11,11 @@
             android:layout_width="match_parent"
             android:text="拍照"
             android:layout_height="wrap_content"/>
+    <Button
+            android:id="@+id/btn_pick"
+            android:layout_width="match_parent"
+            android:text="选择"
+            android:layout_height="wrap_content"/>
 
     <ImageView
             android:id="@+id/iv_image"
