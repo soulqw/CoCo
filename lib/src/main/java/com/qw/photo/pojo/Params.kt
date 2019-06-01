@@ -11,6 +11,10 @@ import java.io.File
  */
 open class BaseParams(private val worker: IWorker) {
 
+    fun applyWithCompress(): Executor {
+        return apply()
+    }
+
     fun apply(): Executor {
         return Executor(worker)
     }

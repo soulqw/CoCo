@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -84,12 +83,12 @@ class SupportFragment : Fragment(), IWorker {
                 val result = ResultData()
                 if (null != data) {
                     result.thumbnailData = data.getParcelableExtra("data")
+                    result.uri = data.data
                 }
                 mCallBack.onSuccess(result)
             }
         }
     }
-
 
     private fun takePhoto() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -121,8 +120,9 @@ class SupportFragment : Fragment(), IWorker {
     }
 
     private fun pickPhoto() {
-        val pickIntent = Intent(Intent.ACTION_GET_CONTENT)
-        pickIntent.type = "image/*"
+//        val pickIntent = Intent(Intent.ACTION_GET_CONTENT)
+//        pickIntent.type = "image/*"
+        val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         if (null === pickIntent.resolveActivity(activity!!.packageManager)) {
             mCallBack.onFailed(IllegalStateException("activity status error"))
             return

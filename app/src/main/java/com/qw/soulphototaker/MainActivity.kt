@@ -2,6 +2,8 @@ package com.qw.soulphototaker
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -9,7 +11,9 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.qw.photo.CoCo
+import com.qw.photo.Utils
 import com.qw.photo.callback.BaseCallBack
+import com.qw.photo.compress.CompressHelper
 import com.qw.photo.pojo.ResultData
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
@@ -60,14 +64,32 @@ class MainActivity : AppCompatActivity() {
         }
         btn_pick.setOnClickListener {
             CoCo.with(this)
-                .pick().apply().start(object : BaseCallBack {
+                .pick().applyWithCompress().start(object : BaseCallBack {
 
                     override fun onSuccess(data: ResultData) {
-                        Toast.makeText(this@MainActivity, "选择成功 path: ${data.file?.path}", Toast.LENGTH_SHORT).show()
-                        iv_image.setImageBitmap(data.thumbnailData)
-//                        data.uri.
-//                        Glide.with(this@MainActivity).load(data.uri.absoluteFile).into(iv_image)
-//                        galleryAddPic(data.file!!.absolutePath)
+                        Toast.makeText(this@MainActivity, "选择成功 path: ${data.uri?.path}", Toast.LENGTH_SHORT).show()
+                        val path = Utils.uriToImagePath(this@MainActivity, data.uri!!)
+//                        val file = File(path)
+//                        if (!file.exists()) {
+//                            file.mkdir()
+//                        }
+//                        Glide.with(this@MainActivity).load(file).into(iv_image)
+                        CompressHelper().compress(path,object :CompressHelper.CompressListener{
+                            override fun onStart(path: String?) {
+                            }
+
+                            override fun onError(e: java.lang.Exception?) {
+                            }
+
+                            override fun onFinish(result: Bitmap?) {
+                                iv_image.setImageBitmap(result)
+                            }
+                        })
+//                        var bitmap: Bitmap? = BitmapFactory.decodeFile(path)
+//                        if (null != bitmap) {
+//                            bitmap = Utils.zoomBitmap(bitmap, 0.5f)
+//                            iv_image.setImageBitmap(bitmap)
+//                        }
                     }
 
                     override fun onCancel() {
@@ -99,7 +121,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun galleryAddPic(path:String) {
+    private fun galleryAddPic(path: String) {
         Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE).also { mediaScanIntent ->
             val f = File(path)
             mediaScanIntent.data = Uri.fromFile(f)
