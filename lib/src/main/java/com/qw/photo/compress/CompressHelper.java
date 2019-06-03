@@ -1,50 +1,66 @@
 package com.qw.photo.compress;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import com.qw.photo.Utils;
+import com.qw.photo.callback.CompressListener;
+import com.qw.photo.constant.CompressStrategy;
+
 
 /**
  * @author cd5160866
- * @date 2019-06-01
  */
 public class CompressHelper {
 
-    private CompressListener listener;
-
     private Bitmap bitmap;
 
-    public void compress(final String path, @NonNull final CompressListener listener) {
+    private int degree;
+
+    private CompressStrategy strategy;
+
+    public static CompressHelper getDefault() {
+        return new CompressHelper()
+                .strategy(CompressStrategy.MATRIX)
+                .degree(50);
+    }
+
+    public CompressHelper degree(int degree) {
+        this.degree = degree;
+        return this;
+    }
+
+    public CompressHelper strategy(CompressStrategy strategy) {
+        this.strategy = strategy;
+        return this;
+    }
+
+    public void compress(@NonNull final String path, @NonNull final CompressListener listener) {
         listener.onStart(path);
         WorkThread.addWork(new Runnable() {
             @Override
             public void run() {
-                bitmap = BitmapFactory.decodeFile(path);
-                if (null != bitmap) {
-                    bitmap = Utils.INSTANCE.zoomBitmap(bitmap, 0.5f);
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            listener.onFinish(bitmap);
-                        }
-                    });
-                } else {
-                    listener.onError(new NullPointerException("get bitmap with null result"));
+                try {
+                    bitmap = CompressFactory.INSTANCE
+                            .create(strategy)
+                            .compress(path, degree);
+                } catch (Exception e) {
+                    listener.onError(e);
+                    return;
                 }
+                //check result
+                if (null == bitmap) {
+                    listener.onError(new NullPointerException("try to compress bitmap get a null result"));
+                    return;
+                }
+                //post result
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onFinish(bitmap);
+                    }
+                });
             }
         });
-    }
-
-
-    public interface CompressListener {
-
-        void onStart(String path);
-
-        void onFinish(Bitmap result);
-
-        void onError(Exception e);
     }
 }

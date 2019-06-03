@@ -2,18 +2,15 @@ package com.qw.soulphototaker
 
 import android.Manifest
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.qw.photo.CoCo
-import com.qw.photo.Utils
 import com.qw.photo.callback.BaseCallBack
-import com.qw.photo.compress.CompressHelper
 import com.qw.photo.pojo.ResultData
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
@@ -68,23 +65,14 @@ class MainActivity : AppCompatActivity() {
 
                     override fun onSuccess(data: ResultData) {
                         Toast.makeText(this@MainActivity, "选择成功 path: ${data.uri?.path}", Toast.LENGTH_SHORT).show()
-                        val path = Utils.uriToImagePath(this@MainActivity, data.uri!!)
+                        Log.d("qw", "with ${data.compressBitmap?.width} height ${data.compressBitmap?.height}")
+                        iv_image.setImageBitmap(data.compressBitmap)
+//                        val path = Utils.uriToImagePath(this@MainActivity, data.uri!!)
 //                        val file = File(path)
 //                        if (!file.exists()) {
 //                            file.mkdir()
 //                        }
 //                        Glide.with(this@MainActivity).load(file).into(iv_image)
-                        CompressHelper().compress(path,object :CompressHelper.CompressListener{
-                            override fun onStart(path: String?) {
-                            }
-
-                            override fun onError(e: java.lang.Exception?) {
-                            }
-
-                            override fun onFinish(result: Bitmap?) {
-                                iv_image.setImageBitmap(result)
-                            }
-                        })
 //                        var bitmap: Bitmap? = BitmapFactory.decodeFile(path)
 //                        if (null != bitmap) {
 //                            bitmap = Utils.zoomBitmap(bitmap, 0.5f)

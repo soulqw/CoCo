@@ -4,13 +4,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
 import android.util.Log
+import com.qw.photo.constant.Constant
 import java.io.File
 
 
@@ -86,16 +85,5 @@ object Utils {
         cursor.close()
         return imagePath
     }
-
-    fun zoomBitmap(bitmap: Bitmap, radios: Float): Bitmap {
-        var bitmap = bitmap
-        val height = bitmap.height
-        val width = bitmap.width
-        val matrix = Matrix()
-        matrix.postScale(radios, radios)
-        bitmap = Bitmap.createBitmap(bitmap, 0, 0, width, height, matrix, true)
-        return bitmap
-    }
-
 
 }

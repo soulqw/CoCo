@@ -9,9 +9,10 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.util.Log
-import com.qw.photo.Constant
 import com.qw.photo.Utils
 import com.qw.photo.callback.BaseCallBack
+import com.qw.photo.callback.CompressListener
+import com.qw.photo.constant.Constant
 import com.qw.photo.pojo.Action
 import com.qw.photo.pojo.BaseParams
 import com.qw.photo.pojo.CaptureParams
@@ -84,8 +85,28 @@ class SupportFragment : Fragment(), IWorker {
                 if (null != data) {
                     result.thumbnailData = data.getParcelableExtra("data")
                     result.uri = data.data
+                    //判断当前状态是否可以压缩
+                    if (null != mParam.compressor && null != data.data && Utils.isActivityAvailable(activity)) {
+                        mParam.compressor!!.compress(Utils.uriToImagePath(activity!!, data.data!!)!!,
+                            object : CompressListener {
+                                override fun onStart(path: String) {
+                                }
+
+                                override fun onFinish(compressed: Bitmap) {
+                                    result.compressBitmap = compressed
+                                    mCallBack.onSuccess(result)
+                                }
+
+                                override fun onError(e: Exception) {
+                                    mCallBack.onFailed(e)
+                                }
+                            })
+                        return
+                    }
+                    mCallBack.onSuccess(result)
+                } else {
+                    mCallBack.onFailed(NullPointerException("null result data"))
                 }
-                mCallBack.onSuccess(result)
             }
         }
     }

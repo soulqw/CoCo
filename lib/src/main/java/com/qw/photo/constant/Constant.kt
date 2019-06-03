@@ -1,4 +1,4 @@
-package com.qw.photo
+package com.qw.photo.constant
 
 object Constant {
 
