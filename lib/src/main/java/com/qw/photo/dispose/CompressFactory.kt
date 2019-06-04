@@ -1,4 +1,4 @@
-package com.qw.photo.compress
+package com.qw.photo.dispose
 
 import com.qw.photo.constant.CompressStrategy
 

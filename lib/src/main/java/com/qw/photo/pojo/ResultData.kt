@@ -10,14 +10,11 @@ import java.io.File
  * @author cd5160866
  */
 class ResultData {
+
     /**
-     * 拍照不指定本地路径有此参数
+     * 完成后写成的文件
      */
-    var thumbnailData: Bitmap? = null
-    /**
-     * 拍照完成后写成的文件
-     */
-    var file: File? = null
+    var targetFile: File? = null
     /**
      * 选择图片生成的url
      */

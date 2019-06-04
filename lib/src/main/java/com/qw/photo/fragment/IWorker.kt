@@ -1,7 +1,7 @@
 package com.qw.photo.fragment
 
 import com.qw.photo.callback.BaseCallBack
-import com.qw.photo.pojo.Action
+import com.qw.photo.constant.Action
 import com.qw.photo.pojo.BaseParams
 
 

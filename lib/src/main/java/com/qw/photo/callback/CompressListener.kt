@@ -1,6 +1,7 @@
 package com.qw.photo.callback
 
 import android.graphics.Bitmap
+import java.io.File
 
 
 /**
@@ -9,10 +10,19 @@ import android.graphics.Bitmap
  */
 interface CompressListener {
 
+    /**
+     * 开始压缩
+     */
     fun onStart(path: String)
 
-    fun onFinish(compressed: Bitmap)
+    /**
+     * 任务结束
+     */
+    fun onFinish(compressed: Bitmap, savedFile: File?)
 
+    /**
+     * 发生错误
+     */
     fun onError(e: Exception)
 
 }

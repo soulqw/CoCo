@@ -3,7 +3,7 @@ package com.qw.photo
 import android.app.Activity
 import com.qw.photo.fragment.FragmentFactory
 import com.qw.photo.fragment.IWorker
-import com.qw.photo.pojo.Action
+import com.qw.photo.constant.Action
 import com.qw.photo.pojo.CaptureParams
 import com.qw.photo.pojo.PickParams
 import java.io.File

@@ -39,15 +39,20 @@ class MainActivity : AppCompatActivity() {
         })
         btn_capture.setOnClickListener {
             CoCo.with(this@MainActivity)
-                .take(createImageFile())
-                .apply()
+                .take(createSDCardFile())
+//                .apply()
+                .applyWithDispose()
                 .start(object : BaseCallBack {
 
+                    override fun onDisposeStart() {
+                        Toast.makeText(this@MainActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT).show()
+                    }
+
                     override fun onSuccess(data: ResultData) {
-                        Toast.makeText(this@MainActivity, "拍照成功 path: ${data.file?.path}", Toast.LENGTH_SHORT).show()
-//                        iv_image.setImageBitmap(data.thumbnailData)
-                        Glide.with(this@MainActivity).load(data.file).into(iv_image)
-                        galleryAddPic(data.file!!.absolutePath)
+//                        Toast.makeText(this@MainActivity, "拍照成功", Toast.LENGTH_SHORT)
+//                            .show()
+                        Glide.with(this@MainActivity).load(data.targetFile).into(iv_image)
+//                        iv_image.setImageBitmap(data.compressBitmap)
                     }
 
                     override fun onCancel() {
@@ -55,13 +60,19 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onFailed(exception: Exception) {
-                        Toast.makeText(this@MainActivity, "拍照异常: " + exception.toString(), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@MainActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
                     }
                 })
         }
         btn_pick.setOnClickListener {
             CoCo.with(this)
-                .pick().applyWithCompress().start(object : BaseCallBack {
+                .pick()
+                .targetFile(createSDCardFile())
+                .applyWithDispose()
+//                .applyWithDispose(ImageDisposer()
+//                    .degree(10)
+//                    .strategy(CompressStrategy.QUALITY))
+                .start(object : BaseCallBack {
 
                     override fun onSuccess(data: ResultData) {
                         Toast.makeText(this@MainActivity, "选择成功 path: ${data.uri?.path}", Toast.LENGTH_SHORT).show()
@@ -92,7 +103,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    var currentPhotoPath: String = ""
 
     @Throws(IOException::class)
     private fun createImageFile(): File {
@@ -103,10 +113,19 @@ class MainActivity : AppCompatActivity() {
             "JPEG_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
             storageDir /* directory */
-        ).apply {
-            // Save a file: xml for use with ACTION_VIEW intents
-            currentPhotoPath = absolutePath
-        }
+        )
+    }
+
+    @Throws(IOException::class)
+    private fun createSDCardFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir: File? = Environment.getExternalStorageDirectory()
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        )
     }
 
     private fun galleryAddPic(path: String) {

@@ -1,4 +1,4 @@
-package com.qw.photo.compress
+package com.qw.photo.dispose
 
 import android.graphics.Bitmap
 

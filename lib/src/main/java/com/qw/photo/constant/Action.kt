@@ -1,4 +1,4 @@
-package com.qw.photo.pojo
+package com.qw.photo.constant
 
 
 /**

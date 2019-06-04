@@ -8,17 +8,19 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
+import android.text.TextUtils
 import android.util.Log
 import com.qw.photo.Utils
 import com.qw.photo.callback.BaseCallBack
 import com.qw.photo.callback.CompressListener
+import com.qw.photo.constant.Action
 import com.qw.photo.constant.Constant
-import com.qw.photo.pojo.Action
+import com.qw.photo.dispose.ImageDisposer
 import com.qw.photo.pojo.BaseParams
 import com.qw.photo.pojo.CaptureParams
+import com.qw.photo.pojo.PickParams
 import com.qw.photo.pojo.ResultData
 import java.io.File
-
 
 /**
  *
@@ -72,36 +74,30 @@ class SupportFragment : Fragment(), IWorker {
         when (requestCode) {
             Constant.REQUEST_CODE_IMAGE_CAPTURE -> {
                 val result = ResultData()
+                val params = mParam
                 if (null != targetFile) {
-                    result.file = targetFile
-                }
-                if (null != data && null != data.extras) {
-                    result.thumbnailData = data.extras!!.get("data") as Bitmap
+                    result.targetFile = targetFile
+                    val targetPath = result.targetFile!!.absolutePath
+                    //判断当前状态是否需要处理
+                    if (!TextUtils.isEmpty(targetPath) && null != params.disposer) {
+                        disposeImage(targetPath, mParam.file, mParam.disposer!!, result, mCallBack)
+                        return
+                    }
                 }
                 mCallBack.onSuccess(result)
             }
             Constant.REQUEST_CODE_IMAGE_PICK -> {
                 val result = ResultData()
                 if (null != data) {
-                    result.thumbnailData = data.getParcelableExtra("data")
                     result.uri = data.data
-                    //判断当前状态是否可以压缩
-                    if (null != mParam.compressor && null != data.data && Utils.isActivityAvailable(activity)) {
-                        mParam.compressor!!.compress(Utils.uriToImagePath(activity!!, data.data!!)!!,
-                            object : CompressListener {
-                                override fun onStart(path: String) {
-                                }
-
-                                override fun onFinish(compressed: Bitmap) {
-                                    result.compressBitmap = compressed
-                                    mCallBack.onSuccess(result)
-                                }
-
-                                override fun onError(e: Exception) {
-                                    mCallBack.onFailed(e)
-                                }
-                            })
-                        return
+                    val params = mParam as PickParams
+                    //判断当前状态是否需要处理
+                    if (null != data.data && Utils.isActivityAvailable(activity)) {
+                        val localPath = Utils.uriToImagePath(activity!!, data.data!!)
+                        if (!TextUtils.isEmpty(localPath) && null != params.disposer) {
+                            disposeImage(localPath!!, mParam.file, mParam.disposer!!, result, mCallBack)
+                            return
+                        }
                     }
                     mCallBack.onSuccess(result)
                 } else {
@@ -109,6 +105,39 @@ class SupportFragment : Fragment(), IWorker {
                 }
             }
         }
+    }
+
+    /**
+     * 处理图片
+     * @param originPath 图片原始路径
+     * @param targetFile 图片处理之后的保存文件 可为空
+     * @param disposer 图片处理器
+     * @param resultData 处理完统一封装的实体类
+     * @param callBack 回调
+     */
+    private fun disposeImage(
+        originPath: String,
+        targetFile: File?,
+        disposer: ImageDisposer,
+        resultData: ResultData,
+        callBack: BaseCallBack
+    ) {
+        disposer.dispose(originPath, targetFile, object : CompressListener {
+            override fun onStart(path: String) {
+                callBack.onDisposeStart()
+            }
+
+            override fun onFinish(compressed: Bitmap, savedFile: File?) {
+                resultData.compressBitmap = compressed
+                resultData.targetFile = savedFile
+                Log.d("qw", "onSuccess $resultData")
+                callBack.onSuccess(resultData)
+            }
+
+            override fun onError(e: Exception) {
+                callBack.onFailed(e)
+            }
+        })
     }
 
     private fun takePhoto() {

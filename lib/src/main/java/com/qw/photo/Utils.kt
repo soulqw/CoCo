@@ -4,13 +4,17 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
 import android.support.v4.content.FileProvider
 import android.util.Log
 import com.qw.photo.constant.Constant
+import java.io.ByteArrayOutputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 /**
@@ -86,4 +90,42 @@ object Utils {
         return imagePath
     }
 
+    fun bitmapToFile(file: File, bm: Bitmap): Boolean {
+        var fos: FileOutputStream? = null
+        try {
+            if (!file.exists())
+                file.createNewFile()
+            fos = FileOutputStream(file)
+            fos.write(bitmapToBytes(bm))
+        } catch (e: IOException) {
+            e.printStackTrace()
+            return false
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+        return true
+    }
+
+    private fun bitmapToBytes(bm: Bitmap): ByteArray {
+        var baos: ByteArrayOutputStream? = null
+        try {
+            baos = ByteArrayOutputStream()
+            bm.compress(Bitmap.CompressFormat.JPEG, 60, baos)
+            return baos.toByteArray()
+        } finally {
+            if (baos != null) {
+                try {
+                    baos.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
+    }
 }
