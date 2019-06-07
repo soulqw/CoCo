@@ -11,28 +11,27 @@ import android.support.v4.app.Fragment
 import android.text.TextUtils
 import android.util.Log
 import com.qw.photo.Utils
-import com.qw.photo.callback.BaseCallBack
 import com.qw.photo.callback.CompressListener
+import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Action
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.ImageDisposer
 import com.qw.photo.pojo.BaseParams
-import com.qw.photo.pojo.CaptureParams
-import com.qw.photo.pojo.PickParams
-import com.qw.photo.pojo.ResultData
+import com.qw.photo.pojo.BaseResultData
+import com.qw.photo.pojo.PickResultData
 import java.io.File
 
 /**
  *
  * @author cd5160866
  */
-class SupportFragment : Fragment(), IWorker {
+class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
 
     private lateinit var mAction: Action
 
-    private lateinit var mParam: BaseParams
+    private lateinit var mParam: BaseParams<Result>
 
-    private lateinit var mCallBack: BaseCallBack
+    private lateinit var mCallBack: GetImageCallBack<Result>
 
     private var targetFile: File? = null
 
@@ -40,11 +39,11 @@ class SupportFragment : Fragment(), IWorker {
         this.mAction = action
     }
 
-    override fun setParams(params: BaseParams) {
+    override fun setParams(params: BaseParams<Result>) {
         this.mParam = params
     }
 
-    override fun start(callBack: BaseCallBack) {
+    override fun start(callBack: GetImageCallBack<Result>) {
         if (!Utils.isActivityAvailable(activity)) {
             return
         }
@@ -73,7 +72,7 @@ class SupportFragment : Fragment(), IWorker {
         }
         when (requestCode) {
             Constant.REQUEST_CODE_IMAGE_CAPTURE -> {
-                val result = ResultData()
+                val result = BaseResultData()
                 val params = mParam
                 if (null != targetFile) {
                     result.targetFile = targetFile
@@ -84,13 +83,13 @@ class SupportFragment : Fragment(), IWorker {
                         return
                     }
                 }
-                mCallBack.onSuccess(result)
+                mCallBack.onSuccess(result as Result)
             }
             Constant.REQUEST_CODE_IMAGE_PICK -> {
-                val result = ResultData()
+                val result = PickResultData()
                 if (null != data) {
                     result.uri = data.data
-                    val params = mParam as PickParams
+                    val params = mParam
                     //判断当前状态是否需要处理
                     if (null != data.data && Utils.isActivityAvailable(activity)) {
                         val localPath = Utils.uriToImagePath(activity!!, data.data!!)
@@ -99,7 +98,7 @@ class SupportFragment : Fragment(), IWorker {
                             return
                         }
                     }
-                    mCallBack.onSuccess(result)
+                    mCallBack.onSuccess(result as Result)
                 } else {
                     mCallBack.onFailed(NullPointerException("null result data"))
                 }
@@ -112,15 +111,15 @@ class SupportFragment : Fragment(), IWorker {
      * @param originPath 图片原始路径
      * @param targetFile 图片处理之后的保存文件 可为空
      * @param disposer 图片处理器
-     * @param resultData 处理完统一封装的实体类
+     * @param baseResultData 处理完统一封装的实体类
      * @param callBack 回调
      */
     private fun disposeImage(
         originPath: String,
         targetFile: File?,
         disposer: ImageDisposer,
-        resultData: ResultData,
-        callBack: BaseCallBack
+        baseResultData: BaseResultData,
+        callBack: GetImageCallBack<Result>
     ) {
         disposer.dispose(originPath, targetFile, object : CompressListener {
             override fun onStart(path: String) {
@@ -128,10 +127,10 @@ class SupportFragment : Fragment(), IWorker {
             }
 
             override fun onFinish(compressed: Bitmap, savedFile: File?) {
-                resultData.compressBitmap = compressed
-                resultData.targetFile = savedFile
-                Log.d("qw", "onSuccess $resultData")
-                callBack.onSuccess(resultData)
+                baseResultData.compressBitmap = compressed
+                baseResultData.targetFile = savedFile
+                Log.d("qw", "onSuccess $baseResultData")
+                callBack.onSuccess(baseResultData as Result)
             }
 
             override fun onError(e: Exception) {
@@ -149,7 +148,7 @@ class SupportFragment : Fragment(), IWorker {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        val params: CaptureParams = mParam as CaptureParams
+        val params = mParam
         targetFile = params.file
         //用户指定了目标文件路径
         if (null != targetFile) {

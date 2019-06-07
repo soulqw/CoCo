@@ -10,34 +10,34 @@ import java.io.File
 /**
  * @author cd5160866
  */
-open class BaseParams(private val worker: IWorker) {
+open class BaseParams<Result>(private val worker: IWorker<Result>) {
 
     internal var disposer: ImageDisposer? = null
 
     internal var file: File? = null
 
-    fun apply(): Executor {
+    fun apply(): Executor<Result> {
         return Executor(worker)
     }
 
-    fun applyWithDispose(compressor: ImageDisposer = ImageDisposer.getDefault()): Executor {
+    fun applyWithDispose(compressor: ImageDisposer = ImageDisposer.getDefault()): Executor<Result> {
         this.disposer = compressor
         return apply()
     }
 }
 
-class CaptureParams(worker: IWorker) : BaseParams(worker) {
+class CaptureParams<Result>(worker: IWorker<Result>) : BaseParams<Result>(worker) {
 
-    fun targetFile(file: File?): CaptureParams {
+    fun targetFile(file: File?): CaptureParams<Result> {
         Log.d("qw", "capture: saveFilePath: " + (file?.path ?: "uri is null"))
         this.file = file
         return this
     }
 }
 
-class PickParams(worker: IWorker) : BaseParams(worker) {
+class PickParams<Result>(worker: IWorker<Result>) : BaseParams<Result>(worker) {
 
-    fun targetFile(file: File?): PickParams {
+    fun targetFile(file: File?): PickParams<Result> {
         Log.d("qw", "pick: saveFilePath: " + (file?.path ?: "uri is null"))
         this.file = file
         return this

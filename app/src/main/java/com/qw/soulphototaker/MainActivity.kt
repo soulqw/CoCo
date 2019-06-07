@@ -6,12 +6,14 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.qw.photo.CoCo
-import com.qw.photo.callback.BaseCallBack
-import com.qw.photo.pojo.ResultData
+import com.qw.photo.callback.GetImageCallBack
+import com.qw.photo.constant.CompressStrategy
+import com.qw.photo.dispose.ImageDisposer
+import com.qw.photo.pojo.BaseResultData
+import com.qw.photo.pojo.PickResultData
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
 import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
@@ -40,19 +42,11 @@ class MainActivity : AppCompatActivity() {
         btn_capture.setOnClickListener {
             CoCo.with(this@MainActivity)
                 .take(createSDCardFile())
-//                .apply()
-                .applyWithDispose()
-                .start(object : BaseCallBack {
+                .apply()
+                .start(object :GetImageCallBack<BaseResultData>{
 
                     override fun onDisposeStart() {
                         Toast.makeText(this@MainActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onSuccess(data: ResultData) {
-//                        Toast.makeText(this@MainActivity, "拍照成功", Toast.LENGTH_SHORT)
-//                            .show()
-                        Glide.with(this@MainActivity).load(data.targetFile).into(iv_image)
-//                        iv_image.setImageBitmap(data.compressBitmap)
                     }
 
                     override fun onCancel() {
@@ -62,42 +56,42 @@ class MainActivity : AppCompatActivity() {
                     override fun onFailed(exception: Exception) {
                         Toast.makeText(this@MainActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
                     }
+
+                    override fun onSuccess(data: BaseResultData) {
+                        Toast.makeText(this@MainActivity, "拍照成功", Toast.LENGTH_SHORT).show()
+                        Glide.with(this@MainActivity).load(data.targetFile).into(iv_image)
+//                        iv_image.setImageBitmap(data.compressBitmap)
+                    }
+
                 })
         }
         btn_pick.setOnClickListener {
             CoCo.with(this)
-                .pick()
-                .targetFile(createSDCardFile())
-                .applyWithDispose()
-//                .applyWithDispose(ImageDisposer()
-//                    .degree(10)
-//                    .strategy(CompressStrategy.QUALITY))
-                .start(object : BaseCallBack {
+                .pick(createSDCardFile())
+                .applyWithDispose(
+                    ImageDisposer()
+                    .degree(10)
+                    .strategy(CompressStrategy.QUALITY))
+                .start(object :GetImageCallBack<PickResultData>{
 
-                    override fun onSuccess(data: ResultData) {
+                    override fun onDisposeStart() {
+                        Toast.makeText(this@MainActivity, "选择成功,开始处理", Toast.LENGTH_SHORT).show()
+                    }
+
+                    override fun onSuccess(data: PickResultData) {
                         Toast.makeText(this@MainActivity, "选择成功 path: ${data.uri?.path}", Toast.LENGTH_SHORT).show()
-                        Log.d("qw", "with ${data.compressBitmap?.width} height ${data.compressBitmap?.height}")
-                        iv_image.setImageBitmap(data.compressBitmap)
-//                        val path = Utils.uriToImagePath(this@MainActivity, data.uri!!)
-//                        val file = File(path)
-//                        if (!file.exists()) {
-//                            file.mkdir()
-//                        }
-//                        Glide.with(this@MainActivity).load(file).into(iv_image)
-//                        var bitmap: Bitmap? = BitmapFactory.decodeFile(path)
-//                        if (null != bitmap) {
-//                            bitmap = Utils.zoomBitmap(bitmap, 0.5f)
-//                            iv_image.setImageBitmap(bitmap)
-//                        }
+                        Glide.with(this@MainActivity).load(data.targetFile).into(iv_image)
+
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                        Toast.makeText(this@MainActivity, "选择异常: $exception", Toast.LENGTH_SHORT).show()
                     }
 
                     override fun onCancel() {
                         Toast.makeText(this@MainActivity, "选择取消", Toast.LENGTH_SHORT).show()
                     }
 
-                    override fun onFailed(exception: Exception) {
-                        Toast.makeText(this@MainActivity, "选择异常: " + exception.toString(), Toast.LENGTH_SHORT).show()
-                    }
                 })
         }
 
