@@ -5,6 +5,7 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.os.Handler
 import android.os.Looper
+import android.support.annotation.IntRange
 import android.util.Log
 import com.qw.photo.Utils
 import com.qw.photo.callback.CompressListener
@@ -37,7 +38,7 @@ class ImageDisposer {
 
     private var strategy: CompressStrategy? = null
 
-    fun degree(degree: Int): ImageDisposer {
+    fun degree(@IntRange(from = 0, to = 100)degree: Int): ImageDisposer {
         this.degree = degree
         return this
     }

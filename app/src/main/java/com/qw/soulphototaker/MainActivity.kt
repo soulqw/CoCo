@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         btn_capture.setOnClickListener {
             CoCo.with(this@MainActivity)
                 .take(createSDCardFile())
-                .apply()
+                .applyWithDispose()
                 .start(object :GetImageCallBack<BaseResultData>{
 
                     override fun onDisposeStart() {
