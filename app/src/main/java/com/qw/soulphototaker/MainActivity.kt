@@ -12,8 +12,8 @@ import com.qw.photo.CoCo
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
 import com.qw.photo.dispose.ImageDisposer
-import com.qw.photo.pojo.BaseResultData
-import com.qw.photo.pojo.PickResultData
+import com.qw.photo.pojo.CaptureResult
+import com.qw.photo.pojo.PickResult
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
 import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
             CoCo.with(this@MainActivity)
                 .take(createSDCardFile())
                 .applyWithDispose()
-                .start(object :GetImageCallBack<BaseResultData>{
+                .start(object :GetImageCallBack<CaptureResult>{
 
                     override fun onDisposeStart() {
                         Toast.makeText(this@MainActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT).show()
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() {
                         Toast.makeText(this@MainActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
                     }
 
-                    override fun onSuccess(data: BaseResultData) {
+                    override fun onSuccess(data: CaptureResult) {
                         Toast.makeText(this@MainActivity, "拍照成功", Toast.LENGTH_SHORT).show()
                         Glide.with(this@MainActivity).load(data.targetFile).into(iv_image)
 //                        iv_image.setImageBitmap(data.compressBitmap)
@@ -72,13 +72,13 @@ class MainActivity : AppCompatActivity() {
                     ImageDisposer()
                     .degree(10)
                     .strategy(CompressStrategy.QUALITY))
-                .start(object :GetImageCallBack<PickResultData>{
+                .start(object :GetImageCallBack<PickResult>{
 
                     override fun onDisposeStart() {
                         Toast.makeText(this@MainActivity, "选择成功,开始处理", Toast.LENGTH_SHORT).show()
                     }
 
-                    override fun onSuccess(data: PickResultData) {
+                    override fun onSuccess(data: PickResult) {
                         Toast.makeText(this@MainActivity, "选择成功 path: ${data.uri?.path}", Toast.LENGTH_SHORT).show()
                         Glide.with(this@MainActivity).load(data.targetFile).into(iv_image)
 

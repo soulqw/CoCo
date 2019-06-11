@@ -9,6 +9,9 @@ import java.io.File
  *
  * @author cd5160866
  */
+/**
+ * 通用的结果
+ */
 open class BaseResultData {
     /**
      * 完成后写成的文件
@@ -16,14 +19,22 @@ open class BaseResultData {
     var targetFile: File? = null
 
     /**
-     * 如果制定了压缩的话
+     * 如果制指定了压缩的话
      */
     var compressBitmap: Bitmap? = null
 }
 
-class PickResultData : BaseResultData(){
+/**
+ * 拍照的结果
+ */
+class CaptureResult : BaseResultData()
+
+/**
+ * 选择的结果
+ */
+class PickResult : BaseResultData() {
     /**
-     * 选择图片生成的url
+     * 选择图片的ur
      */
     var uri: Uri? = null
 }

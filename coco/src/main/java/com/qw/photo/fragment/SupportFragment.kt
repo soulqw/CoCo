@@ -18,7 +18,8 @@ import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.ImageDisposer
 import com.qw.photo.pojo.BaseParams
 import com.qw.photo.pojo.BaseResultData
-import com.qw.photo.pojo.PickResultData
+import com.qw.photo.pojo.CaptureResult
+import com.qw.photo.pojo.PickResult
 import java.io.File
 
 /**
@@ -72,7 +73,7 @@ class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
         }
         when (requestCode) {
             Constant.REQUEST_CODE_IMAGE_CAPTURE -> {
-                val result = BaseResultData()
+                val result = CaptureResult()
                 val params = mParam
                 if (null != targetFile) {
                     result.targetFile = targetFile
@@ -86,7 +87,7 @@ class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
                 mCallBack.onSuccess(result as Result)
             }
             Constant.REQUEST_CODE_IMAGE_PICK -> {
-                val result = PickResultData()
+                val result = PickResult()
                 if (null != data) {
                     result.uri = data.data
                     val params = mParam
@@ -130,7 +131,7 @@ class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
                 baseResultData.compressBitmap = compressed
                 baseResultData.targetFile = savedFile
                 Log.d("qw", "onSuccess $baseResultData")
-                callBack.onSuccess(baseResultData as Result)
+                 callBack.onSuccess(baseResultData as Result)
             }
 
             override fun onError(e: Exception) {
