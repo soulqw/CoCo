@@ -6,4 +6,6 @@ object Constant {
 
     const val REQUEST_CODE_IMAGE_PICK = 1 shl 10
 
+    const val TAG = "CoCo"
+
 }

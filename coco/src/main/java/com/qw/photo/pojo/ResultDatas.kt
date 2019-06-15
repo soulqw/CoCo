@@ -19,7 +19,7 @@ open class BaseResultData {
     var targetFile: File? = null
 
     /**
-     * 如果制指定了压缩的话
+     * 如果指定了压缩的话
      */
     var compressBitmap: Bitmap? = null
 }
@@ -34,7 +34,7 @@ class CaptureResult : BaseResultData()
  */
 class PickResult : BaseResultData() {
     /**
-     * 选择图片的ur
+     * 选择图片的uri
      */
-    var uri: Uri? = null
+    lateinit var originUri: Uri
 }

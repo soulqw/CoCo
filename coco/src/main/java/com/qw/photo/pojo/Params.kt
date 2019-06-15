@@ -1,7 +1,8 @@
 package com.qw.photo.pojo
 
-import android.util.Log
+import com.qw.photo.DevUtil
 import com.qw.photo.Executor
+import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.ImageDisposer
 import com.qw.photo.fragment.IWorker
 import java.io.File
@@ -16,10 +17,17 @@ open class BaseParams<Result>(private val worker: IWorker<Result>) {
 
     internal var file: File? = null
 
+    /**
+     * 应用参数为后续操作做准备
+     * （不会压缩）
+     */
     fun apply(): Executor<Result> {
         return Executor(worker)
     }
 
+    /**
+     * 应用参数为后续操作做准备，并且可自定义压缩策略
+     */
     fun applyWithDispose(compressor: ImageDisposer = ImageDisposer.getDefault()): Executor<Result> {
         this.disposer = compressor
         return apply()
@@ -28,8 +36,11 @@ open class BaseParams<Result>(private val worker: IWorker<Result>) {
 
 class CaptureParams<Result>(worker: IWorker<Result>) : BaseParams<Result>(worker) {
 
-    fun targetFile(file: File?): CaptureParams<Result> {
-        Log.d("qw", "capture: saveFilePath: " + (file?.path ?: "uri is null"))
+    /**
+     * 指定被最终写到的文件
+     */
+    fun targetFile(file: File): CaptureParams<Result> {
+        DevUtil.d(Constant.TAG, "capture: saveFilePath: " + (file.path ?: "originUri is null"))
         this.file = file
         return this
     }
@@ -37,8 +48,9 @@ class CaptureParams<Result>(worker: IWorker<Result>) : BaseParams<Result>(worker
 
 class PickParams<Result>(worker: IWorker<Result>) : BaseParams<Result>(worker) {
 
+
     fun targetFile(file: File?): PickParams<Result> {
-        Log.d("qw", "pick: saveFilePath: " + (file?.path ?: "uri is null"))
+        DevUtil.d(Constant.TAG, "pick: saveFilePath: " + (file?.path ?: "originUri is null"))
         this.file = file
         return this
     }

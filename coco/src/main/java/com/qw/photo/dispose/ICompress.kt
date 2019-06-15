@@ -15,6 +15,6 @@ interface ICompress {
      * @param degree 压缩程度 0~100
      */
     @Throws(Exception::class)
-    fun compress(path: String, @IntRange(from = 0, to = 100) degree: Int): Bitmap?
+    fun compress(path: String, @IntRange(from = 1, to = 100) degree: Int): Bitmap?
 
 }

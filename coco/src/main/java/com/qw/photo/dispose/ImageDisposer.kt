@@ -6,13 +6,13 @@ import android.media.ExifInterface
 import android.os.Handler
 import android.os.Looper
 import android.support.annotation.IntRange
-import android.util.Log
+import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.callback.CompressListener
 import com.qw.photo.constant.CompressStrategy
+import com.qw.photo.constant.Constant
 import com.qw.photo.exception.CompressFailedException
 import com.qw.photo.exception.MissCompressStrategyException
-
 import java.io.File
 
 
@@ -38,7 +38,7 @@ class ImageDisposer {
 
     private var strategy: CompressStrategy? = null
 
-    fun degree(@IntRange(from = 0, to = 100)degree: Int): ImageDisposer {
+    fun degree(@IntRange(from = 1, to = 100) degree: Int): ImageDisposer {
         this.degree = degree
         return this
     }
@@ -53,19 +53,19 @@ class ImageDisposer {
             listener.onError(MissCompressStrategyException())
             return
         }
-        Log.d("qw", "start dispose")
+        DevUtil.d(Constant.TAG, "start dispose")
         listener.onStart(originPath)
         WorkThread.addWork(Runnable {
             try {
-                Log.d("qw", "start compress")
+                DevUtil.d(Constant.TAG, "start compress")
                 bitmap = CompressFactory
                     .create(strategy!!)
                     .compress(originPath, degree)
                 //rotate if needed
-                Log.d("qw", "start Rotate")
+                DevUtil.d(Constant.TAG, "start Rotate")
                 bitmap = correctRotate(originPath, bitmap!!)
             } catch (e: Exception) {
-                Log.d("qw", "error on compress or Rotate $e")
+                DevUtil.d(Constant.TAG, "error on compress or Rotate $e")
                 listener.onError(e)
                 return@Runnable
             }
@@ -73,12 +73,12 @@ class ImageDisposer {
             //check result
             if (null == bitmap) {
                 listener.onError(CompressFailedException("try to dispose bitmap get a null result"))
-                Log.d("qw", "error on get bitmap")
+                DevUtil.d(Constant.TAG, "error on get bitmap")
                 return@Runnable
             }
             //save file as bitmap if needed
             if (null != targetSaveFile) {
-                Log.d("qw", "start save bitmap to file")
+                DevUtil.d(Constant.TAG, "start save bitmap to file")
                 val saveResult = Utils.bitmapToFile(targetSaveFile, bitmap!!)
                 if (!saveResult) {
                     listener.onError(CompressFailedException("save bitmap as file failed"))
@@ -87,7 +87,7 @@ class ImageDisposer {
             }
             //post result
             Handler(Looper.getMainLooper()).post {
-                Log.d("qw", "all dispose ok")
+                DevUtil.d(Constant.TAG, "all dispose ok")
                 listener.onFinish(bitmap!!, targetSaveFile)
             }
         })

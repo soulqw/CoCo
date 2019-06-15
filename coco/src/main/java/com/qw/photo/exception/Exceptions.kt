@@ -1,12 +1,22 @@
 package com.qw.photo.exception
 
-import java.lang.IllegalStateException
-
+import com.qw.photo.DevUtil
+import com.qw.photo.constant.Constant
 
 /**
- *
  * @author cd5160866
  */
-class CompressFailedException(override val message: String) : IllegalStateException()
+open class BaseException(override val message: String) : IllegalStateException() {
+    init {
+        DevUtil.d(Constant.TAG, message)
+    }
+}
 
-class MissCompressStrategyException():IllegalStateException("compress image must have a strategy ")
+class CompressFailedException(override val message: String) : BaseException(message)
+
+class MissCompressStrategyException : BaseException("compress image must have a strategy")
+
+class MissPermissionException :
+    BaseException("Miss permission group in Manifest.permission_group.STORAGE, you may request then before take or pick photos")
+
+class ActivityStatusException : BaseException("activity is destroyed")

@@ -1,16 +1,21 @@
 package com.qw.photo
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION_CODES.M
 import android.provider.MediaStore
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
-import android.util.Log
 import com.qw.photo.constant.Constant
+import com.qw.photo.exception.MissPermissionException
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -23,9 +28,6 @@ import java.io.IOException
  */
 object Utils {
 
-    /**
-     * 是否是约定好的requestCode
-     */
     internal fun isDefinedRequestCode(requestCode: Int): Boolean {
         val inner = Constant.REQUEST_CODE_IMAGE_CAPTURE or
                 Constant.REQUEST_CODE_IMAGE_PICK
@@ -48,14 +50,30 @@ object Utils {
             return false
         }
         if (activity.isFinishing) {
-            Log.d("qw", " activity is finishing :" + activity.javaClass.simpleName)
+            DevUtil.d(Constant.TAG, " activity is finishing :" + activity.javaClass.simpleName)
             return false
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && activity.isDestroyed) {
-            Log.d("qw", " activity is destroyed :" + activity.javaClass.simpleName)
+            DevUtil.d(Constant.TAG, " activity is destroyed :" + activity.javaClass.simpleName)
             return false
         }
         return true
+    }
+
+    @TargetApi(M)
+    internal fun checkNecessaryPermissions(activity: Activity?) {
+        if (!isActivityAvailable(activity)) {
+            return
+        }
+        val readStorageResult =
+            ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.READ_EXTERNAL_STORAGE)
+        val writeStorageResult =
+            ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        if (readStorageResult != PackageManager.PERMISSION_GRANTED
+            || writeStorageResult != PackageManager.PERMISSION_GRANTED
+        ) {
+            throw MissPermissionException()
+        }
     }
 
     @SuppressLint("Recycle")

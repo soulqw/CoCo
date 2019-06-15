@@ -1,7 +1,8 @@
 package com.qw.photo
 
-import android.app.Activity
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentActivity
+import com.qw.photo.exception.ActivityStatusException
 
 
 /**
@@ -12,26 +13,21 @@ import android.support.v4.app.Fragment
 object CoCo {
 
     @JvmStatic
-    fun with(activity: Activity): FunctionManager {
+    fun with(activity: FragmentActivity): FunctionManager {
         return FunctionManager(activity)
     }
 
     @JvmStatic
     fun with(fragment: Fragment): FunctionManager {
         val activity = fragment.activity
-        if (activity == null || activity.isFinishing) {
-            throw IllegalStateException("activity is destroyed ")
+        if (!Utils.isActivityAvailable(activity)) {
+            throw ActivityStatusException()
         }
-        return FunctionManager(activity)
+        return FunctionManager(activity!!)
     }
 
-    @Suppress("DEPRECATION")
     @JvmStatic
-    fun with(fragment: android.app.Fragment): FunctionManager {
-        val activity = fragment.activity
-        if (activity == null || activity.isFinishing) {
-            throw IllegalStateException("activity is destroyed ")
-        }
-        return FunctionManager(activity)
+    fun setDebug(isDebug: Boolean) {
+        DevUtil.isDebug = isDebug
     }
 }

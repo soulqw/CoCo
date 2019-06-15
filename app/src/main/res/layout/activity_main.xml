@@ -3,23 +3,25 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
+        tools:ignore="HardcodedText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
     <Button
             android:id="@+id/btn_capture"
             android:layout_width="match_parent"
-            android:text="拍照"
+            android:text="拍照(长按详细调试)"
             android:layout_height="wrap_content"/>
     <Button
             android:id="@+id/btn_pick"
             android:layout_width="match_parent"
-            android:text="选择"
+            android:text="选择(长按详细调试)"
             android:layout_height="wrap_content"/>
 
     <ImageView
             android:id="@+id/iv_image"
+            android:scaleType="fitCenter"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
 </LinearLayout>

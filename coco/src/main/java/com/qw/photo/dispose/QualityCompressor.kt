@@ -14,9 +14,14 @@ class QualityCompressor : ICompress {
 
     @Throws(Exception::class)
     override fun compress(path: String, degree: Int): Bitmap? {
+        val finalDegree: Int = when {
+            degree <= 0 -> 1
+            degree > 100 -> 100
+            else -> degree
+        }
         var bitmap = BitmapFactory.decodeFile(path)
         val baos = ByteArrayOutputStream()
-        val result = bitmap.compress(Bitmap.CompressFormat.JPEG, degree, baos)
+        val result = bitmap.compress(Bitmap.CompressFormat.JPEG, finalDegree, baos)
         if (!result) {
             throw CompressFailedException("Quality dispose failed")
         }

@@ -7,8 +7,8 @@ package com.qw.photo.callback
 interface GetImageCallBack<Result> {
 
     /**
-     * 当调用 applyWithDispose 才会回调
-     * 图片处理开始
+     * 当调用了 applyWithDispose 才会回调
+     *
      */
     fun onDisposeStart() {
     }
@@ -16,7 +16,7 @@ interface GetImageCallBack<Result> {
     /**
      * 整体操作成功
      */
-    fun  onSuccess(data: Result)
+    fun onSuccess(data: Result)
 
     /**
      * 失败

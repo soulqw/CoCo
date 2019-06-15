@@ -9,13 +9,15 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.support.v4.app.Fragment
 import android.text.TextUtils
-import android.util.Log
+import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.callback.CompressListener
 import com.qw.photo.callback.GetImageCallBack
-import com.qw.photo.constant.Action
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.ImageDisposer
+import com.qw.photo.dispose.WorkThread
+import com.qw.photo.exception.ActivityStatusException
+import com.qw.photo.exception.BaseException
 import com.qw.photo.pojo.BaseParams
 import com.qw.photo.pojo.BaseResultData
 import com.qw.photo.pojo.CaptureResult
@@ -28,29 +30,35 @@ import java.io.File
  */
 class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
 
-    private lateinit var mAction: Action
-
     private lateinit var mParam: BaseParams<Result>
+
+    private lateinit var mResult: Result
 
     private lateinit var mCallBack: GetImageCallBack<Result>
 
     private var targetFile: File? = null
 
-    override fun setActions(action: Action) {
-        this.mAction = action
-    }
-
     override fun setParams(params: BaseParams<Result>) {
         this.mParam = params
     }
 
+    override fun setResult(result: Result) {
+        this.mResult = result
+    }
+
     override fun start(callBack: GetImageCallBack<Result>) {
+        this.mCallBack = callBack
+        //check permission first
+        Utils.checkNecessaryPermissions(activity)
+        //check activity status
         if (!Utils.isActivityAvailable(activity)) {
+            mCallBack.onFailed(ActivityStatusException())
             return
         }
-        this.mCallBack = callBack
-        when (mAction) {
-            Action.CAPTURE -> takePhoto()
+        when (mResult) {
+            is CaptureResult -> {
+                takePhoto()
+            }
             else -> {
                 pickPhoto()
             }
@@ -62,8 +70,8 @@ class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
         retainInstance = true
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intentData)
         if (!Utils.isDefinedRequestCode(requestCode)) {
             return
         }
@@ -71,79 +79,49 @@ class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
             mCallBack.onCancel()
             return
         }
-        when (requestCode) {
-            Constant.REQUEST_CODE_IMAGE_CAPTURE -> {
-                val result = CaptureResult()
-                val params = mParam
+        when (mResult) {
+            is CaptureResult -> {
                 if (null != targetFile) {
+                    val params = mParam
+                    val result = mResult as CaptureResult
                     result.targetFile = targetFile
-                    val targetPath = result.targetFile!!.absolutePath
+                    val targetPath = mResult.targetFile!!.absolutePath
                     //判断当前状态是否需要处理
                     if (!TextUtils.isEmpty(targetPath) && null != params.disposer) {
-                        disposeImage(targetPath, mParam.file, mParam.disposer!!, result, mCallBack)
+                        disposeImage(targetPath, mParam.file, mParam.disposer!!, mResult, mCallBack)
                         return
                     }
+                    mCallBack.onSuccess(mResult)
                 }
-                mCallBack.onSuccess(result as Result)
             }
-            Constant.REQUEST_CODE_IMAGE_PICK -> {
-                val result = PickResult()
-                if (null != data) {
-                    result.uri = data.data
+            is PickResult -> {
+                if (null != intentData && null != intentData.data) {
                     val params = mParam
+                    val result = mResult as PickResult
+                    result.originUri = intentData.data!!
                     //判断当前状态是否需要处理
-                    if (null != data.data && Utils.isActivityAvailable(activity)) {
-                        val localPath = Utils.uriToImagePath(activity!!, data.data!!)
+                    if (null != intentData.data && Utils.isActivityAvailable(activity)) {
+                        val localPath = Utils.uriToImagePath(activity!!, intentData.data!!)
                         if (!TextUtils.isEmpty(localPath) && null != params.disposer) {
-                            disposeImage(localPath!!, mParam.file, mParam.disposer!!, result, mCallBack)
+                            disposeImage(localPath!!, mParam.file, mParam.disposer!!, mResult, mCallBack)
                             return
                         }
                     }
-                    mCallBack.onSuccess(result as Result)
+                    mCallBack.onSuccess(mResult)
                 } else {
-                    mCallBack.onFailed(NullPointerException("null result data"))
+                    mCallBack.onFailed(NullPointerException("null result intentData"))
                 }
             }
         }
     }
 
     /**
-     * 处理图片
-     * @param originPath 图片原始路径
-     * @param targetFile 图片处理之后的保存文件 可为空
-     * @param disposer 图片处理器
-     * @param baseResultData 处理完统一封装的实体类
-     * @param callBack 回调
+     * 拍照的最终方法
      */
-    private fun disposeImage(
-        originPath: String,
-        targetFile: File?,
-        disposer: ImageDisposer,
-        baseResultData: BaseResultData,
-        callBack: GetImageCallBack<Result>
-    ) {
-        disposer.dispose(originPath, targetFile, object : CompressListener {
-            override fun onStart(path: String) {
-                callBack.onDisposeStart()
-            }
-
-            override fun onFinish(compressed: Bitmap, savedFile: File?) {
-                baseResultData.compressBitmap = compressed
-                baseResultData.targetFile = savedFile
-                Log.d("qw", "onSuccess $baseResultData")
-                 callBack.onSuccess(baseResultData as Result)
-            }
-
-            override fun onError(e: Exception) {
-                callBack.onFailed(e)
-            }
-        })
-    }
-
     private fun takePhoto() {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         if (null === takePictureIntent.resolveActivity(activity!!.packageManager)) {
-            mCallBack.onFailed(IllegalStateException("activity status error"))
+            mCallBack.onFailed(BaseException("activity status error"))
             return
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -159,7 +137,7 @@ class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
                     Utils.createUriFromFile((this.activity) as Context, params.file!!)
                 )
             } catch (e: Exception) {
-                Log.e("qw", e.toString())
+                DevUtil.e(Constant.TAG, e.toString())
             }
         }
         try {
@@ -169,12 +147,13 @@ class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
         }
     }
 
+    /**
+     * 选择照片的最终方法
+     */
     private fun pickPhoto() {
-//        val pickIntent = Intent(Intent.ACTION_GET_CONTENT)
-//        pickIntent.type = "image/*"
         val pickIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         if (null === pickIntent.resolveActivity(activity!!.packageManager)) {
-            mCallBack.onFailed(IllegalStateException("activity status error"))
+            mCallBack.onFailed(BaseException("activity status error"))
             return
         }
         try {
@@ -182,5 +161,44 @@ class SupportFragment<Result : BaseResultData> : Fragment(), IWorker<Result> {
         } catch (e: Exception) {
             mCallBack.onFailed(e)
         }
+    }
+
+    /**
+     * 处理图片
+     * @param originPath 图片原始路径
+     * @param targetFile 图片处理之后的保存文件 可为空
+     * @param disposer 图片处理器
+     * @param result 结果
+     * @param callBack 回调
+     */
+    private fun disposeImage(
+        originPath: String,
+        targetFile: File?,
+        disposer: ImageDisposer,
+        result: Result,
+        callBack: GetImageCallBack<Result>
+    ) {
+        disposer.dispose(originPath, targetFile, object : CompressListener {
+            override fun onStart(path: String) {
+                callBack.onDisposeStart()
+            }
+
+            override fun onFinish(compressed: Bitmap, savedFile: File?) {
+                when (result) {
+                    is CaptureResult,
+                    is PickResult -> {
+                        result.compressBitmap = compressed
+                        result.targetFile = savedFile
+                        DevUtil.d(Constant.TAG, "onSuccess $result")
+                        callBack.onSuccess(result)
+                        WorkThread.release()
+                    }
+                }
+            }
+
+            override fun onError(e: Exception) {
+                callBack.onFailed(e)
+            }
+        })
     }
 }
