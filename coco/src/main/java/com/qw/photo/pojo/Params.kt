@@ -28,6 +28,7 @@ open class BaseParams<Result>(private val worker: IWorker<Result>) {
     /**
      * 应用参数为后续操作做准备，并且可自定义压缩策略
      */
+    @JvmOverloads
     fun applyWithDispose(compressor: ImageDisposer = ImageDisposer.getDefault()): Executor<Result> {
         this.disposer = compressor
         return apply()

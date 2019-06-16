@@ -2,13 +2,13 @@
           package="com.qw.photo">
     <application>
         <provider
-                android:name="android.support.v4.content.FileProvider"
+                android:name=".CoCoFileProvider"
                 android:authorities="${applicationId}.coco.provider"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
                     android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/provider_path"/>
+                    android:resource="@xml/coco_provider_path"/>
         </provider>
     </application>
 </manifest>

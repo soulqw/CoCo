@@ -1,29 +1,27 @@
 package com.qw.photo
 
+import android.app.Activity
 import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
 import com.qw.photo.exception.ActivityStatusException
 
 
 /**
- *
  * @author cd5160866
  */
 
 object CoCo {
 
     @JvmStatic
-    fun with(activity: FragmentActivity): FunctionManager {
+    fun with(activity: Activity): FunctionManager {
         return FunctionManager(activity)
     }
 
     @JvmStatic
     fun with(fragment: Fragment): FunctionManager {
-        val activity = fragment.activity
-        if (!Utils.isActivityAvailable(activity)) {
+        if (!Utils.isActivityAvailable(fragment.activity)) {
             throw ActivityStatusException()
         }
-        return FunctionManager(activity!!)
+        return FunctionManager(fragment.activity!!)
     }
 
     @JvmStatic

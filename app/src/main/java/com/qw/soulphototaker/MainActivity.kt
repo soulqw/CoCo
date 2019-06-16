@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.Toast
 import com.qw.photo.CoCo
 import com.qw.photo.Utils
@@ -75,13 +74,10 @@ class MainActivity : AppCompatActivity() {
 
                     })
             }
-            setOnLongClickListener(
-                object : View.OnLongClickListener {
-                    override fun onLongClick(v: View?): Boolean {
-                        startActivity(Intent(this@MainActivity, TakePictureActivity::class.java))
-                        return true
-                    }
-                })
+            setOnLongClickListener {
+                startActivity(Intent(this@MainActivity, TakePictureActivity::class.java))
+                true
+            }
         }
         btn_pick.apply {
             setOnClickListener {
@@ -119,12 +115,10 @@ class MainActivity : AppCompatActivity() {
 
                     })
             }
-            setOnLongClickListener(object : View.OnLongClickListener {
-                override fun onLongClick(v: View?): Boolean {
-                    startActivity(Intent(this@MainActivity, PickPictureActivity::class.java))
-                    return true
-                }
-            })
+            setOnLongClickListener {
+                startActivity(Intent(this@MainActivity, PickPictureActivity::class.java))
+                true
+            }
         }
     }
 
