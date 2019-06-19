@@ -56,6 +56,8 @@ internal class AcceptActivityResultHandlerFactory {
             fm.beginTransaction()
                 .add(fragment, TAG)
                 .commitAllowingStateLoss()
+            // makes it like commitNow
+            fm.executePendingTransactions()
             return fragment
         }
     }

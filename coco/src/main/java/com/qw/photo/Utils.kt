@@ -14,8 +14,13 @@ import android.os.Build.VERSION_CODES.M
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
+import com.qw.photo.callback.CompressListener
+import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
+import com.qw.photo.dispose.ImageDisposer
+import com.qw.photo.dispose.WorkThread
 import com.qw.photo.exception.MissPermissionException
+import com.qw.photo.pojo.BaseResult
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -27,12 +32,6 @@ import java.io.IOException
  * @author cd5160866
  */
 object Utils {
-
-    internal fun isDefinedRequestCode(requestCode: Int): Boolean {
-        val inner = Constant.REQUEST_CODE_IMAGE_CAPTURE or
-                Constant.REQUEST_CODE_IMAGE_PICK
-        return (inner and requestCode) != 0
-    }
 
     internal fun createUriFromFile(context: Context, file: File): Uri? {
         if (!file.exists()) {
@@ -128,6 +127,40 @@ object Utils {
             }
         }
         return true
+    }
+
+    /**
+     * 处理图片
+     * @param originPath 图片原始路径
+     * @param targetFile 图片处理之后的保存文件 可为空
+     * @param disposer 图片处理器
+     * @param result 结果
+     * @param callBack 回调
+     */
+    fun <Result : BaseResult> disposeImage(
+        originPath: String,
+        targetFile: File?,
+        disposer: ImageDisposer,
+        result: Result,
+        callBack: GetImageCallBack<Result>
+    ) {
+        disposer.dispose(originPath, targetFile, object : CompressListener {
+            override fun onStart(path: String) {
+                callBack.onDisposeStart()
+            }
+
+            override fun onFinish(compressed: Bitmap, savedFile: File?) {
+                result.compressBitmap = compressed
+                result.targetFile = savedFile
+                DevUtil.d(Constant.TAG, "onSuccess $result")
+                callBack.onSuccess(result)
+                WorkThread.release()
+            }
+
+            override fun onError(e: Exception) {
+                callBack.onFailed(e)
+            }
+        })
     }
 
     private fun bitmapToBytes(bm: Bitmap): ByteArray {

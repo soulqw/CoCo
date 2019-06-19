@@ -1,9 +1,8 @@
-package com.qw.photo
+package com.qw.photo.work
 
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.pojo.BaseParams
 import com.qw.photo.pojo.BaseResult
-import com.qw.photo.work.IWorker
 
 
 /**

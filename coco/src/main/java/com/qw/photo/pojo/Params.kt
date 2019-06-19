@@ -1,7 +1,7 @@
 package com.qw.photo.pojo
 
 import com.qw.photo.DevUtil
-import com.qw.photo.Executor
+import com.qw.photo.work.Executor
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.ImageDisposer
 import com.qw.photo.work.IWorker
@@ -11,7 +11,7 @@ import java.io.File
 /**
  * @author cd5160866
  */
-open class BaseParams(internal val worker: IWorker<*,*>) {
+open class BaseParams(internal val worker: IWorker<*, *>) {
 
     internal var disposer: ImageDisposer? = null
 

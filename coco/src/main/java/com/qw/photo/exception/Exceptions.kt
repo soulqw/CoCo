@@ -19,4 +19,4 @@ class MissCompressStrategyException : BaseException("compress image must have a 
 class MissPermissionException :
     BaseException("Miss permission group in Manifest.permission_group.STORAGE, you may request then before take or pick photos")
 
-class ActivityStatusException : BaseException("activity is destroyed")
+class ActivityStatusException : BaseException("activity is destroyed or in a error status check your current activity status before use coco")

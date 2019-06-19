@@ -13,13 +13,9 @@ import com.qw.photo.agent.IAcceptActivityResultHandler
 import com.qw.photo.callback.CompressListener
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
-import com.qw.photo.dispose.ImageDisposer
-import com.qw.photo.dispose.WorkThread
-import com.qw.photo.exception.ActivityStatusException
 import com.qw.photo.exception.BaseException
 import com.qw.photo.pojo.TakeParams
 import com.qw.photo.pojo.TakeResult
-import java.io.File
 
 /**
  * Created by rocket on 2019/6/18.
@@ -29,19 +25,7 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<TakePa
     override fun start(callBack: GetImageCallBack<TakeResult>) {
         val activity = mHandler.provideActivity()
         activity ?: return
-        if (!checkStatus(activity, callBack)) return
         takePhoto(activity, callBack)
-    }
-
-    private fun checkStatus(activity: Activity, callBack: GetImageCallBack<TakeResult>): Boolean {
-        //check permission first
-        Utils.checkNecessaryPermissions(activity)
-        //check activity status
-        if (!Utils.isActivityAvailable(activity)) {
-            callBack.onFailed(ActivityStatusException())
-            return false
-        }
-        return true
     }
 
     private fun takePhoto(activity: Activity, callBack: GetImageCallBack<TakeResult>) {
@@ -68,8 +52,8 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<TakePa
             mHandler.startActivityResult(
                 takePictureIntent,
                 Constant.REQUEST_CODE_IMAGE_CAPTURE
-            ) { requestCode: Int, resultCode: Int, data: Intent? ->
-                handleResult(requestCode, resultCode, data, callBack)
+            ) { _: Int, resultCode: Int, _: Intent? ->
+                handleResult(resultCode, callBack)
             }
         } catch (e: Exception) {
             callBack.onFailed(e)
@@ -77,14 +61,9 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<TakePa
     }
 
     private fun handleResult(
-        requestCode: Int,
         resultCode: Int,
-        data: Intent?,
         callBack: GetImageCallBack<TakeResult>
     ) {
-        if (!Utils.isDefinedRequestCode(requestCode)) {
-            return
-        }
         if (resultCode == Activity.RESULT_CANCELED) {
             callBack.onCancel()
             return
@@ -95,44 +74,10 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<TakePa
             val targetPath = result.targetFile!!.absolutePath
             //判断当前状态是否需要处理
             if (!TextUtils.isEmpty(targetPath) && null != mParams.disposer) {
-                disposeImage(targetPath, mParams.file, mParams.disposer!!, result, callBack)
+                Utils.disposeImage(targetPath, mParams.file, mParams.disposer!!, result, callBack)
                 return
             }
             callBack.onSuccess(result)
         }
-    }
-
-    /**
-     * 处理图片
-     * @param originPath 图片原始路径
-     * @param targetFile 图片处理之后的保存文件 可为空
-     * @param disposer 图片处理器
-     * @param result 结果
-     * @param callBack 回调
-     */
-    private fun disposeImage(
-        originPath: String,
-        targetFile: File?,
-        disposer: ImageDisposer,
-        result: TakeResult,
-        callBack: GetImageCallBack<TakeResult>
-    ) {
-        disposer.dispose(originPath, targetFile, object : CompressListener {
-            override fun onStart(path: String) {
-                callBack.onDisposeStart()
-            }
-
-            override fun onFinish(compressed: Bitmap, savedFile: File?) {
-                result.compressBitmap = compressed
-                result.targetFile = savedFile
-                DevUtil.d(Constant.TAG, "onSuccess $result")
-                callBack.onSuccess(result)
-                WorkThread.release()
-            }
-
-            override fun onError(e: Exception) {
-                callBack.onFailed(e)
-            }
-        })
     }
 }

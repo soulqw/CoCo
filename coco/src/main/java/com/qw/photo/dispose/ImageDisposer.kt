@@ -18,7 +18,7 @@ import java.io.File
 
 /**
  * 图片处理者，主要是压缩处理
- *
+ *附带纠正图图片旋转角度等
  * @author cd5160866
  */
 class ImageDisposer {
@@ -94,14 +94,13 @@ class ImageDisposer {
     }
 
     @Throws(Exception::class)
-    private fun correctRotate(imagePath: String, bitmap: Bitmap): Bitmap? {
-        var bitmap = bitmap
+    private fun correctRotate(imagePath: String, bitmapOrigin: Bitmap): Bitmap? {
+        var bitmap = bitmapOrigin
         val exif = ExifInterface(imagePath)
-        val ori = exif.getAttributeInt(
+        val degree = when (exif.getAttributeInt(
             ExifInterface.TAG_ORIENTATION,
             ExifInterface.ORIENTATION_UNDEFINED
-        )
-        val degree = when (ori) {
+        )) {
             ExifInterface.ORIENTATION_ROTATE_90 -> 90
             ExifInterface.ORIENTATION_ROTATE_180 -> 180
             ExifInterface.ORIENTATION_ROTATE_270 -> 270

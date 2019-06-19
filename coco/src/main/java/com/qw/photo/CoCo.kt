@@ -14,29 +14,31 @@ object CoCo {
 
     @JvmStatic
     fun with(activity: Activity): WorkManager {
-        checkActivityStatus(activity)
+        checkStatusFirst(activity)
         return WorkManager.create(activity)
     }
 
     @JvmStatic
     fun with(fragment: android.support.v4.app.Fragment): WorkManager {
-        checkActivityStatus(fragment.activity)
+        checkStatusFirst(fragment.activity)
         return WorkManager.create(fragment)
     }
 
     @JvmStatic
     fun with(fragment: Fragment): WorkManager {
-        checkActivityStatus(fragment.activity)
+        checkStatusFirst(fragment.activity)
         return WorkManager.create(fragment)
-    }
-
-    private fun checkActivityStatus(activity: Activity?) {
-        if (activity == null || !Utils.isActivityAvailable(activity))
-            throw ActivityStatusException()
     }
 
     @JvmStatic
     fun setDebug(isDebug: Boolean) {
         DevUtil.isDebug = isDebug
+    }
+
+    private fun checkStatusFirst(activity: Activity?) {
+        Utils.checkNecessaryPermissions(activity)
+        if (!Utils.isActivityAvailable(activity)) {
+            throw ActivityStatusException()
+        }
     }
 }

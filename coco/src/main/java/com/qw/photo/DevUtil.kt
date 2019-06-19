@@ -5,7 +5,7 @@ import android.util.Log
 /**
  * @author cd5160866
  */
-object DevUtil {
+internal object DevUtil {
 
     var isDebug = false
 
