@@ -11,7 +11,7 @@ import android.widget.Toast
 import com.qw.photo.CoCo
 import com.qw.photo.Utils
 import com.qw.photo.callback.GetImageCallBack
-import com.qw.photo.pojo.CaptureResult
+import com.qw.photo.pojo.TakeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 CoCo.with(this@MainActivity)
                     .take(createSDCardFile())
                     .applyWithDispose()
-                    .start(object : GetImageCallBack<CaptureResult> {
+                    .start(object : GetImageCallBack<TakeResult> {
 
                         override fun onDisposeStart() {
                             Toast.makeText(this@MainActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT).show()
@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
                             Toast.makeText(this@MainActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
                         }
 
-                        override fun onSuccess(data: CaptureResult) {
+                        override fun onSuccess(data: TakeResult) {
                             Toast.makeText(this@MainActivity, "拍照操作最终成功", Toast.LENGTH_SHORT).show()
                             iv_image.setImageBitmap(data.compressBitmap)
                         }

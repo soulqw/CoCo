@@ -12,7 +12,7 @@ import java.io.File
 /**
  * 通用的结果
  */
-open class BaseResultData {
+open class BaseResult {
     /**
      * 完成后写成的文件
      */
@@ -27,12 +27,12 @@ open class BaseResultData {
 /**
  * 拍照的结果
  */
-class CaptureResult : BaseResultData()
+class TakeResult : BaseResult()
 
 /**
  * 选择的结果
  */
-class PickResult : BaseResultData() {
+class PickResult : BaseResult() {
     /**
      * 选择图片的uri
      */

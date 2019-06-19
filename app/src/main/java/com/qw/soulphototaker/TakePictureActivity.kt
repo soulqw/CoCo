@@ -7,7 +7,7 @@ import com.qw.photo.CoCo
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
 import com.qw.photo.dispose.ImageDisposer
-import com.qw.photo.pojo.CaptureResult
+import com.qw.photo.pojo.TakeResult
 import kotlinx.android.synthetic.main.activity_funtion_detail.*
 
 
@@ -21,8 +21,8 @@ class TakePictureActivity : BaseFunctionActivity() {
             CoCo.with(this)
                 .take(createSDCardFile())
                 .apply()
-                .start(object : GetImageCallBack<CaptureResult> {
-                    override fun onSuccess(data: CaptureResult) {
+                .start(object : GetImageCallBack<TakeResult> {
+                    override fun onSuccess(data: TakeResult) {
                         val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
                         getImageView().setImageBitmap(bitmap)
                         tv_result.text = getImageSizeDesc(bitmap)
@@ -45,7 +45,7 @@ class TakePictureActivity : BaseFunctionActivity() {
                     ImageDisposer().degree(degree)
                         .strategy(strategy)
                 )
-                .start(object : GetImageCallBack<CaptureResult> {
+                .start(object : GetImageCallBack<TakeResult> {
 
                     override fun onDisposeStart() {
                         Toast.makeText(this@TakePictureActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT).show()
@@ -59,7 +59,7 @@ class TakePictureActivity : BaseFunctionActivity() {
                         Toast.makeText(this@TakePictureActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
                     }
 
-                    override fun onSuccess(data: CaptureResult) {
+                    override fun onSuccess(data: TakeResult) {
                         Toast.makeText(this@TakePictureActivity, "拍照操作最终成功", Toast.LENGTH_SHORT).show()
                         getImageView().setImageBitmap(data.compressBitmap)
                         tv_result.text = getImageSizeDesc(data.compressBitmap!!)

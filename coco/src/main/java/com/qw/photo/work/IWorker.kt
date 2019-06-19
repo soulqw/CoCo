@@ -1,28 +1,21 @@
-package com.qw.photo.fragment
+package com.qw.photo.work
 
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.pojo.BaseParams
-
+import com.qw.photo.pojo.BaseResult
 
 /**
- *
- * @author cd5160866
+ * Created by rocket on 2019/6/18.
  */
-interface IWorker<Result> {
+interface IWorker<Params : BaseParams, Result : BaseResult> {
 
     /**
      * 设置参数
      */
-    fun setParams(params: BaseParams<Result>)
-
-    /**
-     * 最终结果类型
-     */
-    fun setResult(result: Result)
+    fun setParams(params: Params)
 
     /**
      * 开始
      */
     fun start(callBack: GetImageCallBack<Result>)
-
 }
