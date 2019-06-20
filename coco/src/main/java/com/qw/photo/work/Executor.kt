@@ -9,10 +9,10 @@ import com.qw.photo.pojo.BaseResult
  *
  * @author cd5160866
  */
-class Executor(private val params: BaseParams) {
+class Executor<Result : BaseResult>(private val params: BaseParams<Result>) {
 
-    fun <Result : BaseResult> start(callBack: GetImageCallBack<Result>) {
-        (params.worker as IWorker<BaseParams, Result>).apply {
+    fun start(callBack: GetImageCallBack<Result>) {
+        (params.worker as IWorker<BaseParams<Result>, Result>).apply {
             this.setParams(params)
             this.start(callBack)
         }

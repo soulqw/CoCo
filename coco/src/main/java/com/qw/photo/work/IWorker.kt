@@ -7,7 +7,7 @@ import com.qw.photo.pojo.BaseResult
 /**
  * Created by rocket on 2019/6/18.
  */
-interface IWorker<Params : BaseParams, Result : BaseResult> {
+interface IWorker<Params : BaseParams<Result>, Result : BaseResult> {
 
     /**
      * 设置参数
