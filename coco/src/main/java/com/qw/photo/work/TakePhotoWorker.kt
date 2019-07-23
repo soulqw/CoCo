@@ -3,14 +3,13 @@ package com.qw.photo.work
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
+import android.hardware.Camera
 import android.os.Build
 import android.provider.MediaStore
 import android.text.TextUtils
 import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.agent.IAcceptActivityResultHandler
-import com.qw.photo.callback.CompressListener
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.exception.BaseException
@@ -20,7 +19,8 @@ import com.qw.photo.pojo.TakeResult
 /**
  * Created by rocket on 2019/6/18.
  */
-class TakePhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<TakeParams, TakeResult>(handler) {
+class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
+    BaseWorker<TakeParams, TakeResult>(handler) {
 
     override fun start(callBack: GetImageCallBack<TakeResult>) {
         val activity = mHandler.provideActivity()
@@ -30,6 +30,7 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<TakePa
 
     private fun takePhoto(activity: Activity, callBack: GetImageCallBack<TakeResult>) {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        setCameraFace(takePictureIntent)
         if (null === takePictureIntent.resolveActivity(activity.packageManager)) {
             callBack.onFailed(BaseException("activity status error"))
             return
@@ -58,6 +59,14 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<TakePa
         } catch (e: Exception) {
             callBack.onFailed(e)
         }
+    }
+
+    private fun setCameraFace(intent: Intent) {
+        var face = Camera.CameraInfo.CAMERA_FACING_BACK
+        when (mParams.cameraFace) {
+            TakeParams.FRONT -> face =Camera.CameraInfo.CAMERA_FACING_FRONT
+        }
+        intent.putExtra("android.intent.extras.CAMERA_FACING", face)
     }
 
     private fun handleResult(

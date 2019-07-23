@@ -7,6 +7,7 @@ import com.qw.photo.CoCo
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
 import com.qw.photo.dispose.ImageDisposer
+import com.qw.photo.pojo.TakeParams
 import com.qw.photo.pojo.TakeResult
 import kotlinx.android.synthetic.main.activity_funtion_detail.*
 
@@ -39,8 +40,13 @@ class TakePictureActivity : BaseFunctionActivity() {
             } else {
                 CompressStrategy.QUALITY
             }
+            var cameraFace = TakeParams.BACK
+            if (tb_camera_face.isChecked) {
+                cameraFace = TakeParams.FRONT
+            }
             CoCo.with(this@TakePictureActivity)
                 .take(createSDCardFile())
+                .cameraFace(cameraFace)
                 .applyWithDispose(
                     ImageDisposer().degree(degree)
                         .strategy(strategy)

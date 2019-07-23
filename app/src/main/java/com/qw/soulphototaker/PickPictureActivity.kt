@@ -2,6 +2,8 @@ package com.qw.soulphototaker
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import com.qw.photo.CoCo
 import com.qw.photo.Utils
@@ -16,6 +18,11 @@ import kotlinx.android.synthetic.main.activity_funtion_detail.*
  * @author cd5160866
  */
 class PickPictureActivity : BaseFunctionActivity() {
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        tb_camera_face.visibility =View.GONE
+    }
 
     override fun start(isMatrix: Boolean, degree: Int) {
         if (degree == -1) {
