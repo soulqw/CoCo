@@ -28,12 +28,12 @@ class WorkManager(private val handler: IAcceptActivityResultHandler) {
 
     companion object {
         internal fun create(activity: Activity) =
-            WorkManager(AcceptActivityResultHandlerFactory.create(activity))
+                WorkManager(AcceptActivityResultHandlerFactory.create(activity))
 
         internal fun create(fragment: android.support.v4.app.Fragment) =
-            WorkManager(AcceptActivityResultHandlerFactory.create(fragment))
+                WorkManager(AcceptActivityResultHandlerFactory.create(fragment))
 
         internal fun create(fragment: Fragment) =
-            WorkManager(AcceptActivityResultHandlerFactory.create(fragment))
+                WorkManager(AcceptActivityResultHandlerFactory.create(fragment))
     }
 }

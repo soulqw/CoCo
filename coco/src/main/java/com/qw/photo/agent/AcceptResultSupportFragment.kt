@@ -10,15 +10,13 @@ import com.qw.photo.constant.Constant
 /**
  * Created by rocket on 2019/6/18.
  */
-class AcceptResultFragmentV4 : Fragment(), IAcceptActivityResultHandler {
+class AcceptResultSupportFragment : Fragment(), IAcceptActivityResultHandler {
 
     private var requestCode: Int = 0
     private var callback: ((requestCode: Int, resultCode: Int, data: Intent?) -> Unit)? = null
 
-    override fun startActivityResult(
-        intent: Intent,
-        requestCode: Int,
-        callback: (requestCode: Int, resultCode: Int, data: Intent?) -> Unit
+    override fun startActivityResult(intent: Intent, requestCode: Int,
+                                     callback: (requestCode: Int, resultCode: Int, data: Intent?) -> Unit
     ) {
         this.requestCode = requestCode
         this.callback = callback

@@ -17,7 +17,7 @@ internal class AcceptActivityResultHandlerFactory {
         fun create(activity: Activity): IAcceptActivityResultHandler {
             return if (activity is FragmentActivity) {
                 activity.supportFragmentManager.run {
-                    val resultFragment = findFragmentByTag(TAG) as? AcceptResultFragmentV4?
+                    val resultFragment = findFragmentByTag(TAG) as? AcceptResultSupportFragment?
                     resultFragment ?: getAcceptResultFragmentV4(this)
                 }
             } else {
@@ -29,7 +29,7 @@ internal class AcceptActivityResultHandlerFactory {
         }
 
         fun create(fragment: android.support.v4.app.Fragment): IAcceptActivityResultHandler {
-            val resultFragment = fragment.childFragmentManager.findFragmentByTag(TAG) as? AcceptResultFragmentV4?
+            val resultFragment = fragment.childFragmentManager.findFragmentByTag(TAG) as? AcceptResultSupportFragment?
             return resultFragment ?: getAcceptResultFragmentV4(fragment.childFragmentManager)
         }
 
@@ -43,19 +43,19 @@ internal class AcceptActivityResultHandlerFactory {
             return resultFragment ?: getAcceptResultFragment(fm)
         }
 
-        private fun getAcceptResultFragmentV4(fm: FragmentManager): AcceptResultFragmentV4 {
-            val fragment = AcceptResultFragmentV4()
+        private fun getAcceptResultFragmentV4(fm: FragmentManager): AcceptResultSupportFragment {
+            val fragment = AcceptResultSupportFragment()
             fm.beginTransaction()
-                .add(fragment, TAG)
-                .commitNowAllowingStateLoss()
+                    .add(fragment, TAG)
+                    .commitNowAllowingStateLoss()
             return fragment
         }
 
         private fun getAcceptResultFragment(fm: android.app.FragmentManager): AcceptResultFragment {
             val fragment = AcceptResultFragment()
             fm.beginTransaction()
-                .add(fragment, TAG)
-                .commitAllowingStateLoss()
+                    .add(fragment, TAG)
+                    .commitAllowingStateLoss()
             // makes it like commitNow
             fm.executePendingTransactions()
             return fragment

@@ -65,11 +65,11 @@ object Utils {
             return
         }
         val readStorageResult =
-            ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.READ_EXTERNAL_STORAGE)
+                ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.READ_EXTERNAL_STORAGE)
         val writeStorageResult =
-            ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (readStorageResult != PackageManager.PERMISSION_GRANTED
-            || writeStorageResult != PackageManager.PERMISSION_GRANTED
+                || writeStorageResult != PackageManager.PERMISSION_GRANTED
         ) {
             throw MissPermissionException()
         }
@@ -137,14 +137,12 @@ object Utils {
      * @param result 结果
      * @param callBack 回调
      */
-    fun <Result : BaseResult> disposeImage(
-        originPath: String,
-        targetFile: File?,
-        disposer: ImageDisposer,
-        result: Result,
-        callBack: GetImageCallBack<Result>
+    fun <Result : BaseResult> disposeImage(activity: Activity, originPath: String, targetFile: File?,
+                                           disposer: ImageDisposer,
+                                           result: Result,
+                                           callBack: GetImageCallBack<Result>
     ) {
-        disposer.dispose(originPath, targetFile, object : CompressListener {
+        disposer.dispose(activity, originPath, targetFile, object : CompressListener {
             override fun onStart(path: String) {
                 callBack.onDisposeStart()
             }

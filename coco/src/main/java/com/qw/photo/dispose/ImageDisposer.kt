@@ -1,5 +1,6 @@
 package com.qw.photo.dispose
 
+import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
@@ -27,8 +28,8 @@ class ImageDisposer {
 
         fun getDefault(): ImageDisposer {
             return ImageDisposer()
-                .strategy(CompressStrategy.MATRIX)
-                .degree(50)
+                    .strategy(CompressStrategy.MATRIX)
+                    .degree(50)
         }
     }
 
@@ -48,7 +49,8 @@ class ImageDisposer {
         return this
     }
 
-    fun dispose(originPath: String, targetSaveFile: File?, listener: CompressListener) {
+    internal fun dispose(activity: Activity, originPath: String, targetSaveFile: File?, listener: CompressListener
+    ) {
         if (null == strategy) {
             listener.onError(MissCompressStrategyException())
             return
@@ -59,12 +61,21 @@ class ImageDisposer {
             try {
                 DevUtil.d(Constant.TAG, "start compress")
                 bitmap = CompressFactory
-                    .create(strategy!!)
-                    .compress(originPath, degree)
+                        .create(strategy!!)
+                        .compress(originPath, degree)
                 //rotate if needed
                 DevUtil.d(Constant.TAG, "start Rotate")
+                if (!checkContainerStatus(activity, "compress")) {
+                    return@Runnable
+                }
                 bitmap = correctRotate(originPath, bitmap!!)
+                if (!checkContainerStatus(activity, "Rotate")) {
+                    return@Runnable
+                }
             } catch (e: Exception) {
+                if (!checkContainerStatus(activity, "error on compress or Rotate")) {
+                    return@Runnable
+                }
                 DevUtil.d(Constant.TAG, "error on compress or Rotate $e")
                 listener.onError(e)
                 return@Runnable
@@ -80,6 +91,9 @@ class ImageDisposer {
             if (null != targetSaveFile) {
                 DevUtil.d(Constant.TAG, "start save bitmap to file")
                 val saveResult = Utils.bitmapToFile(targetSaveFile, bitmap!!)
+                if (!checkContainerStatus(activity, "save to file")) {
+                    return@Runnable
+                }
                 if (!saveResult) {
                     listener.onError(CompressFailedException("save bitmap as file failed"))
                     return@Runnable
@@ -88,9 +102,20 @@ class ImageDisposer {
             //post result
             Handler(Looper.getMainLooper()).post {
                 DevUtil.d(Constant.TAG, "all dispose ok")
+                if (!checkContainerStatus(activity, "all dispose ok")) {
+                    return@post
+                }
                 listener.onFinish(bitmap!!, targetSaveFile)
             }
         })
+    }
+
+    private fun checkContainerStatus(activity: Activity, tag: String): Boolean {
+        if (!Utils.isActivityAvailable(activity)) {
+            DevUtil.d(Constant.TAG, "activity is disabled after $tag")
+            return false
+        }
+        return true
     }
 
     @Throws(Exception::class)
@@ -98,8 +123,8 @@ class ImageDisposer {
         var bitmap = bitmapOrigin
         val exif = ExifInterface(imagePath)
         val degree = when (exif.getAttributeInt(
-            ExifInterface.TAG_ORIENTATION,
-            ExifInterface.ORIENTATION_UNDEFINED
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_UNDEFINED
         )) {
             ExifInterface.ORIENTATION_ROTATE_90 -> 90
             ExifInterface.ORIENTATION_ROTATE_180 -> 180
@@ -110,8 +135,8 @@ class ImageDisposer {
             val m = Matrix()
             m.postRotate(degree.toFloat())
             bitmap = Bitmap.createBitmap(
-                bitmap, 0, 0, bitmap.width,
-                bitmap.height, m, true
+                    bitmap, 0, 0, bitmap.width,
+                    bitmap.height, m, true
             )
         }
         return bitmap

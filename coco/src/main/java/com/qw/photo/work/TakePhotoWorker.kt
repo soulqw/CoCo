@@ -20,7 +20,7 @@ import com.qw.photo.pojo.TakeResult
  * Created by rocket on 2019/6/18.
  */
 class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
-    BaseWorker<TakeParams, TakeResult>(handler) {
+        BaseWorker<TakeParams, TakeResult>(handler) {
 
     override fun start(callBack: GetImageCallBack<TakeResult>) {
         val activity = mHandler.provideActivity()
@@ -41,20 +41,15 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
         //用户指定了目标文件路径
         if (null != mParams.file) {
             try {
-                takePictureIntent.putExtra(
-                    MediaStore.EXTRA_OUTPUT,
-                    Utils.createUriFromFile((activity) as Context, mParams.file!!)
-                )
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Utils.createUriFromFile((activity) as Context, mParams.file!!))
             } catch (e: Exception) {
                 DevUtil.e(Constant.TAG, e.toString())
             }
         }
         try {
-            mHandler.startActivityResult(
-                takePictureIntent,
-                Constant.REQUEST_CODE_IMAGE_CAPTURE
+            mHandler.startActivityResult(takePictureIntent, Constant.REQUEST_CODE_IMAGE_CAPTURE
             ) { _: Int, resultCode: Int, _: Intent? ->
-                handleResult(resultCode, callBack)
+                handleResult(activity, resultCode, callBack)
             }
         } catch (e: Exception) {
             callBack.onFailed(e)
@@ -64,14 +59,12 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
     private fun setCameraFace(intent: Intent) {
         var face = Camera.CameraInfo.CAMERA_FACING_BACK
         when (mParams.cameraFace) {
-            TakeParams.FRONT -> face =Camera.CameraInfo.CAMERA_FACING_FRONT
+            TakeParams.FRONT -> face = Camera.CameraInfo.CAMERA_FACING_FRONT
         }
         intent.putExtra("android.intent.extras.CAMERA_FACING", face)
     }
 
-    private fun handleResult(
-        resultCode: Int,
-        callBack: GetImageCallBack<TakeResult>
+    private fun handleResult(activity: Activity, resultCode: Int, callBack: GetImageCallBack<TakeResult>
     ) {
         if (resultCode == Activity.RESULT_CANCELED) {
             callBack.onCancel()
@@ -83,7 +76,7 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
             val targetPath = result.targetFile!!.absolutePath
             //判断当前状态是否需要处理
             if (!TextUtils.isEmpty(targetPath) && null != mParams.disposer) {
-                Utils.disposeImage(targetPath, mParams.file, mParams.disposer!!, result, callBack)
+                Utils.disposeImage(activity, targetPath, mParams.file, mParams.disposer!!, result, callBack)
                 return
             }
             callBack.onSuccess(result)

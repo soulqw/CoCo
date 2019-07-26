@@ -10,9 +10,7 @@ interface IAcceptActivityResultHandler {
 
     fun provideActivity(): Activity?
 
-    fun startActivityResult(
-        intent: Intent,
-        requestCode: Int,
-        callback: (requestCode: Int, resultCode: Int, data: Intent?) -> Unit
+    fun startActivityResult(intent: Intent, requestCode: Int,
+                            callback: (requestCode: Int, resultCode: Int, data: Intent?) -> Unit
     )
 }
