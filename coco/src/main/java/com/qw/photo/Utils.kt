@@ -11,6 +11,8 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.M
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
@@ -156,9 +158,19 @@ object Utils {
             }
 
             override fun onError(e: Exception) {
-                callBack.onFailed(e)
+                if (isOnMainThread()) {
+                    callBack.onFailed(e)
+                    return
+                }
+                Handler(Looper.getMainLooper()).post {
+                    callBack.onFailed(e)
+                }
             }
         })
+    }
+
+    private fun isOnMainThread(): Boolean {
+        return Looper.myLooper() == Looper.getMainLooper()
     }
 
     private fun bitmapToBytes(bm: Bitmap): ByteArray {

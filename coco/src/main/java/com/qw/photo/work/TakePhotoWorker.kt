@@ -57,15 +57,14 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
     }
 
     private fun setCameraFace(intent: Intent) {
-        var face = Camera.CameraInfo.CAMERA_FACING_BACK
         when (mParams.cameraFace) {
-            TakeParams.FRONT -> face = Camera.CameraInfo.CAMERA_FACING_FRONT
+            TakeParams.FRONT -> {
+                intent.putExtra("android.intent.extras.CAMERA_FACING", Camera.CameraInfo.CAMERA_FACING_FRONT)
+            }
         }
-        intent.putExtra("android.intent.extras.CAMERA_FACING", face)
     }
 
-    private fun handleResult(activity: Activity, resultCode: Int, callBack: GetImageCallBack<TakeResult>
-    ) {
+    private fun handleResult(activity: Activity, resultCode: Int, callBack: GetImageCallBack<TakeResult>) {
         if (resultCode == Activity.RESULT_CANCELED) {
             callBack.onCancel()
             return
