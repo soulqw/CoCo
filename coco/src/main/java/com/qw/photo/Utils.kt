@@ -8,6 +8,7 @@ import android.content.ContentResolver
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Build.VERSION_CODES.M
@@ -23,10 +24,7 @@ import com.qw.photo.dispose.ImageDisposer
 import com.qw.photo.dispose.WorkThread
 import com.qw.photo.exception.MissPermissionException
 import com.qw.photo.pojo.BaseResult
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
+import java.io.*
 
 
 /**
@@ -40,7 +38,11 @@ object Utils {
             file.mkdir()
         }
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            FileProvider.getUriForFile(context, "${context.applicationInfo.packageName}.coco.provider", file)
+            FileProvider.getUriForFile(
+                context,
+                "${context.applicationInfo.packageName}.coco.provider",
+                file
+            )
         } else {
             Uri.fromFile(file)
         }
@@ -67,11 +69,14 @@ object Utils {
             return
         }
         val readStorageResult =
-                ActivityCompat.checkSelfPermission(activity!!, Manifest.permission.READ_EXTERNAL_STORAGE)
+            ActivityCompat.checkSelfPermission(
+                activity!!,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            )
         val writeStorageResult =
-                ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         if (readStorageResult != PackageManager.PERMISSION_GRANTED
-                || writeStorageResult != PackageManager.PERMISSION_GRANTED
+            || writeStorageResult != PackageManager.PERMISSION_GRANTED
         ) {
             throw MissPermissionException()
         }
@@ -139,10 +144,11 @@ object Utils {
      * @param result 结果
      * @param callBack 回调
      */
-    fun <Result : BaseResult> disposeImage(activity: Activity, originPath: String, targetFile: File?,
-                                           disposer: ImageDisposer,
-                                           result: Result,
-                                           callBack: GetImageCallBack<Result>
+    fun <Result : BaseResult> disposeImage(
+        activity: Activity, originPath: String, targetFile: File?,
+        disposer: ImageDisposer,
+        result: Result,
+        callBack: GetImageCallBack<Result>
     ) {
         disposer.dispose(activity, originPath, targetFile, object : CompressListener {
             override fun onStart(path: String) {
@@ -167,6 +173,24 @@ object Utils {
                 }
             }
         })
+    }
+
+    internal fun getBitmapFromFile(filePath: String): Bitmap? {
+        var bis: BufferedInputStream? = null
+        try {
+            bis = BufferedInputStream(FileInputStream(filePath))
+            BitmapFactory.decodeStream(bis, null, null)
+            bis = BufferedInputStream(FileInputStream(filePath))
+            return BitmapFactory.decodeStream(bis, null, null)
+        } finally {
+            if (bis != null) {
+                try {
+                    bis.close()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     private fun isOnMainThread(): Boolean {

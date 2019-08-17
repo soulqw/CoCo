@@ -2,6 +2,7 @@ package com.qw.photo.dispose
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import com.qw.photo.Utils
 import com.qw.photo.exception.CompressFailedException
 import java.io.ByteArrayOutputStream
 
@@ -19,7 +20,10 @@ class QualityCompressor : ICompress {
             degree > 100 -> 100
             else -> degree
         }
-        var bitmap = BitmapFactory.decodeFile(path)
+        var bitmap = Utils.getBitmapFromFile(path)
+        if (null == bitmap) {
+            return bitmap
+        }
         val baos = ByteArrayOutputStream()
         val result = bitmap.compress(Bitmap.CompressFormat.JPEG, finalDegree, baos)
         if (!result) {

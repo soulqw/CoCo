@@ -3,6 +3,7 @@ package com.qw.photo.dispose
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import com.qw.photo.Utils
 
 
 /**
@@ -18,7 +19,10 @@ class MatrixCompressor : ICompress {
             else -> degree
         }
         val degreeF = finalDegree.toFloat() / 100f
-        var bitmap = BitmapFactory.decodeFile(path)
+        var bitmap = Utils.getBitmapFromFile(path)
+        if (null == bitmap) {
+            return bitmap
+        }
         val height = bitmap.height
         val width = bitmap.width
         val matrix = Matrix()
