@@ -7,7 +7,6 @@ import android.hardware.Camera
 import android.os.Build
 import android.provider.MediaStore
 import android.text.TextUtils
-import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.agent.IAcceptActivityResultHandler
 import com.qw.photo.callback.GetImageCallBack
@@ -35,16 +34,15 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
             callBack.onFailed(BaseException("activity status error"))
             return
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
-        }
         //用户指定了目标文件路径
         if (null != mParams.file) {
-            try {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Utils.createUriFromFile((activity) as Context, mParams.file!!))
-            } catch (e: Exception) {
-                DevUtil.e(Constant.TAG, e.toString())
+            val uri = Utils.createUriFromFile((activity) as Context, mParams.file!!)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                activity.grantUriPermission(activity.packageName, uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                activity.revokeUriPermission(uri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
         try {
             mHandler.startActivityResult(takePictureIntent, Constant.REQUEST_CODE_IMAGE_CAPTURE
