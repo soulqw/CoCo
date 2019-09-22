@@ -19,6 +19,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
 import com.qw.photo.callback.CompressListener
 import com.qw.photo.callback.GetImageCallBack
+import com.qw.photo.callback.Host
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.ImageDisposer
 import com.qw.photo.dispose.WorkThread
@@ -61,6 +62,10 @@ object Utils {
             return false
         }
         return true
+    }
+
+    internal fun isHostAvailable(host: Host): Boolean {
+        return host.getStatus() == Host.Status.LIVE
     }
 
     @TargetApi(M)
@@ -138,6 +143,7 @@ object Utils {
 
     /**
      * 处理图片
+     * @param host 处理的容器 activity or fragment
      * @param originPath 图片原始路径
      * @param targetFile 图片处理之后的保存文件 可为空
      * @param disposer 图片处理器
@@ -145,12 +151,12 @@ object Utils {
      * @param callBack 回调
      */
     fun <Result : BaseResult> disposeImage(
-        activity: Activity, originPath: String, targetFile: File?,
+        host: Host, originPath: String, targetFile: File?,
         disposer: ImageDisposer,
         result: Result,
         callBack: GetImageCallBack<Result>
     ) {
-        disposer.dispose(activity, originPath, targetFile, object : CompressListener {
+        disposer.dispose(host, originPath, targetFile, object : CompressListener {
             override fun onStart(path: String) {
                 callBack.onDisposeStart()
             }

@@ -1,7 +1,7 @@
 package com.qw.photo.work
 
 import android.app.Activity
-import android.app.Fragment
+import android.support.v4.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
 import com.qw.photo.agent.IAcceptActivityResultHandler
 import com.qw.photo.pojo.TakeParams
@@ -11,7 +11,7 @@ import java.io.File
 /**
  * Created by rocket on 2019/6/18.
  */
-class WorkManager(private val handler: IAcceptActivityResultHandler) {
+class FunctionManager(private val handler: IAcceptActivityResultHandler) {
 
     /**
      * 拍照
@@ -28,12 +28,13 @@ class WorkManager(private val handler: IAcceptActivityResultHandler) {
 
     companion object {
         internal fun create(activity: Activity) =
-                WorkManager(AcceptActivityResultHandlerFactory.create(activity))
-
-        internal fun create(fragment: android.support.v4.app.Fragment) =
-                WorkManager(AcceptActivityResultHandlerFactory.create(fragment))
+            FunctionManager(AcceptActivityResultHandlerFactory.create(activity))
 
         internal fun create(fragment: Fragment) =
-                WorkManager(AcceptActivityResultHandlerFactory.create(fragment))
+            FunctionManager(AcceptActivityResultHandlerFactory.create(fragment))
+
+        internal fun create(fragment: android.app.Fragment) =
+            FunctionManager(AcceptActivityResultHandlerFactory.create(fragment))
+
     }
 }

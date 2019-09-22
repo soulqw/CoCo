@@ -1,6 +1,5 @@
 package com.qw.photo.dispose
 
-import android.app.Activity
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
@@ -10,6 +9,7 @@ import android.support.annotation.IntRange
 import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.callback.CompressListener
+import com.qw.photo.callback.Host
 import com.qw.photo.constant.CompressStrategy
 import com.qw.photo.constant.Constant
 import com.qw.photo.exception.CompressFailedException
@@ -28,8 +28,8 @@ class ImageDisposer {
 
         fun getDefault(): ImageDisposer {
             return ImageDisposer()
-                    .strategy(CompressStrategy.MATRIX)
-                    .degree(50)
+                .strategy(CompressStrategy.MATRIX)
+                .degree(50)
         }
     }
 
@@ -49,7 +49,8 @@ class ImageDisposer {
         return this
     }
 
-    internal fun dispose(activity: Activity, originPath: String, targetSaveFile: File?, listener: CompressListener
+    internal fun dispose(
+        host: Host, originPath: String, targetSaveFile: File?, listener: CompressListener
     ) {
         if (null == strategy) {
             listener.onError(MissCompressStrategyException())
@@ -61,19 +62,19 @@ class ImageDisposer {
             try {
                 DevUtil.d(Constant.TAG, "start compress")
                 bitmap = CompressFactory
-                        .create(strategy!!)
-                        .compress(originPath, degree)
+                    .create(strategy!!)
+                    .compress(originPath, degree)
                 //rotate if needed
                 DevUtil.d(Constant.TAG, "start Rotate")
-                if (!checkContainerStatus(activity, "compress")) {
+                if (!checkContainerStatus(host, "compress")) {
                     return@Runnable
                 }
                 bitmap = correctRotate(originPath, bitmap!!)
-                if (!checkContainerStatus(activity, "Rotate")) {
+                if (!checkContainerStatus(host, "Rotate")) {
                     return@Runnable
                 }
             } catch (e: Exception) {
-                if (!checkContainerStatus(activity, "error on compress or Rotate")) {
+                if (!checkContainerStatus(host, "error on compress or Rotate")) {
                     return@Runnable
                 }
                 DevUtil.d(Constant.TAG, "error on compress or Rotate $e")
@@ -91,7 +92,7 @@ class ImageDisposer {
             if (null != targetSaveFile) {
                 DevUtil.d(Constant.TAG, "start save bitmap to file")
                 val saveResult = Utils.bitmapToFile(targetSaveFile, bitmap!!)
-                if (!checkContainerStatus(activity, "save to file")) {
+                if (!checkContainerStatus(host, "save to file")) {
                     return@Runnable
                 }
                 if (!saveResult) {
@@ -102,7 +103,7 @@ class ImageDisposer {
             //post result
             Handler(Looper.getMainLooper()).post {
                 DevUtil.d(Constant.TAG, "all dispose ok")
-                if (!checkContainerStatus(activity, "all dispose ok")) {
+                if (!checkContainerStatus(host, "all dispose ok")) {
                     return@post
                 }
                 listener.onFinish(bitmap!!, targetSaveFile)
@@ -110,9 +111,9 @@ class ImageDisposer {
         })
     }
 
-    private fun checkContainerStatus(activity: Activity, tag: String): Boolean {
-        if (!Utils.isActivityAvailable(activity)) {
-            DevUtil.d(Constant.TAG, "activity is disabled after $tag")
+    private fun checkContainerStatus(host: Host, tag: String): Boolean {
+        if (!Utils.isHostAvailable(host)) {
+            DevUtil.d(Constant.TAG, "host is disabled after $tag")
             return false
         }
         return true
@@ -123,8 +124,8 @@ class ImageDisposer {
         var bitmap = bitmapOrigin
         val exif = ExifInterface(imagePath)
         val degree = when (exif.getAttributeInt(
-                ExifInterface.TAG_ORIENTATION,
-                ExifInterface.ORIENTATION_UNDEFINED
+            ExifInterface.TAG_ORIENTATION,
+            ExifInterface.ORIENTATION_UNDEFINED
         )) {
             ExifInterface.ORIENTATION_ROTATE_90 -> 90
             ExifInterface.ORIENTATION_ROTATE_180 -> 180
@@ -135,8 +136,8 @@ class ImageDisposer {
             val m = Matrix()
             m.postRotate(degree.toFloat())
             bitmap = Bitmap.createBitmap(
-                    bitmap, 0, 0, bitmap.width,
-                    bitmap.height, m, true
+                bitmap, 0, 0, bitmap.width,
+                bitmap.height, m, true
             )
         }
         return bitmap

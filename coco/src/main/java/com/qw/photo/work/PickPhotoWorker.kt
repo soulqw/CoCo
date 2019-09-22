@@ -15,7 +15,8 @@ import com.qw.photo.pojo.PickResult
 /**
  * Created by rocket on 2019/6/18.
  */
-class PickPhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<PickParams, PickResult>(handler) {
+class PickPhotoWorker(handler: IAcceptActivityResultHandler) :
+    BaseWorker<PickParams, PickResult>(handler) {
     override fun start(callBack: GetImageCallBack<PickResult>) {
         val activity = mHandler.provideActivity()
         activity ?: return
@@ -29,7 +30,8 @@ class PickPhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<PickPa
             return
         }
         try {
-            mHandler.startActivityResult(pickIntent, Constant.REQUEST_CODE_IMAGE_PICK
+            mHandler.startActivityResult(
+                pickIntent, Constant.REQUEST_CODE_IMAGE_PICK
             ) { _: Int, resultCode: Int, data: Intent? ->
                 handleResult(resultCode, data, callBack, activity)
             }
@@ -38,7 +40,11 @@ class PickPhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<PickPa
         }
     }
 
-    private fun handleResult(resultCode: Int, intentData: Intent?, callBack: GetImageCallBack<PickResult>, activity: Activity
+    private fun handleResult(
+        resultCode: Int,
+        intentData: Intent?,
+        callBack: GetImageCallBack<PickResult>,
+        activity: Activity
     ) {
         if (resultCode == Activity.RESULT_CANCELED) {
             callBack.onCancel()
@@ -51,7 +57,14 @@ class PickPhotoWorker(handler: IAcceptActivityResultHandler) : BaseWorker<PickPa
             if (null != intentData.data && Utils.isActivityAvailable(activity)) {
                 val localPath = Utils.uriToImagePath(activity, intentData.data!!)
                 if (!TextUtils.isEmpty(localPath) && null != mParams.disposer) {
-                    Utils.disposeImage(activity, localPath!!, mParams.file, mParams.disposer!!, result, callBack)
+                    Utils.disposeImage(
+                        mHandler.getLifecycleHost(),
+                        localPath!!,
+                        mParams.file,
+                        mParams.disposer!!,
+                        result,
+                        callBack
+                    )
                     return
                 }
             }
