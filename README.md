@@ -1,5 +1,6 @@
 # CoCo
- [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://www.apache.org/licenses/LICENSE-2.0)
+ [![Hex.pm](https://img.shields.io/badge/download-0.0.9-green)](https://www.apache.org/licenses/LICENSE-2.0)
+ [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
 #### 一个更好用的Android系统相机拍照和系统相册选择库：
  -  一行代码完成从系统相机拍照或者系统相册选择图片
  - 支持多种策略的图片压缩，并可自定义压缩范围
