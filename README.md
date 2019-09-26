@@ -11,7 +11,7 @@
 
 ```java
 dependencies {
-    implementation 'com.qw:coco:0.0.6'
+    implementation 'com.qw:coco:0.1.0'
 }
 
 ```

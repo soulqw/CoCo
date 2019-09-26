@@ -8,8 +8,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 8
-        versionName "0.0.9"
+        versionCode 9
+        versionName "0.1.0"
     }
 
     buildTypes {
@@ -39,7 +39,7 @@ def gitUrl = 'https://github.com/soulqw/SoulPhotoTaker.git'
 
 def libName = "CoCo"
 group = "com.qw"
-version = "0.0.9"
+version = "0.1.0"
 
 task sourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
