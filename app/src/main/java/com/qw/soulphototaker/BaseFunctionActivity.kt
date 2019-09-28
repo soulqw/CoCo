@@ -21,11 +21,16 @@ import java.util.*
  */
 abstract class BaseFunctionActivity : AppCompatActivity() {
 
+    companion object {
+        const val TAG = "functionFragment"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_funtion_detail)
-        cb_compress.setOnCheckedChangeListener { buttonView, isChecked ->
-            findViewById<View>(R.id.ly_compress).visibility = if (isChecked) View.VISIBLE else View.GONE
+        cb_compress.setOnCheckedChangeListener { _, isChecked ->
+            findViewById<View>(R.id.ly_compress).visibility =
+                if (isChecked) View.VISIBLE else View.GONE
         }
         sb_degree.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -40,18 +45,32 @@ abstract class BaseFunctionActivity : AppCompatActivity() {
 
             }
         })
-        findViewById<View>(R.id.btn_begin).setOnClickListener {
+        tb_container.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                iv_image.visibility = View.GONE
+                tv_result.visibility = View.GONE
+                fl_fragment.visibility = View.VISIBLE
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.fl_fragment, FunctionFragment(), TAG)
+                    .commitAllowingStateLoss()
+            } else {
+                tv_result.visibility = View.VISIBLE
+                iv_image.visibility = View.VISIBLE
+                fl_fragment.visibility = View.GONE
+            }
+        }
+        btn_begin.setOnClickListener {
             val isMatrix = rg_strategy.checkedRadioButtonId == R.id.matrix
             val degree = if (cb_compress.isChecked) {
                 sb_degree.progress
             } else {
                 -1
             }
-            start(isMatrix, degree)
+            start(tb_container.isChecked, isMatrix, degree)
         }
     }
 
-    protected abstract fun start(isMatrix: Boolean, degree: Int)
+    protected abstract fun start(isFragment: Boolean, isMatrix: Boolean, degree: Int)
 
     protected fun getImageView(): ImageView {
         return iv_image

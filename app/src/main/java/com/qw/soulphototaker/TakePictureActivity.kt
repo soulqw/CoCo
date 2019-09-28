@@ -17,20 +17,32 @@ import kotlinx.android.synthetic.main.activity_funtion_detail.*
  */
 class TakePictureActivity : BaseFunctionActivity() {
 
-    override fun start(isMatrix: Boolean, degree: Int) {
+    override fun start(isFragment: Boolean, isMatrix: Boolean, degree: Int) {
+        if (isFragment) {
+            val fragment: FunctionFragment =
+                supportFragmentManager.findFragmentByTag(TAG) as FunctionFragment
+            fragment.takePhoto(isMatrix, degree)
+            return
+        }
         if (degree == -1) {
             CoCo.with(this)
                 .take(createSDCardFile())
                 .apply()
                 .start(object : GetImageCallBack<TakeResult> {
                     override fun onSuccess(data: TakeResult) {
+                        Toast.makeText(this@TakePictureActivity, "拍照操作最终成功", Toast.LENGTH_SHORT)
+                            .show()
                         val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
                         getImageView().setImageBitmap(bitmap)
                         tv_result.text = getImageSizeDesc(bitmap)
                     }
 
                     override fun onFailed(exception: Exception) {
-                        Toast.makeText(this@TakePictureActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@TakePictureActivity,
+                            "拍照异常: $exception",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                 })
@@ -54,7 +66,8 @@ class TakePictureActivity : BaseFunctionActivity() {
                 .start(object : GetImageCallBack<TakeResult> {
 
                     override fun onDisposeStart() {
-                        Toast.makeText(this@TakePictureActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@TakePictureActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT)
+                            .show()
                     }
 
                     override fun onCancel() {
@@ -62,11 +75,16 @@ class TakePictureActivity : BaseFunctionActivity() {
                     }
 
                     override fun onFailed(exception: Exception) {
-                        Toast.makeText(this@TakePictureActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@TakePictureActivity,
+                            "拍照异常: $exception",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                     override fun onSuccess(data: TakeResult) {
-                        Toast.makeText(this@TakePictureActivity, "拍照操作最终成功", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@TakePictureActivity, "拍照操作最终成功", Toast.LENGTH_SHORT)
+                            .show()
                         getImageView().setImageBitmap(data.compressBitmap)
                         tv_result.text = getImageSizeDesc(data.compressBitmap!!)
                     }

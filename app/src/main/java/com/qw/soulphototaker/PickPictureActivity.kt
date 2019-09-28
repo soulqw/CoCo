@@ -21,24 +21,35 @@ class PickPictureActivity : BaseFunctionActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        tb_camera_face.visibility =View.GONE
+        tb_camera_face.visibility = View.GONE
     }
 
-    override fun start(isMatrix: Boolean, degree: Int) {
+    override fun start(isFragment: Boolean, isMatrix: Boolean, degree: Int) {
+        if (isFragment) {
+            val fragment: FunctionFragment =
+                supportFragmentManager.findFragmentByTag(TAG) as FunctionFragment
+            fragment.pick(isMatrix, degree)
+            return
+        }
         if (degree == -1) {
             CoCo.with(this)
                 .pick(createSDCardFile())
                 .apply()
                 .start(object : GetImageCallBack<PickResult> {
                     override fun onSuccess(data: PickResult) {
-                        val selectedPath = Utils.uriToImagePath(this@PickPictureActivity, data.originUri)
+                        val selectedPath =
+                            Utils.uriToImagePath(this@PickPictureActivity, data.originUri)
                         val bitmap: Bitmap = BitmapFactory.decodeFile(selectedPath)
                         getImageView().setImageBitmap(bitmap)
                         tv_result.text = getImageSizeDesc(bitmap)
                     }
 
                     override fun onFailed(exception: Exception) {
-                        Toast.makeText(this@PickPictureActivity, "选择异常: $exception", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@PickPictureActivity,
+                            "选择异常: $exception",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
                 })
@@ -56,7 +67,8 @@ class PickPictureActivity : BaseFunctionActivity() {
                 ).start(object : GetImageCallBack<PickResult> {
 
                     override fun onDisposeStart() {
-                        Toast.makeText(this@PickPictureActivity, "选择成功,开始处理", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@PickPictureActivity, "选择成功,开始处理", Toast.LENGTH_SHORT)
+                            .show()
                     }
 
                     override fun onSuccess(data: PickResult) {
@@ -75,7 +87,11 @@ class PickPictureActivity : BaseFunctionActivity() {
                     }
 
                     override fun onFailed(exception: Exception) {
-                        Toast.makeText(this@PickPictureActivity, "选择异常: $exception", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@PickPictureActivity,
+                            "选择异常: $exception",
+                            Toast.LENGTH_SHORT
+                        ).show()
 
                     }
                 })

@@ -11,20 +11,29 @@
             android:orientation="vertical"
             android:padding="8dp">
 
+        <ToggleButton
+            android:id="@+id/tb_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textAllCaps="false"
+            android:textOff="In Activity"
+            android:textOn="In Fragment" />
+
+        <ToggleButton
+            android:id="@+id/tb_camera_face"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:textOff="后摄像头"
+            android:textOn="前摄像头" />
+
         <CheckBox
                 android:id="@+id/cb_compress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="压缩" />
-
-        <ToggleButton
-                android:id="@+id/tb_camera_face"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:textOff="后摄像头"
-                android:textOn="前摄像头" />
 
         <LinearLayout
                 android:id="@+id/ly_compress"
@@ -93,6 +102,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitCenter" />
+
+        <FrameLayout
+            android:id="@+id/fl_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 
