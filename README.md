@@ -12,6 +12,8 @@
  - 支持debug模式
 ## Installation：
 
+ ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
+
 ```java
 dependencies {
     implementation 'com.qw:coco:0.1.0'
@@ -68,6 +70,9 @@ dependencies {
 
                 })
 ```
+##### 效果图:
+![image](https://upload-images.jianshu.io/upload_images/4346197-95a4098e9d4b7e98.gif)
+
 - 也可以传入一个ImageDisposer来处理图片：
 
 ```kotlin
@@ -150,7 +155,5 @@ APi与拍照相似，同样支持压缩，选择照片结果中提供原始Uri
 ![image](https://upload-images.jianshu.io/upload_images/4346197-45eef4367cc55ca1.png)
 
 ![image](https://upload-images.jianshu.io/upload_images/4346197-c5b04e7acad92ff3.png)
-
-![image](https://upload-images.jianshu.io/upload_images/4346197-95a4098e9d4b7e98.gif)
 
 [GitHub地址](https://github.com/soulqw/SoulPhotoTaker/)
