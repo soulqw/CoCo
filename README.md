@@ -2,6 +2,7 @@
  [![Hex.pm](https://img.shields.io/badge/download-0.1.0-green)](https://www.apache.org/licenses/LICENSE-2.0)
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
+ [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
 #### 一个更好用的Android系统相机拍照和系统相册选择库：
  - 一行代码完成从系统相机拍照或者系统相册选择图片
  - 内部适配 7.0 FileProvider文件处理，无需自己额外处理
@@ -14,6 +15,14 @@
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
 
+如果你的项目已经支持Android X:
+```java
+dependencies {
+    implementation 'com.qw:coco:0.1.0_x'
+}
+
+```
+如果你的项目还没迁移到Android X:
 ```java
 dependencies {
     implementation 'com.qw:coco:0.1.0'
