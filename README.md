@@ -9,7 +9,7 @@
  - 支持多种图片压缩策略，并可自定义压缩程度
  - 完全基于Kotlin编写，与Java兼容
  - 支持Activity、Fragment,图片压缩异步处理自动绑定相关生命周期
- - 配置简单，导入方便
+ - 全面适配AndroidX、配置简单，导入方便
  - 支持debug模式
 ## Installation：
 
