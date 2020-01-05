@@ -6,7 +6,7 @@ import android.widget.Toast
 import com.qw.photo.CoCo
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
-import com.qw.photo.dispose.ImageDisposer
+import com.qw.photo.dispose.disposer.DefaultImageDisposer
 import com.qw.photo.pojo.TakeParams
 import com.qw.photo.pojo.TakeResult
 import kotlinx.android.synthetic.main.activity_funtion_detail.*
@@ -60,7 +60,7 @@ class TakePictureActivity : BaseFunctionActivity() {
                 .take(createSDCardFile())
                 .cameraFace(cameraFace)
                 .applyWithDispose(
-                    ImageDisposer().degree(degree)
+                    DefaultImageDisposer().degree(degree)
                         .strategy(strategy)
                 )
                 .start(object : GetImageCallBack<TakeResult> {

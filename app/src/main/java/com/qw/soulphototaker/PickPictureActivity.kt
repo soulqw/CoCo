@@ -9,7 +9,7 @@ import com.qw.photo.CoCo
 import com.qw.photo.Utils
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
-import com.qw.photo.dispose.ImageDisposer
+import com.qw.photo.dispose.disposer.DefaultImageDisposer
 import com.qw.photo.pojo.PickResult
 import kotlinx.android.synthetic.main.activity_funtion_detail.*
 
@@ -62,7 +62,7 @@ class PickPictureActivity : BaseFunctionActivity() {
             CoCo.with(this)
                 .pick(createSDCardFile())
                 .applyWithDispose(
-                    ImageDisposer().degree(degree)
+                    DefaultImageDisposer().degree(degree)
                         .strategy(strategy)
                 ).start(object : GetImageCallBack<PickResult> {
 
