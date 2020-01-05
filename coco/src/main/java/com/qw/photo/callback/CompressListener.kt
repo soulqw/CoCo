@@ -1,7 +1,6 @@
 package com.qw.photo.callback
 
-import android.graphics.Bitmap
-import java.io.File
+import com.qw.photo.pojo.BaseResult
 
 
 /**
@@ -18,7 +17,7 @@ interface CompressListener {
     /**
      * 任务结束
      */
-    fun onFinish(compressed: Bitmap, savedFile: File?)
+    fun onFinish(disposeResult: BaseResult)
 
     /**
      * 发生错误

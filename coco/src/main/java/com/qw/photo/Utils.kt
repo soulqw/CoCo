@@ -21,8 +21,8 @@ import com.qw.photo.callback.CompressListener
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.callback.Host
 import com.qw.photo.constant.Constant
-import com.qw.photo.dispose.ImageDisposer
 import com.qw.photo.dispose.WorkThread
+import com.qw.photo.dispose.disposer.ImageDisposer
 import com.qw.photo.exception.MissPermissionException
 import com.qw.photo.pojo.BaseResult
 import java.io.*
@@ -143,7 +143,6 @@ object Utils {
 
     /**
      * 处理图片
-     * @param host 处理的容器 activity or fragment
      * @param originPath 图片原始路径
      * @param targetFile 图片处理之后的保存文件 可为空
      * @param disposer 图片处理器
@@ -156,14 +155,14 @@ object Utils {
         result: Result,
         callBack: GetImageCallBack<Result>
     ) {
-        disposer.dispose(host, originPath, targetFile, object : CompressListener {
+        DisposerManager.dispose(host, originPath, targetFile, disposer, object : CompressListener {
             override fun onStart(path: String) {
                 callBack.onDisposeStart()
             }
 
-            override fun onFinish(compressed: Bitmap, savedFile: File?) {
-                result.compressBitmap = compressed
-                result.targetFile = savedFile
+            override fun onFinish(disposeResult: BaseResult) {
+                result.compressBitmap = disposeResult.compressBitmap
+                result.targetFile = disposeResult.targetFile
                 DevUtil.d(Constant.TAG, "onSuccess $result")
                 callBack.onSuccess(result)
                 WorkThread.release()

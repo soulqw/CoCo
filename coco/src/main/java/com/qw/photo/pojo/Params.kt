@@ -3,7 +3,8 @@ package com.qw.photo.pojo
 import com.qw.photo.DevUtil
 import com.qw.photo.annotations.CameraFace
 import com.qw.photo.constant.Constant
-import com.qw.photo.dispose.ImageDisposer
+import com.qw.photo.dispose.disposer.DefaultImageDisposer
+import com.qw.photo.dispose.disposer.ImageDisposer
 import com.qw.photo.work.Executor
 import com.qw.photo.work.IWorker
 import java.io.File
@@ -30,7 +31,7 @@ open class BaseParams<Result : BaseResult>(internal val worker: IWorker<*, Resul
      * 应用参数为后续操作做准备，并且可自定义压缩策略
      */
     @JvmOverloads
-    fun applyWithDispose(compressor: ImageDisposer = ImageDisposer.getDefault()): Executor<Result> {
+    fun applyWithDispose(compressor: ImageDisposer = DefaultImageDisposer.getDefault()): Executor<Result> {
         this.disposer = compressor
         return apply()
     }

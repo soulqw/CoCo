@@ -22,6 +22,11 @@ open class BaseResult {
      * 如果指定了压缩的话
      */
     var compressBitmap: Bitmap? = null
+
+    /**
+     * 如果需要额外的参数的话
+     */
+    var extra: Any? = null
 }
 
 /**
