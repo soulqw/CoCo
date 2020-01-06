@@ -6,7 +6,7 @@
 #### 一个更好用的Android系统相机拍照和系统相册选择库：
  - 一行代码完成从系统相机拍照或者系统相册选择图片
  - 内部适配 7.0 FileProvider文件处理，无需自己额外处理
- - 支持多种图片压缩策略，并可自定义压缩程度
+ - 默认支持多种图片压缩策略，并可自定义图片压缩策略
  - 完全基于Kotlin编写，与Java兼容
  - 支持Activity、Fragment,图片压缩异步处理自动绑定相关生命周期
  - 全面适配AndroidX、配置简单，导入方便
@@ -15,17 +15,10 @@
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
 
-如果你的项目已经支持Android X:
-```java
-dependencies {
-    implementation 'com.qw:coco:0.1.0_x'
-}
 
-```
-如果你的项目还没迁移到Android X:
 ```java
 dependencies {
-    implementation 'com.qw:coco:0.1.0'
+    implementation 'com.qw:coco:0.2.0'
 }
 
 ```
@@ -160,6 +153,51 @@ APi与拍照相似，同样支持压缩，选择照片结果中提供原始Uri
                     }
                 })
 ```
+自定义压缩策略:
+
+```kotlin
+    /**
+     * 自定义图片处理器
+     * 自定义想要处理的任意结果
+     */
+    class CustomDisposer : ImageDisposer {
+
+        override fun disposeImage(originPath: String, targetSaveFile: File?): BaseResult {
+            return BaseResult().also {
+                val bitmap = QualityCompressor()
+                    .compress(originPath, 5)
+                it.targetFile = targetSaveFile
+                it.compressBitmap = bitmap
+            }
+        }
+
+    }
+    
+    fun custom() {
+        CoCo.with(this)
+            .take(createSDCardFile())
+            .applyWithDispose(CustomDisposer())
+            .start(object : GetImageCallBack<TakeResult> {
+
+                override fun onSuccess(data: TakeResult) {
+                    Toast.makeText(this@MainActivity, "自定义Disposer拍照操作最终成功", Toast.LENGTH_SHORT)
+                        .show()
+                    iv_image.setImageBitmap(data.compressBitmap)
+                }
+
+                override fun onFailed(exception: Exception) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "拍照异常: $exception",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+            })
+    }
+```
+
+
 ### 截图：
 ![image](https://upload-images.jianshu.io/upload_images/4346197-45eef4367cc55ca1.png)
 
