@@ -11,8 +11,11 @@ import android.widget.Toast
 import com.qw.photo.CoCo
 import com.qw.photo.Utils
 import com.qw.photo.callback.GetImageCallBack
-import com.qw.photo.pojo.TakeResult
+import com.qw.photo.dispose.QualityCompressor
+import com.qw.photo.dispose.disposer.ImageDisposer
+import com.qw.photo.pojo.BaseResult
 import com.qw.photo.pojo.PickResult
+import com.qw.photo.pojo.TakeResult
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
 import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
@@ -120,6 +123,28 @@ class MainActivity : AppCompatActivity() {
                 true
             }
         }
+        btn_custom_disposer.setOnClickListener {
+            CoCo.with(this)
+                .take(createSDCardFile())
+                .applyWithDispose(CustomDisposer())
+                .start(object : GetImageCallBack<TakeResult> {
+
+                    override fun onSuccess(data: TakeResult) {
+                        Toast.makeText(this@MainActivity, "自定义Disposer拍照操作最终成功", Toast.LENGTH_SHORT)
+                            .show()
+                        iv_image.setImageBitmap(data.compressBitmap)
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "拍照异常: $exception",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                })
+        }
     }
 
 
@@ -133,5 +158,22 @@ class MainActivity : AppCompatActivity() {
             ".jpg", /* suffix */
             storageDir /* directory */
         )
+    }
+
+    /**
+     * 自定义图片处理器
+     * 自定义想要处理的任意结果
+     */
+    class CustomDisposer : ImageDisposer {
+
+        override fun disposeImage(originPath: String, targetSaveFile: File?): BaseResult {
+            return BaseResult().also {
+                val bitmap = QualityCompressor()
+                    .compress(originPath, 5)
+                it.targetFile = targetSaveFile
+                it.compressBitmap = bitmap
+            }
+        }
+
     }
 }

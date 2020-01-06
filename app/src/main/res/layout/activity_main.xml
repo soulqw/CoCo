@@ -1,27 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        android:orientation="vertical"
-        tools:ignore="HardcodedText"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
-    <Button
-            android:id="@+id/btn_capture"
-            android:layout_width="match_parent"
-            android:text="拍照(长按详细调试)"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:id="@+id/btn_pick"
-            android:layout_width="match_parent"
-            android:text="选择(长按详细调试)"
-            android:layout_height="wrap_content"/>
+        android:orientation="vertical"
+        tools:ignore="HardcodedText">
 
-    <ImageView
-            android:id="@+id/iv_image"
-            android:scaleType="fitCenter"
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            tools:context=".MainActivity">
 
-</LinearLayout>
+        <Button
+                android:id="@+id/btn_capture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="拍照(长按详细调试)" />
+
+        <Button
+                android:id="@+id/btn_pick"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="选择(长按详细调试)" />
+
+        <Button
+                android:id="@+id/btn_custom_disposer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="拍照(自定义图片处理器)" />
+
+        <ImageView
+                android:id="@+id/iv_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter" />
+
+    </LinearLayout>
+</ScrollView>
