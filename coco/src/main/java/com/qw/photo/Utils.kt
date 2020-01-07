@@ -163,6 +163,7 @@ object Utils {
             override fun onFinish(disposeResult: BaseResult) {
                 result.compressBitmap = disposeResult.compressBitmap
                 result.targetFile = disposeResult.targetFile
+                result.extra = disposeResult.extra
                 DevUtil.d(Constant.TAG, "onSuccess $result")
                 callBack.onSuccess(result)
                 WorkThread.release()

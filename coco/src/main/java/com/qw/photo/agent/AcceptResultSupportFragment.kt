@@ -14,9 +14,10 @@ import com.qw.photo.constant.Constant
  */
 class AcceptResultSupportFragment : Fragment(), IAcceptActivityResultHandler, Host {
 
-    var current: Host.Status = Host.Status.INIT
+    private var current: Host.Status = Host.Status.INIT
 
     private var requestCode: Int = 0
+
     private var callback: ((requestCode: Int, resultCode: Int, data: Intent?) -> Unit)? = null
 
     override fun startActivityResult(
