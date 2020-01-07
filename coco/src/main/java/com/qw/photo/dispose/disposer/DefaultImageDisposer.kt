@@ -3,7 +3,7 @@ package com.qw.photo.dispose.disposer
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.media.ExifInterface
-import android.support.annotation.IntRange
+import androidx.annotation.IntRange
 import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.constant.CompressStrategy

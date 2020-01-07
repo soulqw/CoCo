@@ -1,6 +1,6 @@
 package com.qw.photo.annotations
 
-import android.support.annotation.IntDef
+import androidx.annotation.IntDef
 import com.qw.photo.pojo.TakeParams.Companion.BACK
 import com.qw.photo.pojo.TakeParams.Companion.FRONT
 

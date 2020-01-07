@@ -15,8 +15,8 @@ import android.os.Build.VERSION_CODES.M
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.FileProvider
+import androidx.core.app.ActivityCompat
+import androidx.core.content.FileProvider
 import com.qw.photo.callback.CompressListener
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.callback.Host

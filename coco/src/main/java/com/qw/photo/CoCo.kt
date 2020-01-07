@@ -19,7 +19,7 @@ object CoCo {
     }
 
     @JvmStatic
-    fun with(fragment: android.support.v4.app.Fragment): FunctionManager {
+    fun with(fragment: androidx.fragment.app.Fragment): FunctionManager {
         checkStatusFirst(fragment.activity)
         return FunctionManager.create(fragment)
     }

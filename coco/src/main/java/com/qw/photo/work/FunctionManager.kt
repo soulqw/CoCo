@@ -1,7 +1,7 @@
 package com.qw.photo.work
 
 import android.app.Activity
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
 import com.qw.photo.agent.IAcceptActivityResultHandler
 import com.qw.photo.pojo.TakeParams

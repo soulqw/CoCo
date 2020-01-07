@@ -6,8 +6,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
-import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.qw.photo.CoCo
 import com.qw.photo.Utils
 import com.qw.photo.callback.GetImageCallBack
@@ -36,18 +36,19 @@ class MainActivity : AppCompatActivity() {
 
     //https://github.com/soulqw/SoulPermission
     private fun checkPermissionFirst() {
-        SoulPermission.getInstance().checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, object :
-            CheckRequestPermissionListener {
+        SoulPermission.getInstance()
+            .checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, object :
+                CheckRequestPermissionListener {
 
-            override fun onPermissionOk(permission: Permission?) {
-                initViewComponent()
-            }
+                override fun onPermissionOk(permission: Permission?) {
+                    initViewComponent()
+                }
 
-            override fun onPermissionDenied(permission: Permission?) {
-                Toast.makeText(this@MainActivity, "不授予文件权限无法使用CoCo", Toast.LENGTH_SHORT).show()
-                finish()
-            }
-        })
+                override fun onPermissionDenied(permission: Permission?) {
+                    Toast.makeText(this@MainActivity, "不授予文件权限无法使用CoCo", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            })
     }
 
     private fun initViewComponent() {
@@ -59,7 +60,8 @@ class MainActivity : AppCompatActivity() {
                     .start(object : GetImageCallBack<TakeResult> {
 
                         override fun onDisposeStart() {
-                            Toast.makeText(this@MainActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT)
+                                .show()
                         }
 
                         override fun onCancel() {
@@ -67,7 +69,11 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         override fun onFailed(exception: Exception) {
-                            Toast.makeText(this@MainActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                "拍照异常: $exception",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
                         override fun onSuccess(data: TakeResult) {
@@ -91,7 +97,8 @@ class MainActivity : AppCompatActivity() {
                     .start(object : GetImageCallBack<PickResult> {
 
                         override fun onDisposeStart() {
-                            Toast.makeText(this@MainActivity, "选择成功,开始处理", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this@MainActivity, "选择成功,开始处理", Toast.LENGTH_SHORT)
+                                .show()
                         }
 
                         override fun onSuccess(data: PickResult) {
@@ -100,7 +107,8 @@ class MainActivity : AppCompatActivity() {
                                 "选择操作最终成功 path: ${data.originUri.path}",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            val selectedPath = Utils.uriToImagePath(this@MainActivity, data.originUri)
+                            val selectedPath =
+                                Utils.uriToImagePath(this@MainActivity, data.originUri)
                             val bitmap: Bitmap = BitmapFactory.decodeFile(selectedPath)
                             iv_image.setImageBitmap(bitmap)
 //                         if you use applyWithDispose() can get compress bitmap
@@ -109,7 +117,11 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         override fun onFailed(exception: Exception) {
-                            Toast.makeText(this@MainActivity, "选择异常: $exception", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@MainActivity,
+                                "选择异常: $exception",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
                         override fun onCancel() {

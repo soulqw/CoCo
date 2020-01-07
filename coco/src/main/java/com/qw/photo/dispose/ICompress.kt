@@ -1,7 +1,7 @@
 package com.qw.photo.dispose
 
 import android.graphics.Bitmap
-import android.support.annotation.IntRange
+import androidx.annotation.IntRange
 
 
 /**
