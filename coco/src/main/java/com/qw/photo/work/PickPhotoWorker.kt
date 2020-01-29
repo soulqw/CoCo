@@ -55,7 +55,13 @@ class PickPhotoWorker(handler: IAcceptActivityResultHandler) :
             result.originUri = intentData.data!!
             //判断当前状态是否需要处理
             if (null != intentData.data && Utils.isActivityAvailable(activity)) {
-                val localPath = Utils.uriToImagePath(activity, intentData.data!!)
+                var localPath: String? = null
+                try {
+                    localPath = Utils.uriToImagePath(activity, intentData.data!!)
+                } catch (e: Exception) {
+                    callBack.onFailed(e)
+                }
+                localPath ?: return
                 if (!TextUtils.isEmpty(localPath) && null != mParams.disposer) {
                     Utils.disposeImage(
                         mHandler.getLifecycleHost(),
