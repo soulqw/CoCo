@@ -104,13 +104,11 @@ class MainActivity : AppCompatActivity() {
                         override fun onSuccess(data: PickResult) {
                             Toast.makeText(
                                 this@MainActivity,
-                                "选择操作最终成功 path: ${data.originUri.path}",
+                                "选择操作最终成功 path: ${data.localPath}",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            if (data.targetFile!=null) {
-                                val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
-                                iv_image.setImageBitmap(bitmap)
-                            }
+                            val bitmap: Bitmap = BitmapFactory.decodeFile(data.localPath)
+                            iv_image.setImageBitmap(bitmap)
 //                         if you use applyWithDispose() can get compress bitmap
 //                        iv_image.setImageBitmap(data.compressBitmap)
 

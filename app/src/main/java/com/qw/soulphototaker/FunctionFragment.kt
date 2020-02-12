@@ -4,17 +4,17 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import android.widget.ToggleButton
+import androidx.fragment.app.Fragment
 import com.qw.photo.CoCo
-import com.qw.photo.Utils
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
 import com.qw.photo.dispose.disposer.DefaultImageDisposer
+import com.qw.photo.pojo.PickParams
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeParams
 import com.qw.photo.pojo.TakeResult
@@ -116,11 +116,11 @@ class FunctionFragment : Fragment() {
         if (degree == -1) {
             CoCo.with(this)
                 .pick(createSDCardFile())
+                .range(PickParams.PICK_CONTENT)
                 .apply()
                 .start(object : GetImageCallBack<PickResult> {
                     override fun onSuccess(data: PickResult) {
-                        val selectedPath = Utils.uriToImagePath(context!!, data.originUri)
-                        val bitmap: Bitmap = BitmapFactory.decodeFile(selectedPath)
+                        val bitmap: Bitmap = BitmapFactory.decodeFile(data.localPath)
                         iv_image.setImageBitmap(bitmap)
                         tv_result.text = getImageSizeDesc(bitmap)
                     }
@@ -138,6 +138,7 @@ class FunctionFragment : Fragment() {
             }
             CoCo.with(this)
                 .pick(createSDCardFile())
+                .range(PickParams.PICK_CONTENT)
                 .applyWithDispose(
                     DefaultImageDisposer().degree(degree)
                         .strategy(strategy)

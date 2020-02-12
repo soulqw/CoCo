@@ -69,9 +69,37 @@ class TakeParams(worker: IWorker<TakeParams, TakeResult>) : BaseParams<TakeResul
 
 class PickParams(worker: IWorker<PickParams, PickResult>) : BaseParams<PickResult>(worker) {
 
+    companion object {
+
+        /**
+         * 系统相册
+         */
+        const val PICK_DICM = 0
+
+        /**
+         * 全文件路径
+         */
+        const val PICK_CONTENT = 1
+
+    }
+
+    var pickRange = PICK_DICM
+
     fun targetFile(file: File?): PickParams {
         DevUtil.d(Constant.TAG, "pick: saveFilePath: " + (file?.path ?: "originUri is null"))
         this.file = file
         return this
     }
+
+    /**
+     * 选择范围根据你自己需要
+     * @param
+     * @see PICK_DICM
+     * @see PICK_CONTENT
+     */
+    fun range(pickRange: Int): PickParams {
+        this.pickRange = pickRange;
+        return this
+    }
+
 }

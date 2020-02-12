@@ -42,4 +42,10 @@ class PickResult : BaseResult() {
      * 选择图片的uri
      */
     lateinit var originUri: Uri
+
+    /**
+     * 本地path
+     */
+    lateinit var localPath: String
+
 }

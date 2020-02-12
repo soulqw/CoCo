@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.qw.photo.CoCo
-import com.qw.photo.Utils
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
 import com.qw.photo.dispose.disposer.DefaultImageDisposer
@@ -37,9 +36,12 @@ class PickPictureActivity : BaseFunctionActivity() {
                 .apply()
                 .start(object : GetImageCallBack<PickResult> {
                     override fun onSuccess(data: PickResult) {
-                        val selectedPath =
-                            Utils.uriToImagePath(this@PickPictureActivity, data.originUri)
-                        val bitmap: Bitmap = BitmapFactory.decodeFile(selectedPath)
+                        Toast.makeText(
+                            this@PickPictureActivity,
+                            "选择操作最终成功 path: ${data.localPath}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        val bitmap: Bitmap = BitmapFactory.decodeFile(data.localPath)
                         getImageView().setImageBitmap(bitmap)
                         tv_result.text = getImageSizeDesc(bitmap)
                     }
@@ -74,7 +76,7 @@ class PickPictureActivity : BaseFunctionActivity() {
                     override fun onSuccess(data: PickResult) {
                         Toast.makeText(
                             this@PickPictureActivity,
-                            "选择操作最终成功 path: ${data.originUri.path}",
+                            "选择操作最终成功 path: ${data.localPath}",
                             Toast.LENGTH_SHORT
                         ).show()
                         getImageView().setImageBitmap(data.compressBitmap)
