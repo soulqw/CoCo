@@ -2,6 +2,7 @@ package com.qw.photo.pojo
 
 import com.qw.photo.DevUtil
 import com.qw.photo.annotations.CameraFace
+import com.qw.photo.annotations.PickRange
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.disposer.DefaultImageDisposer
 import com.qw.photo.dispose.disposer.ImageDisposer
@@ -93,12 +94,12 @@ class PickParams(worker: IWorker<PickParams, PickResult>) : BaseParams<PickResul
 
     /**
      * 选择范围根据你自己需要
-     * @param
+     * @param pickRange 筛选范围
      * @see PICK_DICM
      * @see PICK_CONTENT
      */
-    fun range(pickRange: Int): PickParams {
-        this.pickRange = pickRange;
+    fun range(@PickRange pickRange: Int): PickParams {
+        this.pickRange = pickRange
         return this
     }
 

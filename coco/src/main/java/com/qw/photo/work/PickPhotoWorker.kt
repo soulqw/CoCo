@@ -91,7 +91,7 @@ class PickPhotoWorker(handler: IAcceptActivityResultHandler) :
                 if (null != mParams.disposer) {
                     Utils.disposeImage(
                         mHandler.getLifecycleHost(),
-                        localPath!!,
+                        localPath,
                         mParams.file,
                         mParams.disposer!!,
                         result,
