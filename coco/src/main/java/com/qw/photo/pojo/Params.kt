@@ -22,14 +22,14 @@ open class BaseParams<Result : BaseResult>(internal val worker: IWorker<*, Resul
 
     /**
      * 应用参数为后续操作做准备
-     * （不会压缩）
+     * （不会做额外处理）
      */
     fun apply(): Executor<Result> {
         return Executor(this)
     }
 
     /**
-     * 应用参数为后续操作做准备，并且可自定义压缩策略
+     * 应用参数为后续操作做准备，并根据ImageDisposer 做图片处理
      */
     @JvmOverloads
     fun applyWithDispose(compressor: ImageDisposer = DefaultImageDisposer.getDefault()): Executor<Result> {
@@ -45,9 +45,11 @@ class TakeParams(worker: IWorker<TakeParams, TakeResult>) : BaseParams<TakeResul
         const val FRONT = 1
 
         const val BACK = 0
+
     }
 
-    var cameraFace = BACK
+    internal var cameraFace = BACK
+
     /**
      * 指定被最终写到的文件
      */
@@ -84,7 +86,7 @@ class PickParams(worker: IWorker<PickParams, PickResult>) : BaseParams<PickResul
 
     }
 
-    var pickRange = PICK_DICM
+    internal var pickRange = PICK_DICM
 
     fun targetFile(file: File?): PickParams {
         DevUtil.d(Constant.TAG, "pick: saveFilePath: " + (file?.path ?: "originUri is null"))
