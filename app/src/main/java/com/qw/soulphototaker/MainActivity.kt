@@ -107,10 +107,10 @@ class MainActivity : AppCompatActivity() {
                                 "选择操作最终成功 path: ${data.originUri.path}",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            val selectedPath =
-                                Utils.uriToImagePath(this@MainActivity, data.originUri)
-                            val bitmap: Bitmap = BitmapFactory.decodeFile(selectedPath)
-                            iv_image.setImageBitmap(bitmap)
+                            if (data.targetFile!=null) {
+                                val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
+                                iv_image.setImageBitmap(bitmap)
+                            }
 //                         if you use applyWithDispose() can get compress bitmap
 //                        iv_image.setImageBitmap(data.compressBitmap)
 
