@@ -5,11 +5,9 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Environment
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.qw.photo.CoCo
-import com.qw.photo.Utils
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.dispose.QualityCompressor
 import com.qw.photo.dispose.disposer.ImageDisposer
@@ -162,7 +160,10 @@ class MainActivity : AppCompatActivity() {
     private fun createSDCardFile(): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? = Environment.getExternalStorageDirectory()
+        val storageDir = File(externalCacheDir!!.path + "/" + timeStamp)
+        if (!storageDir.exists()) {
+            storageDir.mkdir()
+        }
         return File.createTempFile(
             "JPEG_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */

@@ -87,7 +87,10 @@ abstract class BaseFunctionActivity : AppCompatActivity() {
     protected fun createSDCardFile(): File {
         // Create an image file name
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir: File? = Environment.getExternalStorageDirectory()
+        val storageDir = File(externalCacheDir!!.path + "/" + timeStamp)
+        if (!storageDir.exists()) {
+            storageDir.mkdir()
+        }
         return File.createTempFile(
             "JPEG_${timeStamp}_", /* prefix */
             ".jpg", /* suffix */
