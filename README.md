@@ -38,6 +38,7 @@ dependencies {
         .take(createSDCardFile())
         .apply()
         .start(object : GetImageCallBack<CaptureResult> {
+        
                 override fun onSuccess(data: CaptureResult) {
                     val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
                     getImageView().setImageBitmap(bitmap)
