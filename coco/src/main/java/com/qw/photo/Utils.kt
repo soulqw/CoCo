@@ -1,21 +1,16 @@
 package com.qw.photo
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.app.Activity
 import android.content.ContentResolver
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION_CODES.M
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
-import androidx.core.app.ActivityCompat
 import androidx.core.content.FileProvider
 import com.qw.photo.callback.CompressListener
 import com.qw.photo.callback.GetImageCallBack
@@ -24,7 +19,6 @@ import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.DisposerManager
 import com.qw.photo.dispose.WorkThread
 import com.qw.photo.dispose.disposer.ImageDisposer
-import com.qw.photo.exception.MissPermissionException
 import com.qw.photo.pojo.BaseResult
 import java.io.*
 
@@ -67,25 +61,6 @@ object Utils {
 
     internal fun isHostAvailable(host: Host): Boolean {
         return host.getStatus() == Host.Status.LIVE
-    }
-
-    @TargetApi(M)
-    internal fun checkNecessaryPermissions(activity: Activity?) {
-        if (!isActivityAvailable(activity)) {
-            return
-        }
-        val readStorageResult =
-            ActivityCompat.checkSelfPermission(
-                activity!!,
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-        val writeStorageResult =
-            ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        if (readStorageResult != PackageManager.PERMISSION_GRANTED
-            || writeStorageResult != PackageManager.PERMISSION_GRANTED
-        ) {
-            throw MissPermissionException()
-        }
     }
 
     @SuppressLint("Recycle")

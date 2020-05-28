@@ -1,9 +1,6 @@
 package com.qw.soulphototaker
 
-import android.Manifest
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -14,9 +11,6 @@ import com.qw.photo.dispose.disposer.ImageDisposer
 import com.qw.photo.pojo.BaseResult
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
-import com.qw.soul.permission.SoulPermission
-import com.qw.soul.permission.bean.Permission
-import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.IOException
@@ -28,25 +22,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        checkPermissionFirst()
+        initViewComponent()
         CoCo.setDebug(true)
-    }
-
-    //https://github.com/soulqw/SoulPermission
-    private fun checkPermissionFirst() {
-        SoulPermission.getInstance()
-            .checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, object :
-                CheckRequestPermissionListener {
-
-                override fun onPermissionOk(permission: Permission?) {
-                    initViewComponent()
-                }
-
-                override fun onPermissionDenied(permission: Permission?) {
-                    Toast.makeText(this@MainActivity, "不授予文件权限无法使用CoCo", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-            })
     }
 
     private fun initViewComponent() {

@@ -36,7 +36,6 @@ object CoCo {
     }
 
     private fun checkStatusFirst(activity: Activity?) {
-        Utils.checkNecessaryPermissions(activity)
         if (!Utils.isActivityAvailable(activity)) {
             throw ActivityStatusException()
         }
