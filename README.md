@@ -1,5 +1,5 @@
 # CoCo
- [![Hex.pm](https://img.shields.io/badge/download-0.2.3-green)](https://www.apache.org/licenses/LICENSE-2.0)
+ [![Hex.pm](https://img.shields.io/badge/download-0.3.0-green)](https://www.apache.org/licenses/LICENSE-2.0)
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
@@ -18,7 +18,7 @@
 最新版本(Based on Android X):
 ```java
 dependencies {
-    implementation 'com.qw:coco:0.2.3'
+    implementation 'com.qw:coco:0.3.0'
 }
 ```
 此后迭代的版本全部基于AndroidX,如果你的应用还没适配,未适配Android X的版本最多支持到 0.2.0,源码在 master_old 分支,且不再维护.
