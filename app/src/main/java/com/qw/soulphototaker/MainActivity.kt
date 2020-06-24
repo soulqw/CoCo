@@ -2,6 +2,7 @@ package com.qw.soulphototaker
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.StrictMode
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.qw.photo.CoCo
@@ -24,6 +25,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViewComponent()
         CoCo.setDebug(true)
+        StrictMode.setVmPolicy(
+            StrictMode.VmPolicy.Builder()
+                .detectLeakedSqlLiteObjects()
+                .detectActivityLeaks()
+                .detectLeakedClosableObjects()
+                .penaltyLog().penaltyDeath().build()
+        );
     }
 
     private fun initViewComponent() {

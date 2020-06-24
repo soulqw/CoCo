@@ -103,15 +103,13 @@ object Utils {
             fos = FileOutputStream(file)
             fos.write(bitmapToBytes(bm))
         } catch (e: IOException) {
-            e.printStackTrace()
+            DevUtil.e(Constant.TAG, e.toString())
             return false
         } finally {
-            if (fos != null) {
-                try {
-                    fos.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+            try {
+                fos!!.close()
+            } catch (e: IOException) {
+                DevUtil.e(Constant.TAG, e.toString())
             }
         }
         return true
@@ -159,18 +157,23 @@ object Utils {
 
     internal fun getBitmapFromFile(filePath: String): Bitmap? {
         var bis: BufferedInputStream? = null
+        var fis: FileInputStream? = null
         try {
-            bis = BufferedInputStream(FileInputStream(filePath))
+            fis = FileInputStream(filePath)
+            bis = BufferedInputStream(fis)
             BitmapFactory.decodeStream(bis, null, null)
-            bis = BufferedInputStream(FileInputStream(filePath))
+            fis.close()
+            bis.close()
+            fis = FileInputStream(filePath)
+            bis = BufferedInputStream(fis)
             return BitmapFactory.decodeStream(bis, null, null)
         } finally {
-            if (bis != null) {
-                try {
-                    bis.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+            try {
+                bis!!.close()
+                fis!!.close()
+            } catch (e: IOException) {
+                DevUtil.e(Constant.TAG, e.toString())
+                return null
             }
         }
     }
@@ -186,12 +189,10 @@ object Utils {
             bm.compress(Bitmap.CompressFormat.JPEG, 60, baos)
             return baos.toByteArray()
         } finally {
-            if (baos != null) {
-                try {
-                    baos.close()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+            try {
+                baos!!.close()
+            } catch (e: IOException) {
+                DevUtil.e(Constant.TAG, e.toString())
             }
         }
     }
