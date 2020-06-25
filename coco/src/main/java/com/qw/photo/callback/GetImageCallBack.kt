@@ -8,6 +8,7 @@ interface GetImageCallBack<Result> {
 
     /**
      * 当调用了 applyWithDispose 才会回调
+     * @see com.qw.photo.pojo.BaseParams.applyWithDispose
      *
      */
     fun onDisposeStart() {

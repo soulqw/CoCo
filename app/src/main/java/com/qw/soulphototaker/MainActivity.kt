@@ -2,11 +2,10 @@ package com.qw.soulphototaker
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.StrictMode
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.qw.photo.CoCo
-import com.qw.photo.callback.GetImageCallBack
+import com.qw.photo.callback.SimpleGetImageAdapter
 import com.qw.photo.dispose.QualityCompressor
 import com.qw.photo.dispose.disposer.ImageDisposer
 import com.qw.photo.pojo.BaseResult
@@ -25,13 +24,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViewComponent()
         CoCo.setDebug(true)
-        StrictMode.setVmPolicy(
-            StrictMode.VmPolicy.Builder()
-                .detectLeakedSqlLiteObjects()
-                .detectActivityLeaks()
-                .detectLeakedClosableObjects()
-                .penaltyLog().penaltyDeath().build()
-        );
     }
 
     private fun initViewComponent() {
@@ -40,24 +32,7 @@ class MainActivity : AppCompatActivity() {
                 CoCo.with(this@MainActivity)
                     .take(createSDCardFile())
                     .applyWithDispose()
-                    .start(object : GetImageCallBack<TakeResult> {
-
-                        override fun onDisposeStart() {
-                            Toast.makeText(this@MainActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT)
-                                .show()
-                        }
-
-                        override fun onCancel() {
-                            Toast.makeText(this@MainActivity, "拍照取消", Toast.LENGTH_SHORT).show()
-                        }
-
-                        override fun onFailed(exception: Exception) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "拍照异常: $exception",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
+                    .start(object : SimpleGetImageAdapter<TakeResult>() {
 
                         override fun onSuccess(data: TakeResult) {
                             Toast.makeText(this@MainActivity, "拍照操作最终成功", Toast.LENGTH_SHORT).show()
@@ -77,12 +52,7 @@ class MainActivity : AppCompatActivity() {
                     .pick(createSDCardFile())
                     .apply()
 //                .applyWithDispose()
-                    .start(object : GetImageCallBack<PickResult> {
-
-                        override fun onDisposeStart() {
-                            Toast.makeText(this@MainActivity, "选择成功,开始处理", Toast.LENGTH_SHORT)
-                                .show()
-                        }
+                    .start(object : SimpleGetImageAdapter<PickResult>() {
 
                         override fun onSuccess(data: PickResult) {
                             Toast.makeText(
@@ -96,19 +66,6 @@ class MainActivity : AppCompatActivity() {
 //                        iv_image.setImageBitmap(data.compressBitmap)
 
                         }
-
-                        override fun onFailed(exception: Exception) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "选择异常: $exception",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        override fun onCancel() {
-                            Toast.makeText(this@MainActivity, "选择取消", Toast.LENGTH_SHORT).show()
-                        }
-
                     })
             }
             setOnLongClickListener {
@@ -120,20 +77,12 @@ class MainActivity : AppCompatActivity() {
             CoCo.with(this)
                 .take(createSDCardFile())
                 .applyWithDispose(CustomDisposer())
-                .start(object : GetImageCallBack<TakeResult> {
+                .start(object : SimpleGetImageAdapter<TakeResult>() {
 
                     override fun onSuccess(data: TakeResult) {
                         Toast.makeText(this@MainActivity, "自定义Disposer拍照操作最终成功", Toast.LENGTH_SHORT)
                             .show()
                         iv_image.setImageBitmap(data.compressBitmap)
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "拍照异常: $exception",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
 
                 })

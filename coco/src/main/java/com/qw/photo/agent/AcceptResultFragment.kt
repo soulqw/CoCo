@@ -14,7 +14,7 @@ import com.qw.photo.constant.Constant
  */
 class AcceptResultFragment : Fragment(), IAcceptActivityResultHandler, Host {
 
-    private var current: Host.Status = Host.Status.INIT
+    private var current = Host.Status.INIT
 
     private var requestCode: Int = 0
 
@@ -55,7 +55,7 @@ class AcceptResultFragment : Fragment(), IAcceptActivityResultHandler, Host {
         callback = null
     }
 
-    override fun getStatus(): Host.Status {
+    override fun getStatus(): Int {
         return current
     }
 

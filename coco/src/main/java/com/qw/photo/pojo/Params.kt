@@ -30,6 +30,7 @@ open class BaseParams<Result : BaseResult>(internal val worker: IWorker<*, Resul
 
     /**
      * 应用参数为后续操作做准备，并根据ImageDisposer 做图片处理
+     * @see ImageDisposer
      */
     @JvmOverloads
     fun applyWithDispose(compressor: ImageDisposer = DefaultImageDisposer.getDefault()): Executor<Result> {

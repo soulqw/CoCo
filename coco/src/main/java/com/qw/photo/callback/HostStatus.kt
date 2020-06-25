@@ -1,5 +1,6 @@
 package com.qw.photo.callback
 
+import com.qw.photo.annotations.HostStatus
 
 /**
  *
@@ -8,24 +9,29 @@ package com.qw.photo.callback
  */
 interface Host {
 
-    fun getStatus(): Status
+    @HostStatus
+    fun getStatus(): Int
 
-    enum class Status {
-        /**
-         * 初始化状态
-         */
-        INIT,
+    class Status {
 
-        /**
-         * 可用态
-         */
-        LIVE,
+        companion object {
 
-        /**
-         * 结束态
-         */
-        DEAD
+            /**
+             * 初始化状态
+             */
+            const val INIT = 0x1 shl 1
 
+            /**
+             * 可用态
+             */
+            const val LIVE = 0x1 shl 2
+
+            /**
+             * 结束态
+             */
+            const val DEAD = 0x1 shl 3
+
+        }
     }
 
 }
