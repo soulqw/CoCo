@@ -8,7 +8,7 @@ android {
         applicationId "com.qw.soulphototaker"
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 23
+        versionCode 25
         versionName "0.2.3"
     }
     buildTypes {
@@ -21,7 +21,7 @@ android {
 dependencies {
     implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation project(':coco')
-//    implementation 'com.qw:coco:0.3.0'
+//    implementation project(':coco')
+    implementation 'com.qw:coco:0.3.1'
 
 }
