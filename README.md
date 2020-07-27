@@ -3,7 +3,7 @@
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
-#### 一款小而美的的Android系统相机拍照和系统相册选择库🐵：
+#### 一款小而美的的Android系统相机拍照和系统相册选择库🐵
  - 一行代码完成从系统相机拍照或者系统相册选择图片
  - 内部适配 7.0 FileProvider文件处理，无需自己额外处理
  - 默认图片处理器自带两种图片压缩策略，并可按需自定义图片处理器
