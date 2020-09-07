@@ -4,8 +4,8 @@ import android.app.Activity
 import androidx.fragment.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
 import com.qw.photo.agent.IAcceptActivityResultHandler
-import com.qw.photo.pojo.TakeParams
-import com.qw.photo.pojo.PickParams
+import com.qw.photo.functions.PickBuilder
+import com.qw.photo.functions.TakeBuilder
 import java.io.File
 
 /**
@@ -17,14 +17,19 @@ class FunctionManager(private val handler: IAcceptActivityResultHandler) {
      * 拍照
      * @param targetFile 拍照完成后的存储路径，如果指定压缩，也是此路径（必传）
      */
-    fun take(targetFile: File): TakeParams = TakeParams(TakePhotoWorker(handler)).targetFile(targetFile)
+    fun take(targetFile: File): TakeBuilder =
+        TakeBuilder(this, TakePhotoWorker(handler)).targetFile(targetFile)
 
     /**
      * 选择照片
      * @param targetFile 如果需要压缩之后的存贮路径
      */
-    fun pick(targetFile: File? = null): PickParams = PickParams(PickPhotoWorker(handler)).targetFile(targetFile)
+    fun pick(targetFile: File? = null): PickBuilder =
+        PickBuilder(this, PickPhotoWorker(handler)).targetFile(targetFile)
 
+    fun dispose() {}
+
+    fun crop() {}
 
     companion object {
         internal fun create(activity: Activity) =

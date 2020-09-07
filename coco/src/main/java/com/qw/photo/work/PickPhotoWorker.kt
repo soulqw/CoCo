@@ -11,7 +11,7 @@ import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.DisposerManager
 import com.qw.photo.exception.BaseException
-import com.qw.photo.pojo.PickParams
+import com.qw.photo.functions.PickBuilder
 import com.qw.photo.pojo.PickResult
 
 
@@ -19,7 +19,7 @@ import com.qw.photo.pojo.PickResult
  * Created by rocket on 2019/6/18.
  */
 class PickPhotoWorker(handler: IAcceptActivityResultHandler) :
-    BaseWorker<PickParams, PickResult>(handler) {
+    BaseWorker<PickBuilder, PickResult>(handler) {
     override fun start(callBack: GetImageCallBack<PickResult>) {
         val activity = mHandler.provideActivity()
         activity ?: return
@@ -27,7 +27,7 @@ class PickPhotoWorker(handler: IAcceptActivityResultHandler) :
     }
 
     private fun pickPhoto(activity: Activity, callBack: GetImageCallBack<PickResult>) {
-        val pickIntent = if (mParams.pickRange == PickParams.PICK_DICM) {
+        val pickIntent = if (mParams.pickRange == PickBuilder.PICK_DICM) {
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         } else {
             Intent(Intent.ACTION_GET_CONTENT, null).also {

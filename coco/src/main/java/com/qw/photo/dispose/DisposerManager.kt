@@ -13,7 +13,7 @@ import com.qw.photo.callback.Host
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.disposer.ImageDisposer
 import com.qw.photo.exception.PickNoResultException
-import com.qw.photo.pojo.PickParams
+import com.qw.photo.functions.PickBuilder
 import com.qw.photo.pojo.PickResult
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -64,7 +64,7 @@ internal object DisposerManager {
     fun generateLocalPathAndHandResultWhenConvertUriFailed(
         activity: Activity,
         host: Host,
-        params: PickParams,
+        params: PickBuilder,
         result: PickResult,
         callBack: GetImageCallBack<PickResult>
 

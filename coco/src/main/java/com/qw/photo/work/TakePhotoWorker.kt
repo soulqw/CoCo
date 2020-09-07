@@ -12,14 +12,14 @@ import com.qw.photo.agent.IAcceptActivityResultHandler
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.exception.BaseException
-import com.qw.photo.pojo.TakeParams
+import com.qw.photo.functions.TakeBuilder
 import com.qw.photo.pojo.TakeResult
 
 /**
  * Created by rocket on 2019/6/18.
  */
 class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
-    BaseWorker<TakeParams, TakeResult>(handler) {
+    BaseWorker<TakeBuilder, TakeResult>(handler) {
 
     override fun start(callBack: GetImageCallBack<TakeResult>) {
         val activity = mHandler.provideActivity()
@@ -64,7 +64,7 @@ class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
 
     private fun setCameraFace(intent: Intent) {
         when (mParams.cameraFace) {
-            TakeParams.FRONT -> {
+            TakeBuilder.FRONT -> {
                 intent.putExtra(
                     "android.intent.extras.CAMERA_FACING",
                     Camera.CameraInfo.CAMERA_FACING_FRONT

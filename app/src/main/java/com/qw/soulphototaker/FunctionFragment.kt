@@ -3,7 +3,6 @@ package com.qw.soulphototaker
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +13,9 @@ import com.qw.photo.CoCo
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
 import com.qw.photo.dispose.disposer.DefaultImageDisposer
-import com.qw.photo.pojo.PickParams
+import com.qw.photo.functions.PickBuilder
+import com.qw.photo.functions.TakeBuilder
 import com.qw.photo.pojo.PickResult
-import com.qw.photo.pojo.TakeParams
 import com.qw.photo.pojo.TakeResult
 import kotlinx.android.synthetic.main.activity_funtion_detail.*
 import java.io.ByteArrayOutputStream
@@ -71,9 +70,9 @@ class FunctionFragment : Fragment() {
             } else {
                 CompressStrategy.QUALITY
             }
-            var cameraFace = TakeParams.BACK
+            var cameraFace = TakeBuilder.BACK
             if (activity!!.findViewById<ToggleButton>(R.id.tb_camera_face).isChecked) {
-                cameraFace = TakeParams.FRONT
+                cameraFace = TakeBuilder.FRONT
             }
             CoCo.with(this)
                 .take(createSDCardFile())
@@ -116,7 +115,7 @@ class FunctionFragment : Fragment() {
         if (degree == -1) {
             CoCo.with(this)
                 .pick(createSDCardFile())
-                .range(PickParams.PICK_CONTENT)
+                .range(PickBuilder.PICK_CONTENT)
                 .apply()
                 .start(object : GetImageCallBack<PickResult> {
                     override fun onSuccess(data: PickResult) {
@@ -138,7 +137,7 @@ class FunctionFragment : Fragment() {
             }
             CoCo.with(this)
                 .pick(createSDCardFile())
-                .range(PickParams.PICK_CONTENT)
+                .range(PickBuilder.PICK_CONTENT)
                 .applyWithDispose(
                     DefaultImageDisposer().degree(degree)
                         .strategy(strategy)
