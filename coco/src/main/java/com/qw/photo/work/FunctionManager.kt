@@ -3,7 +3,8 @@ package com.qw.photo.work
 import android.app.Activity
 import androidx.fragment.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
-import com.qw.photo.agent.IAcceptActivityResultHandler
+import com.qw.photo.agent.IContainer
+import com.qw.photo.functions.DisposeBuilder
 import com.qw.photo.functions.PickBuilder
 import com.qw.photo.functions.TakeBuilder
 import java.io.File
@@ -11,7 +12,7 @@ import java.io.File
 /**
  * Created by rocket on 2019/6/18.
  */
-class FunctionManager(private val handler: IAcceptActivityResultHandler) {
+class FunctionManager(private val handler: IContainer) {
 
     /**
      * 拍照
@@ -27,7 +28,7 @@ class FunctionManager(private val handler: IAcceptActivityResultHandler) {
     fun pick(targetFile: File? = null): PickBuilder =
         PickBuilder(this, PickPhotoWorker(handler)).targetFile(targetFile)
 
-    fun dispose() {}
+    fun dispose(): DisposeBuilder = DisposeBuilder(this, DisposeWorker(handler))
 
     fun crop() {}
 

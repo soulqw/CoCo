@@ -7,7 +7,7 @@ import com.qw.photo.callback.Host
 /**
  * Created by rocket on 2019/6/18.
  */
-interface IAcceptActivityResultHandler {
+interface IContainer {
 
     fun provideActivity(): Activity?
 

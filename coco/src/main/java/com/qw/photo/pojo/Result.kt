@@ -49,3 +49,7 @@ class PickResult : BaseResult() {
     lateinit var localPath: String
 
 }
+
+class DisposeResult :BaseResult(){
+
+}

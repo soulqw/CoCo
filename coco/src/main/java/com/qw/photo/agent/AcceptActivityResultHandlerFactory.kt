@@ -14,7 +14,7 @@ internal class AcceptActivityResultHandlerFactory {
     companion object {
         private const val TAG = "AcceptResultFragment"
 
-        fun create(activity: Activity): IAcceptActivityResultHandler {
+        fun create(activity: Activity): IContainer {
             return if (activity is FragmentActivity) {
                 activity.supportFragmentManager.run {
                     val resultFragment = findFragmentByTag(TAG) as? AcceptResultSupportFragment?
@@ -28,13 +28,13 @@ internal class AcceptActivityResultHandlerFactory {
             }
         }
 
-        fun create(fragment: Fragment): IAcceptActivityResultHandler {
+        fun create(fragment: Fragment): IContainer {
             val resultFragment =
                 fragment.childFragmentManager.findFragmentByTag(TAG) as? AcceptResultSupportFragment?
             return resultFragment ?: getAcceptResultSupportFragment(fragment.childFragmentManager)
         }
 
-        fun create(fragment: android.app.Fragment): IAcceptActivityResultHandler {
+        fun create(fragment: android.app.Fragment): IContainer {
             val fm = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
                 fragment.childFragmentManager
             } else {

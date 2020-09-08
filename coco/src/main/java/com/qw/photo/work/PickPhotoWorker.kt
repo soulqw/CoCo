@@ -6,7 +6,7 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import com.qw.photo.DevUtil
 import com.qw.photo.Utils
-import com.qw.photo.agent.IAcceptActivityResultHandler
+import com.qw.photo.agent.IContainer
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.DisposerManager
@@ -18,7 +18,7 @@ import com.qw.photo.pojo.PickResult
 /**
  * Created by rocket on 2019/6/18.
  */
-class PickPhotoWorker(handler: IAcceptActivityResultHandler) :
+class PickPhotoWorker(handler: IContainer) :
     BaseWorker<PickBuilder, PickResult>(handler) {
     override fun start(callBack: GetImageCallBack<PickResult>) {
         val activity = mHandler.provideActivity()

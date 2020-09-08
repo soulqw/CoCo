@@ -12,7 +12,7 @@ import com.qw.photo.constant.Constant
 /**
  * Created by rocket on 2019/6/18.
  */
-class AcceptResultFragment : Fragment(), IAcceptActivityResultHandler, Host {
+class AcceptResultFragment : Fragment(), IContainer, Host {
 
     private var current = Host.Status.INIT
 

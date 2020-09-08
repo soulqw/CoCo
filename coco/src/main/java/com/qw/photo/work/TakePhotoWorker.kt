@@ -8,7 +8,7 @@ import android.os.Build
 import android.provider.MediaStore
 import android.text.TextUtils
 import com.qw.photo.Utils
-import com.qw.photo.agent.IAcceptActivityResultHandler
+import com.qw.photo.agent.IContainer
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.exception.BaseException
@@ -18,7 +18,7 @@ import com.qw.photo.pojo.TakeResult
 /**
  * Created by rocket on 2019/6/18.
  */
-class TakePhotoWorker(handler: IAcceptActivityResultHandler) :
+class TakePhotoWorker(handler: IContainer) :
     BaseWorker<TakeBuilder, TakeResult>(handler) {
 
     override fun start(callBack: GetImageCallBack<TakeResult>) {
