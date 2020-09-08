@@ -1,4 +1,4 @@
-package com.qw.photo.callback
+package com.qw.photo.constant
 
 import com.qw.photo.annotations.HostStatus
 

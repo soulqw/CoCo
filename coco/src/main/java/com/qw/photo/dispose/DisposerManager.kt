@@ -9,7 +9,7 @@ import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.callback.CompressListener
 import com.qw.photo.callback.GetImageCallBack
-import com.qw.photo.callback.Host
+import com.qw.photo.constant.Host
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.disposer.ImageDisposer
 import com.qw.photo.exception.PickNoResultException

@@ -6,13 +6,14 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.qw.photo.DevUtil
 import com.qw.photo.Utils
-import com.qw.photo.callback.Host
+import com.qw.photo.constant.Host
 import com.qw.photo.constant.Constant
 
 /**
  * Created by rocket on 2019/6/18.
  */
-class AcceptResultSupportFragment : Fragment(), IContainer, Host {
+class AcceptResultSupportFragment : Fragment(), IContainer,
+    Host {
 
     private var current = Host.Status.INIT
 
