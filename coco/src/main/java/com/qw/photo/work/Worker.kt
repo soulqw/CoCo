@@ -2,8 +2,8 @@ package com.qw.photo.work
 
 import com.qw.photo.callback.CoCoCallBack
 
-interface Worker {
+interface Worker<ResultData> {
 
-    fun start(callBack: CoCoCallBack)
+    fun start(callBack: CoCoCallBack<ResultData>)
 
 }

@@ -4,9 +4,9 @@ package com.qw.photo.callback
 /**
  * @author cd5160866
  */
-interface CoCoCallBack {
+interface CoCoCallBack<ResultData> {
 
-    fun onSuccess(data: Any)
+    fun onSuccess(data: ResultData)
 
     /**
      * 失败

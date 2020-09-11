@@ -3,6 +3,7 @@ package com.qw.photo
 import android.app.Activity
 import android.app.Fragment
 import com.qw.photo.exception.ActivityStatusException
+import com.qw.photo.pojo.BaseResult
 import com.qw.photo.work.FunctionManager
 
 
@@ -13,19 +14,19 @@ import com.qw.photo.work.FunctionManager
 object CoCo {
 
     @JvmStatic
-    fun with(activity: Activity): FunctionManager {
+    fun with(activity: Activity): FunctionManager<BaseResult> {
         checkStatusFirst(activity)
         return FunctionManager.create(activity)
     }
 
     @JvmStatic
-    fun with(fragment: androidx.fragment.app.Fragment): FunctionManager {
+    fun with(fragment: androidx.fragment.app.Fragment): FunctionManager<BaseResult> {
         checkStatusFirst(fragment.activity)
         return FunctionManager.create(fragment)
     }
 
     @JvmStatic
-    fun with(fragment: Fragment): FunctionManager {
+    fun with(fragment: Fragment): FunctionManager<BaseResult> {
         checkStatusFirst(fragment.activity)
         return FunctionManager.create(fragment)
     }

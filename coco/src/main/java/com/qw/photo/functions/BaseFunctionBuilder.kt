@@ -1,24 +1,22 @@
 package com.qw.photo.functions
 
-import com.qw.photo.dispose.disposer.DefaultImageDisposer
-import com.qw.photo.dispose.disposer.ImageDisposer
-import com.qw.photo.pojo.BaseResult
-import com.qw.photo.work.Executor
+import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.work.FunctionManager
-import com.qw.photo.work.IWorker
 import com.qw.photo.work.Worker
 import java.io.File
 
 /**
  * @author cd5160866
  */
-abstract class BaseFunctionBuilder<Result : BaseResult>(
-    internal val functionManager: FunctionManager) {
+abstract class BaseFunctionBuilder<Result>(
+    private val functionManager: FunctionManager<Result>,
+    internal val worker: Worker<Result>
+) {
 
     internal var file: File? = null
 
-    fun then(): FunctionManager {
-        this.functionManager.workerFlows.add(createWorker())
+    fun then(): FunctionManager<Result> {
+        this.functionManager.workerFlows.add(this)
         return this.functionManager
     }
 
@@ -26,17 +24,23 @@ abstract class BaseFunctionBuilder<Result : BaseResult>(
      * 应用参数为后续操作做准备
      * （不会做额外处理）
      */
-    fun apply(): Executor<Result> {
-        return Executor(this)
+    fun apply(callback: CoCoCallBack<Result>) {
+        val iterator = functionManager.workerFlows.iterator()
+        iterator.forEach {
+            it.worker.start(object : CoCoCallBack<Result> {
+                override fun onSuccess(data: Result) {
+                    if (iterator.hasNext()) {
+                        iterator.remove()
+                    } else {
+                        callback.onSuccess(data)
+                    }
+                }
+
+                override fun onFailed(exception: Exception) {
+                    callback.onFailed(exception)
+                }
+            })
+        }
     }
 
-    internal abstract fun createWorker(): Worker
-
-    /**
-     * 应用参数为后续操作做准备，并根据ImageDisposer 做图片处理
-     */
-    @JvmOverloads
-    fun applyWithDispose(compressor: ImageDisposer = DefaultImageDisposer.getDefault()): Executor<Result> {
-        return apply()
-    }
 }

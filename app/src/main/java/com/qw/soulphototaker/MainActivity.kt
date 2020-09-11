@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.qw.photo.CoCo
+import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.callback.SimpleGetImageAdapter
 import com.qw.photo.dispose.QualityCompressor
 import com.qw.photo.dispose.disposer.ImageDisposer
 import com.qw.photo.pojo.BaseResult
+import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
 import kotlinx.android.synthetic.main.activity_main.*
@@ -24,6 +26,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViewComponent()
         CoCo.setDebug(true)
+        CoCo.with(this).dispose().apply(object:CoCoCallBack<DisposeResult>{
+            override fun onSuccess(data: DisposeResult) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onFailed(exception: Exception) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+        })
     }
 
     private fun initViewComponent() {
