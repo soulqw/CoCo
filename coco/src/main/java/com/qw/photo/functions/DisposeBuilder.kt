@@ -12,7 +12,7 @@ import java.io.File
  *Author: 思忆
  *Date: Created in 2020/9/8 3:06 PM
  */
-class DisposeBuilder(fm: FunctionManager<DisposeResult>) :
+class DisposeBuilder(fm: FunctionManager) :
     BaseFunctionBuilder<DisposeResult>(fm, DisposeWorker(fm.container)) {
 
     private lateinit var targetFile: File
