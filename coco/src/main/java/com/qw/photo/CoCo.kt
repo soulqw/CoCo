@@ -14,19 +14,19 @@ import com.qw.photo.work.FunctionManager
 object CoCo {
 
     @JvmStatic
-    fun with(activity: Activity): FunctionManager<BaseResult> {
+    fun with(activity: Activity): FunctionManager {
         checkStatusFirst(activity)
         return FunctionManager.create(activity)
     }
 
     @JvmStatic
-    fun with(fragment: androidx.fragment.app.Fragment): FunctionManager<BaseResult> {
+    fun with(fragment: androidx.fragment.app.Fragment): FunctionManager {
         checkStatusFirst(fragment.activity)
         return FunctionManager.create(fragment)
     }
 
     @JvmStatic
-    fun with(fragment: Fragment): FunctionManager<BaseResult> {
+    fun with(fragment: Fragment): FunctionManager {
         checkStatusFirst(fragment.activity)
         return FunctionManager.create(fragment)
     }

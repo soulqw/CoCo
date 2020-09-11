@@ -4,21 +4,18 @@ import android.app.Activity
 import androidx.fragment.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
 import com.qw.photo.agent.IContainer
-import com.qw.photo.functions.BaseFunctionBuilder
 import com.qw.photo.functions.DisposeBuilder
 import com.qw.photo.functions.PickBuilder
 import com.qw.photo.functions.TakeBuilder
-import com.qw.photo.pojo.BaseResult
-import com.qw.photo.pojo.DisposeResult
 import java.io.File
 import java.util.ArrayList
 
 /**
  * Created by rocket on 2019/6/18.
  */
-class FunctionManager<BaseResult>(val container: IContainer) {
+class FunctionManager(val container: IContainer) {
 
-    internal val workerFlows = ArrayList<BaseFunctionBuilder<BaseResult>>()
+    internal val workerFlows = ArrayList<Any>()
 
     /**
      * 拍照
@@ -40,13 +37,13 @@ class FunctionManager<BaseResult>(val container: IContainer) {
 
     companion object {
         internal fun create(activity: Activity) =
-            FunctionManager<BaseResult>(AcceptActivityResultHandlerFactory.create(activity))
+            FunctionManager(AcceptActivityResultHandlerFactory.create(activity))
 
         internal fun create(fragment: Fragment) =
-            FunctionManager<BaseResult>(AcceptActivityResultHandlerFactory.create(fragment))
+            FunctionManager(AcceptActivityResultHandlerFactory.create(fragment))
 
         internal fun create(fragment: android.app.Fragment) =
-            FunctionManager<BaseResult>(AcceptActivityResultHandlerFactory.create(fragment))
+            FunctionManager(AcceptActivityResultHandlerFactory.create(fragment))
 
     }
 }
