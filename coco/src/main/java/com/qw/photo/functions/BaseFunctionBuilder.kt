@@ -3,7 +3,6 @@ package com.qw.photo.functions
 import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.work.FunctionManager
 import com.qw.photo.work.Worker
-import java.io.File
 
 /**
  * @author cd5160866
@@ -13,17 +12,18 @@ abstract class BaseFunctionBuilder<P, Result>(
     private val worker: Worker<P, Result>
 ) {
 
-    internal var file: File? = null
+    init {
+        this.functionManager.workerFlows.add(this)
+    }
 
     fun then(): FunctionManager {
-        this.functionManager.workerFlows.add(this)
         return this.functionManager
     }
 
     /**
      * 应用参数为后续操作做准备
      */
-    fun apply(callback: CoCoCallBack<Result>) {
+    fun start(callback: CoCoCallBack<Result>) {
         val iterator = functionManager.workerFlows.iterator()
         if (!iterator.hasNext()) {
             return

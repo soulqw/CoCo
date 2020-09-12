@@ -13,27 +13,32 @@ import java.util.ArrayList
 /**
  * Created by rocket on 2019/6/18.
  */
-class FunctionManager(val container: IContainer) {
+class FunctionManager(internal val container: IContainer) {
 
     internal val workerFlows = ArrayList<Any>()
 
     /**
-     * 拍照
+     * 系统相机拍照
      * @param targetFile 拍照完成后的存储路径，如果指定压缩，也是此路径（必传）
      */
     fun take(targetFile: File): TakeBuilder =
-        TakeBuilder(this, TakePhotoWorker(container)).targetFile(targetFile)
+        TakeBuilder(this).fileToSave(targetFile)
 
     /**
-     * 选择照片
-     * @param targetFile 如果需要压缩之后的存贮路径
+     * 系统选择照片
      */
-    fun pick(targetFile: File? = null): PickBuilder =
-        PickBuilder(this).targetFile(targetFile)
+    fun pick(): PickBuilder =
+        PickBuilder(this)
 
-    fun dispose(): DisposeBuilder = DisposeBuilder(this)
-
+    /**
+     * 系统裁剪照片
+     */
     fun crop() {}
+
+    /**
+     * 处理图片（可自定义）
+     */
+    fun dispose(): DisposeBuilder = DisposeBuilder(this)
 
     companion object {
         internal fun create(activity: Activity) =

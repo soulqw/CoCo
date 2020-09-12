@@ -6,10 +6,9 @@ import android.content.Intent
 import android.hardware.Camera
 import android.os.Build
 import android.provider.MediaStore
-import android.text.TextUtils
 import com.qw.photo.Utils
 import com.qw.photo.agent.IContainer
-import com.qw.photo.callback.GetImageCallBack
+import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.exception.BaseException
 import com.qw.photo.functions.TakeBuilder
@@ -21,13 +20,16 @@ import com.qw.photo.pojo.TakeResult
 class TakePhotoWorker(handler: IContainer) :
     BaseWorker<TakeBuilder, TakeResult>(handler) {
 
-    override fun start(callBack: GetImageCallBack<TakeResult>) {
-        val activity = mHandler.provideActivity()
+    lateinit var mParams: TakeBuilder
+
+    override fun start(params: TakeBuilder, callBack: CoCoCallBack<TakeResult>) {
+        this.mParams = params
+        val activity = iContainer.provideActivity()
         activity ?: return
         takePhoto(activity, callBack)
     }
 
-    private fun takePhoto(activity: Activity, callBack: GetImageCallBack<TakeResult>) {
+    private fun takePhoto(activity: Activity, callBack: CoCoCallBack<TakeResult>) {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         setCameraFace(takePictureIntent)
         if (null === takePictureIntent.resolveActivity(activity.packageManager)) {
@@ -35,8 +37,8 @@ class TakePhotoWorker(handler: IContainer) :
             return
         }
         //用户指定了目标文件路径
-        if (null != mParams.file) {
-            val uri = Utils.createUriFromFile((activity) as Context, mParams.file!!)
+        if (null != mParams.fileToSave) {
+            val uri = Utils.createUriFromFile((activity) as Context, mParams.fileToSave!!)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 activity.grantUriPermission(
@@ -52,7 +54,7 @@ class TakePhotoWorker(handler: IContainer) :
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
         }
         try {
-            mHandler.startActivityResult(
+            iContainer.startActivityResult(
                 takePictureIntent, Constant.REQUEST_CODE_IMAGE_CAPTURE
             ) { _: Int, resultCode: Int, _: Intent? ->
                 handleResult(resultCode, callBack)
@@ -75,29 +77,20 @@ class TakePhotoWorker(handler: IContainer) :
 
     private fun handleResult(
         resultCode: Int,
-        callBack: GetImageCallBack<TakeResult>
+        callBack: CoCoCallBack<TakeResult>
     ) {
         if (resultCode == Activity.RESULT_CANCELED) {
-            callBack.onCancel()
+            if (null != mParams.takeCallBack) {
+                mParams.takeCallBack!!.onCancel()
+            }
             return
         }
-        if (null != mParams.file) {
+        if (null != mParams.fileToSave) {
             val result = TakeResult()
-            result.targetFile = mParams.file
-            val targetPath = result.targetFile!!.absolutePath
-            //判断当前状态是否需要处理
-            if (!TextUtils.isEmpty(targetPath) && null != mParams.disposer) {
-                Utils.disposeImage(
-                    mHandler.getLifecycleHost(),
-                    targetPath,
-                    mParams.file,
-                    mParams.disposer!!,
-                    result,
-                    callBack
-                )
-                return
-            }
+            result.savedFile = mParams.fileToSave
             callBack.onSuccess(result)
         }
     }
+
+
 }

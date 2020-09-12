@@ -78,8 +78,8 @@ class DefaultImageDisposer : ImageDisposer {
             throw CompressFailedException("save bitmap as file failed")
         }
         val result = BaseResult()
-        result.compressBitmap = bitmap
-        result.targetFile = targetSaveFile
+//        result.compressBitmap = bitmap
+//        result.targetFile = targetSaveFile
         return result
     }
 

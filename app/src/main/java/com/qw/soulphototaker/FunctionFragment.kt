@@ -43,27 +43,27 @@ class FunctionFragment : Fragment() {
 
     fun takePhoto(isMatrix: Boolean, degree: Int) {
         if (degree == -1) {
-            CoCo.with(this)
-                .take(createSDCardFile())
-                .apply()
-                .start(object : GetImageCallBack<TakeResult> {
-                    override fun onSuccess(data: TakeResult) {
-                        Toast.makeText(context, "拍照操作最终成功", Toast.LENGTH_SHORT)
-                            .show()
-                        val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
-                        iv_image.setImageBitmap(bitmap)
-                        tv_result.text = getImageSizeDesc(bitmap)
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Toast.makeText(
-                            context,
-                            "拍照异常: $exception",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                })
+//            CoCo.with(this)
+//                .take(createSDCardFile())
+//                .apply()
+//                .start(object : GetImageCallBack<TakeResult> {
+//                    override fun onSuccess(data: TakeResult) {
+//                        Toast.makeText(context, "拍照操作最终成功", Toast.LENGTH_SHORT)
+//                            .show()
+//                        val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
+//                        iv_image.setImageBitmap(bitmap)
+//                        tv_result.text = getImageSizeDesc(bitmap)
+//                    }
+//
+//                    override fun onFailed(exception: Exception) {
+//                        Toast.makeText(
+//                            context,
+//                            "拍照异常: $exception",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//
+//                })
         } else {
             val strategy: CompressStrategy = if (isMatrix) {
                 CompressStrategy.MATRIX
@@ -74,99 +74,99 @@ class FunctionFragment : Fragment() {
             if (activity!!.findViewById<ToggleButton>(R.id.tb_camera_face).isChecked) {
                 cameraFace = TakeBuilder.FRONT
             }
-            CoCo.with(this)
-                .take(createSDCardFile())
-                .cameraFace(cameraFace)
-                .applyWithDispose(
-                    DefaultImageDisposer().degree(degree)
-                        .strategy(strategy)
-                )
-                .start(object : GetImageCallBack<TakeResult> {
-
-                    override fun onDisposeStart() {
-                        Toast.makeText(context, "拍照成功,开始处理", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-
-                    override fun onCancel() {
-                        Toast.makeText(context, "拍照取消", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Toast.makeText(
-                            context,
-                            "拍照异常: $exception",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-
-                    override fun onSuccess(data: TakeResult) {
-                        Toast.makeText(context, "拍照操作最终成功", Toast.LENGTH_SHORT)
-                            .show()
-                        iv_image.setImageBitmap(data.compressBitmap)
-                        tv_result.text = getImageSizeDesc(data.compressBitmap!!)
-                    }
-
-                })
+//            CoCo.with(this)
+//                .take(createSDCardFile())
+//                .cameraFace(cameraFace)
+//                .applyWithDispose(
+//                    DefaultImageDisposer().degree(degree)
+//                        .strategy(strategy)
+//                )
+//                .start(object : GetImageCallBack<TakeResult> {
+//
+//                    override fun onDisposeStart() {
+//                        Toast.makeText(context, "拍照成功,开始处理", Toast.LENGTH_SHORT)
+//                            .show()
+//                    }
+//
+//                    override fun onCancel() {
+//                        Toast.makeText(context, "拍照取消", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                    override fun onFailed(exception: Exception) {
+//                        Toast.makeText(
+//                            context,
+//                            "拍照异常: $exception",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                    }
+//
+//                    override fun onSuccess(data: TakeResult) {
+//                        Toast.makeText(context, "拍照操作最终成功", Toast.LENGTH_SHORT)
+//                            .show()
+//                        iv_image.setImageBitmap(data.compressBitmap)
+//                        tv_result.text = getImageSizeDesc(data.compressBitmap!!)
+//                    }
+//
+//                })
         }
     }
 
     fun pick(isMatrix: Boolean, degree: Int) {
         if (degree == -1) {
-            CoCo.with(this)
-                .pick(createSDCardFile())
-                .range(PickBuilder.PICK_CONTENT)
-                .apply()
-                .start(object : GetImageCallBack<PickResult> {
-                    override fun onSuccess(data: PickResult) {
-                        val bitmap: Bitmap = BitmapFactory.decodeFile(data.localPath)
-                        iv_image.setImageBitmap(bitmap)
-                        tv_result.text = getImageSizeDesc(bitmap)
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Toast.makeText(context, "选择异常: $exception", Toast.LENGTH_SHORT).show()
-                    }
-
-                })
+//            CoCo.with(this)
+//                .pick(createSDCardFile())
+//                .range(PickBuilder.PICK_CONTENT)
+//                .apply()
+//                .start(object : GetImageCallBack<PickResult> {
+//                    override fun onSuccess(data: PickResult) {
+//                        val bitmap: Bitmap = BitmapFactory.decodeFile(data.localPath)
+//                        iv_image.setImageBitmap(bitmap)
+//                        tv_result.text = getImageSizeDesc(bitmap)
+//                    }
+//
+//                    override fun onFailed(exception: Exception) {
+//                        Toast.makeText(context, "选择异常: $exception", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                })
         } else {
             val strategy: CompressStrategy = if (isMatrix) {
                 CompressStrategy.MATRIX
             } else {
                 CompressStrategy.QUALITY
             }
-            CoCo.with(this)
-                .pick(createSDCardFile())
-                .range(PickBuilder.PICK_CONTENT)
-                .applyWithDispose(
-                    DefaultImageDisposer().degree(degree)
-                        .strategy(strategy)
-                ).start(object : GetImageCallBack<PickResult> {
-
-                    override fun onDisposeStart() {
-                        Toast.makeText(context, "选择成功,开始处理", Toast.LENGTH_SHORT).show()
-                    }
-
-                    override fun onSuccess(data: PickResult) {
-                        Toast.makeText(
-                            context,
-                            "选择操作最终成功 path: ${data.originUri.path}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        iv_image.setImageBitmap(data.compressBitmap)
-                        tv_result.text = getImageSizeDesc(data.compressBitmap!!)
-                    }
-
-                    override fun onCancel() {
-                        Toast.makeText(context, "选择取消", Toast.LENGTH_SHORT).show()
-
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Toast.makeText(context, "选择异常: $exception", Toast.LENGTH_SHORT).show()
-
-                    }
-                })
+//            CoCo.with(this)
+//                .pick(createSDCardFile())
+//                .range(PickBuilder.PICK_CONTENT)
+//                .applyWithDispose(
+//                    DefaultImageDisposer().degree(degree)
+//                        .strategy(strategy)
+//                ).start(object : GetImageCallBack<PickResult> {
+//
+//                    override fun onDisposeStart() {
+//                        Toast.makeText(context, "选择成功,开始处理", Toast.LENGTH_SHORT).show()
+//                    }
+//
+//                    override fun onSuccess(data: PickResult) {
+//                        Toast.makeText(
+//                            context,
+//                            "选择操作最终成功 path: ${data.originUri.path}",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                        iv_image.setImageBitmap(data.compressBitmap)
+//                        tv_result.text = getImageSizeDesc(data.compressBitmap!!)
+//                    }
+//
+//                    override fun onCancel() {
+//                        Toast.makeText(context, "选择取消", Toast.LENGTH_SHORT).show()
+//
+//                    }
+//
+//                    override fun onFailed(exception: Exception) {
+//                        Toast.makeText(context, "选择异常: $exception", Toast.LENGTH_SHORT).show()
+//
+//                    }
+//                })
         }
     }
 

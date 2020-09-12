@@ -1,12 +1,10 @@
 package com.qw.photo.functions
 
-import com.qw.photo.DevUtil
 import com.qw.photo.annotations.PickRange
-import com.qw.photo.constant.Constant
+import com.qw.photo.callback.PickCallBack
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.work.FunctionManager
 import com.qw.photo.work.PickPhotoWorker
-import java.io.File
 
 class PickBuilder(fm: FunctionManager) :
     BaseFunctionBuilder<PickBuilder, PickResult>(fm, PickPhotoWorker(fm.container)) {
@@ -27,9 +25,10 @@ class PickBuilder(fm: FunctionManager) :
 
     internal var pickRange = PICK_DICM
 
-    fun targetFile(file: File?): PickBuilder {
-        DevUtil.d(Constant.TAG, "pick: saveFilePath: " + (file?.path ?: "originUri is null"))
-        this.file = file
+    internal var pickCallBack: PickCallBack? = null
+
+    fun callBack(callBack: PickCallBack): PickBuilder {
+        this.pickCallBack = callBack
         return this
     }
 

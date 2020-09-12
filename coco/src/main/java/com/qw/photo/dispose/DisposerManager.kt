@@ -58,56 +58,56 @@ internal object DisposerManager {
         })
     }
 
-    /**
-     * 当将uri 转化为 path失败时 将原图在应用路径内生成并处理
-     */
-    fun generateLocalPathAndHandResultWhenConvertUriFailed(
-        activity: Activity,
-        host: Host,
-        params: PickBuilder,
-        result: PickResult,
-        callBack: GetImageCallBack<PickResult>
-
-    ) {
-        WorkThread.addWork(Runnable {
-            try {
-                //generate local path
-                val bitmap: Bitmap? =
-                    MediaStore.Images.Media.getBitmap(activity.contentResolver, result.originUri)
-                if (null == bitmap) {
-                    runOnUIThread(Runnable { callBack.onFailed(PickNoResultException()) })
-                    return@Runnable
-                }
-                val file =
-                    File(activity.externalCacheDir!!.path + "/" + System.currentTimeMillis() + ".jpg")
-                if (!file.exists()) file.createNewFile()
-                result.localPath = file.path
-                val fos = FileOutputStream(file)
-                fos.write(bitmap2Bytes(bitmap))
-                fos.close()
-                if (!checkContainerStatus(host, "generate local path")) {
-                    return@Runnable
-                }
-                //dispose
-                if (null == params.disposer) {
-                    runOnUIThread(Runnable { callBack.onSuccess(result) })
-                } else {
-                    runOnUIThread(Runnable {
-                        Utils.disposeImage(
-                            host,
-                            result.localPath,
-                            params.file,
-                            params.disposer!!,
-                            result,
-                            callBack
-                        )
-                    })
-                }
-            } catch (e: Exception) {
-                runOnUIThread(Runnable { callBack.onFailed(e) })
-            }
-        })
-    }
+//    /**
+//     * 当将uri 转化为 path失败时 将原图在应用路径内生成并处理
+//     */
+//    fun generateLocalPathAndHandResultWhenConvertUriFailed(
+//        activity: Activity,
+//        host: Host,
+//        params: PickBuilder,
+//        result: PickResult,
+//        callBack: GetImageCallBack<PickResult>
+//
+//    ) {
+//        WorkThread.addWork(Runnable {
+//            try {
+//                //generate local path
+//                val bitmap: Bitmap? =
+//                    MediaStore.Images.Media.getBitmap(activity.contentResolver, result.originUri)
+//                if (null == bitmap) {
+//                    runOnUIThread(Runnable { callBack.onFailed(PickNoResultException()) })
+//                    return@Runnable
+//                }
+//                val file =
+//                    File(activity.externalCacheDir!!.path + "/" + System.currentTimeMillis() + ".jpg")
+//                if (!file.exists()) file.createNewFile()
+//                result.localPath = file.path
+//                val fos = FileOutputStream(file)
+//                fos.write(bitmap2Bytes(bitmap))
+//                fos.close()
+//                if (!checkContainerStatus(host, "generate local path")) {
+//                    return@Runnable
+//                }
+//                //dispose
+//                if (null == params.disposer) {
+//                    runOnUIThread(Runnable { callBack.onSuccess(result) })
+//                } else {
+//                    runOnUIThread(Runnable {
+//                        Utils.disposeImage(
+//                            host,
+//                            result.localPath,
+//                            params.file,
+//                            params.disposer!!,
+//                            result,
+//                            callBack
+//                        )
+//                    })
+//                }
+//            } catch (e: Exception) {
+//                runOnUIThread(Runnable { callBack.onFailed(e) })
+//            }
+//        })
+//    }
 
     private fun runOnUIThread(runnable: Runnable) {
         Handler(Looper.getMainLooper()).post(runnable)

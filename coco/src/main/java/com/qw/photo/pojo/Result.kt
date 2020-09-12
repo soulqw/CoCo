@@ -13,15 +13,6 @@ import java.io.File
  * 通用的结果
  */
 open class BaseResult {
-    /**
-     * 完成后写成的文件
-     */
-    var targetFile: File? = null
-
-    /**
-     * 如果指定了压缩的话
-     */
-    var compressBitmap: Bitmap? = null
 
     /**
      * 如果需要额外的参数的话
@@ -32,7 +23,12 @@ open class BaseResult {
 /**
  * 拍照的结果
  */
-class TakeResult : BaseResult()
+class TakeResult : BaseResult() {
+    /**
+     * 完成后写成的文件
+     */
+    var savedFile: File? = null
+}
 
 /**
  * 选择的结果
@@ -50,6 +46,8 @@ class PickResult : BaseResult() {
 
 }
 
-class DisposeResult :BaseResult(){
+class DisposeResult : BaseResult() {
+
+    var compressBitmap: Bitmap? = null
 
 }

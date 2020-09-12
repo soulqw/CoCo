@@ -3,14 +3,9 @@ package com.qw.photo.work
 import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
-import android.text.TextUtils
-import com.qw.photo.DevUtil
-import com.qw.photo.Utils
 import com.qw.photo.agent.IContainer
 import com.qw.photo.callback.CoCoCallBack
-import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
-import com.qw.photo.dispose.DisposerManager
 import com.qw.photo.exception.BaseException
 import com.qw.photo.functions.PickBuilder
 import com.qw.photo.pojo.PickResult
@@ -22,14 +17,16 @@ import com.qw.photo.pojo.PickResult
 class PickPhotoWorker(iContainer: IContainer) :
     BaseWorker<PickBuilder, PickResult>(iContainer) {
 
+    lateinit var params: PickBuilder
 
     override fun start(params: PickBuilder, callBack: CoCoCallBack<PickResult>) {
+        this.params = params
         val activity = iContainer.provideActivity()
         activity ?: return
-        pickPhoto(activity,params, callBack)
+        pickPhoto(activity, callBack)
     }
 
-    private fun pickPhoto(activity: Activity, params: PickBuilder,callBack: CoCoCallBack<PickResult>) {
+    private fun pickPhoto(activity: Activity, callBack: CoCoCallBack<PickResult>) {
         val pickIntent = if (params.pickRange == PickBuilder.PICK_DICM) {
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         } else {
@@ -45,7 +42,7 @@ class PickPhotoWorker(iContainer: IContainer) :
             iContainer.startActivityResult(
                 pickIntent, Constant.REQUEST_CODE_IMAGE_PICK
             ) { _: Int, resultCode: Int, data: Intent? ->
-                handleResult(resultCode, data, callBack, activity)
+                handleResult(resultCode, data, callBack)
             }
         } catch (e: Exception) {
             callBack.onFailed(e)
@@ -55,55 +52,55 @@ class PickPhotoWorker(iContainer: IContainer) :
     private fun handleResult(
         resultCode: Int,
         intentData: Intent?,
-        callBack: GetImageCallBack<PickResult>,
-        activity: Activity
+        callBack: CoCoCallBack<PickResult>
     ) {
         if (resultCode == Activity.RESULT_CANCELED) {
-            callBack.onCancel()
+            if (null != params.pickCallBack) {
+                params.pickCallBack!!.onCancel()
+            }
             return
         }
         if (null != intentData && null != intentData.data) {
             val result = PickResult()
             result.originUri = intentData.data!!
-            //判断当前状态是否可处理
-            if (null != intentData.data && Utils.isActivityAvailable(activity)) {
-                var localPath: String? = null
-                try {
-                    localPath = Utils.uriToImagePath(activity, intentData.data!!)
-                } catch (e: Exception) {
-                    DevUtil.e(Constant.TAG, e.toString())
-                }
-                //uri convert to local path failed
-                //change another way to generate local path
-                if (TextUtils.isEmpty(localPath)) {
-                    DisposerManager.generateLocalPathAndHandResultWhenConvertUriFailed(
-                        activity,
-                        mHandler.getLifecycleHost(),
-                        mParams,
-                        result,
-                        callBack
-                    )
-                    return
-                }
-                result.localPath = localPath!!
-                if (null != mParams.disposer) {
-                    Utils.disposeImage(
-                        mHandler.getLifecycleHost(),
-                        localPath,
-                        mParams.file,
-                        mParams.disposer!!,
-                        result,
-                        callBack
-                    )
-                    return
-                }
-            }
+//            //判断当前状态是否可处理
+//            if (null != intentData.data && Utils.isActivityAvailable(activity)) {
+//                var localPath: String? = null
+//                try {
+//                    localPath = Utils.uriToImagePath(activity, intentData.data!!)
+//                } catch (e: Exception) {
+//                    DevUtil.e(Constant.TAG, e.toString())
+//                }
+//                //uri convert to local path failed
+//                //change another way to generate local path
+//                if (TextUtils.isEmpty(localPath)) {
+//                    DisposerManager.generateLocalPathAndHandResultWhenConvertUriFailed(
+//                        activity,
+//                        mHandler.getLifecycleHost(),
+//                        mParams,
+//                        result,
+//                        callBack
+//                    )
+//                    return
+//                }
+//                result.localPath = localPath!!
+//                if (null != mParams.disposer) {
+//                    Utils.disposeImage(
+//                        mHandler.getLifecycleHost(),
+//                        localPath,
+//                        mParams.file,
+//                        mParams.disposer!!,
+//                        result,
+//                        callBack
+//                    )
+//                    return
+//                }
+//            }
             callBack.onSuccess(result)
         } else {
             callBack.onFailed(BaseException("null result intentData"))
         }
     }
-
 
 
 }

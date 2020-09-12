@@ -2,14 +2,15 @@ package com.qw.photo.functions
 
 import com.qw.photo.DevUtil
 import com.qw.photo.annotations.CameraFace
+import com.qw.photo.callback.TakeCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.pojo.TakeResult
 import com.qw.photo.work.FunctionManager
-import com.qw.photo.work.IWorker
+import com.qw.photo.work.TakePhotoWorker
 import java.io.File
 
-class TakeBuilder(fm: FunctionManager, worker: IWorker<TakeBuilder, TakeResult>) :
-    BaseFunctionBuilder<TakeResult>(fm, worker) {
+class TakeBuilder(fm: FunctionManager) :
+    BaseFunctionBuilder<TakeBuilder, TakeResult>(fm, TakePhotoWorker(fm.container)) {
 
     companion object {
 
@@ -21,12 +22,21 @@ class TakeBuilder(fm: FunctionManager, worker: IWorker<TakeBuilder, TakeResult>)
 
     internal var cameraFace = BACK
 
+    internal var fileToSave: File? = null
+
+    internal var takeCallBack: TakeCallBack? = null
+
+    fun callBack(callBack: TakeCallBack): TakeBuilder {
+        this.takeCallBack = callBack
+        return this
+    }
+
     /**
      * 指定被最终写到的文件
      */
-    fun targetFile(file: File): TakeBuilder {
-        DevUtil.d(Constant.TAG, "capture: saveFilePath: " + (file.path ?: "originUri is null"))
-        this.file = file
+    fun fileToSave(fileToSave: File): TakeBuilder {
+        DevUtil.d(Constant.TAG, "capture: saveFilePath: " + (fileToSave.path ?: "originUri is null"))
+        this.fileToSave = fileToSave
         return this
     }
 
@@ -37,6 +47,10 @@ class TakeBuilder(fm: FunctionManager, worker: IWorker<TakeBuilder, TakeResult>)
      */
     fun cameraFace(@CameraFace face: Int): TakeBuilder {
         this.cameraFace = face
+        return this
+    }
+
+    override fun getParamsBuilder(): TakeBuilder {
         return this
     }
 }

@@ -123,37 +123,37 @@ object Utils {
      * @param result 结果
      * @param callBack 回调
      */
-    fun <Result : BaseResult> disposeImage(
-        host: Host, originPath: String, targetFile: File?,
-        disposer: ImageDisposer,
-        result: Result,
-        callBack: GetImageCallBack<Result>
-    ) {
-        DisposerManager.dispose(host, originPath, targetFile, disposer, object : CompressListener {
-            override fun onStart(path: String) {
-                callBack.onDisposeStart()
-            }
-
-            override fun onFinish(disposeResult: BaseResult) {
-                result.compressBitmap = disposeResult.compressBitmap
-                result.targetFile = disposeResult.targetFile
-                result.extra = disposeResult.extra
-                DevUtil.d(Constant.TAG, "onSuccess $result")
-                callBack.onSuccess(result)
-                WorkThread.release()
-            }
-
-            override fun onError(e: Exception) {
-                if (isOnMainThread()) {
-                    callBack.onFailed(e)
-                    return
-                }
-                Handler(Looper.getMainLooper()).post {
-                    callBack.onFailed(e)
-                }
-            }
-        })
-    }
+//    fun <Result : BaseResult> disposeImage(
+//        host: Host, originPath: String, targetFile: File?,
+//        disposer: ImageDisposer,
+//        result: Result,
+//        callBack: GetImageCallBack<Result>
+//    ) {
+//        DisposerManager.dispose(host, originPath, targetFile, disposer, object : CompressListener {
+//            override fun onStart(path: String) {
+//                callBack.onDisposeStart()
+//            }
+//
+//            override fun onFinish(disposeResult: BaseResult) {
+//                result.compressBitmap = disposeResult.compressBitmap
+//                result.targetFile = disposeResult.targetFile
+//                result.extra = disposeResult.extra
+//                DevUtil.d(Constant.TAG, "onSuccess $result")
+//                callBack.onSuccess(result)
+//                WorkThread.release()
+//            }
+//
+//            override fun onError(e: Exception) {
+//                if (isOnMainThread()) {
+//                    callBack.onFailed(e)
+//                    return
+//                }
+//                Handler(Looper.getMainLooper()).post {
+//                    callBack.onFailed(e)
+//                }
+//            }
+//        })
+//    }
 
     internal fun getBitmapFromFile(filePath: String): Bitmap? {
         var bis: BufferedInputStream? = null

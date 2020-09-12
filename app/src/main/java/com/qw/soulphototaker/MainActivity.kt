@@ -26,79 +26,86 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViewComponent()
         CoCo.setDebug(true)
-        CoCo.with(this).dispose().apply(object:CoCoCallBack<DisposeResult>{
-            override fun onSuccess(data: DisposeResult) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
 
-            override fun onFailed(exception: Exception) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-        })
     }
 
     private fun initViewComponent() {
         btn_capture.apply {
             setOnClickListener {
                 CoCo.with(this@MainActivity)
-                    .take(createSDCardFile())
-                    .applyWithDispose()
-                    .start(object : SimpleGetImageAdapter<TakeResult>() {
-
-                        override fun onSuccess(data: TakeResult) {
-                            Toast.makeText(this@MainActivity, "拍照操作最终成功", Toast.LENGTH_SHORT).show()
-                            iv_image.setImageBitmap(data.compressBitmap)
+                    .pick()
+                    .then()
+                    .pick()
+                    .start(object : CoCoCallBack<PickResult> {
+                        override fun onSuccess(data: PickResult) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                data.originUri.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
 
+                        override fun onFailed(exception: Exception) {
+                        }
                     })
+//                CoCo.with(this@MainActivity)
+//                    .take(createSDCardFile())
+//                    .applyWithDispose()
+//                    .start(object : SimpleGetImageAdapter<TakeResult>() {
+//
+//                        override fun onSuccess(data: TakeResult) {
+//                            Toast.makeText(this@MainActivity, "拍照操作最终成功", Toast.LENGTH_SHORT).show()
+//                            iv_image.setImageBitmap(data.compressBitmap)
+//                        }
+//
+//                    })
             }
             setOnLongClickListener {
                 startActivity(Intent(this@MainActivity, TakePictureActivity::class.java))
                 true
             }
         }
-        btn_pick.apply {
-            setOnClickListener {
-                CoCo.with(this@MainActivity)
-                    .pick(createSDCardFile())
-                    .apply()
-//                .applyWithDispose()
-                    .start(object : SimpleGetImageAdapter<PickResult>() {
-
-                        override fun onSuccess(data: PickResult) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "选择操作最终成功 path: ${data.originUri}",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            //if you want origin image
-                            iv_image.setImageURI(data.originUri)
-//                         if you use applyWithDispose() can get compress bitmap
+//        btn_pick.apply {
+//            setOnClickListener {
+//                CoCo.with(this@MainActivity)
+//                    .pick(createSDCardFile())
+//                    .apply()
+////                .applyWithDispose()
+//                    .start(object : SimpleGetImageAdapter<PickResult>() {
+//
+//                        override fun onSuccess(data: PickResult) {
+//                            Toast.makeText(
+//                                this@MainActivity,
+//                                "选择操作最终成功 path: ${data.originUri}",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                            //if you want origin image
+//                            iv_image.setImageURI(data.originUri)
+////                         if you use applyWithDispose() can get compress bitmap
+////                        iv_image.setImageBitmap(data.compressBitmap)
+//
+//                        }
+//                    })
+//            }
+//            setOnLongClickListener {
+//                startActivity(Intent(this@MainActivity, PickPictureActivity::class.java))
+//                true
+//            }
+//        }
+//        btn_custom_disposer.setOnClickListener {
+//            CoCo.with(this)
+//                .take(createSDCardFile())
+//                .applyWithDispose(CustomDisposer())
+//                .start(object : SimpleGetImageAdapter<TakeResult>() {
+//
+//                    override fun onSuccess(data: TakeResult) {
+//                        Toast.makeText(this@MainActivity, "自定义Disposer拍照操作最终成功", Toast.LENGTH_SHORT)
+//                            .show()
 //                        iv_image.setImageBitmap(data.compressBitmap)
-
-                        }
-                    })
-            }
-            setOnLongClickListener {
-                startActivity(Intent(this@MainActivity, PickPictureActivity::class.java))
-                true
-            }
-        }
-        btn_custom_disposer.setOnClickListener {
-            CoCo.with(this)
-                .take(createSDCardFile())
-                .applyWithDispose(CustomDisposer())
-                .start(object : SimpleGetImageAdapter<TakeResult>() {
-
-                    override fun onSuccess(data: TakeResult) {
-                        Toast.makeText(this@MainActivity, "自定义Disposer拍照操作最终成功", Toast.LENGTH_SHORT)
-                            .show()
-                        iv_image.setImageBitmap(data.compressBitmap)
-                    }
-
-                })
-        }
+//                    }
+//
+//                })
+//        }
     }
 
 
@@ -121,16 +128,16 @@ class MainActivity : AppCompatActivity() {
      * 自定义图片处理器
      * 自定义想要处理的任意结果
      */
-    class CustomDisposer : ImageDisposer {
-
-        override fun disposeImage(originPath: String, targetSaveFile: File?): BaseResult {
-            return BaseResult().also {
-                val bitmap = QualityCompressor()
-                    .compress(originPath, 5)
-                it.targetFile = targetSaveFile
-                it.compressBitmap = bitmap
-            }
-        }
-
-    }
+//    class CustomDisposer : ImageDisposer {
+//
+//        override fun disposeImage(originPath: String, targetSaveFile: File?): BaseResult {
+//            return BaseResult().also {
+//                val bitmap = QualityCompressor()
+//                    .compress(originPath, 5)
+//                it.targetFile = targetSaveFile
+//                it.compressBitmap = bitmap
+//            }
+//        }
+//
+//    }
 }
