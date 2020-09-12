@@ -5,11 +5,11 @@ import com.qw.photo.annotations.PickRange
 import com.qw.photo.constant.Constant
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.work.FunctionManager
-import com.qw.photo.work.IWorker
+import com.qw.photo.work.PickPhotoWorker
 import java.io.File
 
-class PickBuilder(fm: FunctionManager, worker: IWorker<PickBuilder, PickResult>) :
-    BaseFunctionBuilder<PickResult>(fm, worker) {
+class PickBuilder(fm: FunctionManager) :
+    BaseFunctionBuilder<PickBuilder, PickResult>(fm, PickPhotoWorker(fm.container)) {
 
     companion object {
 
@@ -41,6 +41,10 @@ class PickBuilder(fm: FunctionManager, worker: IWorker<PickBuilder, PickResult>)
      */
     fun range(@PickRange pickRange: Int): PickBuilder {
         this.pickRange = pickRange
+        return this
+    }
+
+    override fun getParamsBuilder(): PickBuilder {
         return this
     }
 

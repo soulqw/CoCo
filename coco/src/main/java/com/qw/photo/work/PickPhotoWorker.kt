@@ -7,6 +7,7 @@ import android.text.TextUtils
 import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.agent.IContainer
+import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.DisposerManager
@@ -18,16 +19,18 @@ import com.qw.photo.pojo.PickResult
 /**
  * Created by rocket on 2019/6/18.
  */
-class PickPhotoWorker(handler: IContainer) :
-    BaseWorker<PickBuilder, PickResult>(handler) {
-    override fun start(callBack: GetImageCallBack<PickResult>) {
-        val activity = mHandler.provideActivity()
+class PickPhotoWorker(iContainer: IContainer) :
+    BaseWorker<PickBuilder, PickResult>(iContainer) {
+
+
+    override fun start(params: PickBuilder, callBack: CoCoCallBack<PickResult>) {
+        val activity = iContainer.provideActivity()
         activity ?: return
-        pickPhoto(activity, callBack)
+        pickPhoto(activity,params, callBack)
     }
 
-    private fun pickPhoto(activity: Activity, callBack: GetImageCallBack<PickResult>) {
-        val pickIntent = if (mParams.pickRange == PickBuilder.PICK_DICM) {
+    private fun pickPhoto(activity: Activity, params: PickBuilder,callBack: CoCoCallBack<PickResult>) {
+        val pickIntent = if (params.pickRange == PickBuilder.PICK_DICM) {
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         } else {
             Intent(Intent.ACTION_GET_CONTENT, null).also {
@@ -39,7 +42,7 @@ class PickPhotoWorker(handler: IContainer) :
             return
         }
         try {
-            mHandler.startActivityResult(
+            iContainer.startActivityResult(
                 pickIntent, Constant.REQUEST_CODE_IMAGE_PICK
             ) { _: Int, resultCode: Int, data: Intent? ->
                 handleResult(resultCode, data, callBack, activity)
@@ -100,5 +103,7 @@ class PickPhotoWorker(handler: IContainer) :
             callBack.onFailed(BaseException("null result intentData"))
         }
     }
+
+
 
 }

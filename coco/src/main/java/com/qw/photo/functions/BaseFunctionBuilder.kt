@@ -8,9 +8,9 @@ import java.io.File
 /**
  * @author cd5160866
  */
-abstract class BaseFunctionBuilder<Result>(
+abstract class BaseFunctionBuilder<P, Result>(
     private val functionManager: FunctionManager,
-    internal val worker: Worker<Result>
+    private val worker: Worker<P, Result>
 ) {
 
     internal var file: File? = null
@@ -31,9 +31,11 @@ abstract class BaseFunctionBuilder<Result>(
         realApply(iterator, callback)
     }
 
+    internal abstract fun getParamsBuilder(): P
+
     private fun realApply(iterator: MutableIterator<Any>, callback: CoCoCallBack<Result>) {
-        val worker = (iterator.next() as Worker<Result>)
-        worker.start(object : CoCoCallBack<Result> {
+        val worker = (iterator.next() as BaseFunctionBuilder<P, Result>).worker
+        worker.start(getParamsBuilder(), object : CoCoCallBack<Result> {
             override fun onSuccess(data: Result) {
                 if (iterator.hasNext()) {
                     iterator.remove()

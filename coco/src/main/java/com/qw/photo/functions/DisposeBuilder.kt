@@ -13,7 +13,7 @@ import java.io.File
  *Date: Created in 2020/9/8 3:06 PM
  */
 class DisposeBuilder(fm: FunctionManager) :
-    BaseFunctionBuilder<DisposeResult>(fm, DisposeWorker(fm.container)) {
+    BaseFunctionBuilder<DisposeBuilder, DisposeResult>(fm, DisposeWorker(fm.container)) {
 
     private lateinit var targetFile: File
 
@@ -33,6 +33,10 @@ class DisposeBuilder(fm: FunctionManager) :
 
     fun callBack(callBack: DisposeCallBack): DisposeBuilder {
         this.callBack = callBack
+        return this
+    }
+
+    override fun getParamsBuilder(): DisposeBuilder {
         return this
     }
 

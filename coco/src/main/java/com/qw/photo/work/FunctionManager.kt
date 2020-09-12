@@ -29,7 +29,7 @@ class FunctionManager(val container: IContainer) {
      * @param targetFile 如果需要压缩之后的存贮路径
      */
     fun pick(targetFile: File? = null): PickBuilder =
-        PickBuilder(this, PickPhotoWorker(container)).targetFile(targetFile)
+        PickBuilder(this).targetFile(targetFile)
 
     fun dispose(): DisposeBuilder = DisposeBuilder(this)
 
