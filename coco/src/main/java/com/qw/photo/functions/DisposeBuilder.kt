@@ -6,6 +6,7 @@ import com.qw.photo.dispose.disposer.ImageDisposer
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.work.DisposeWorker
 import com.qw.photo.work.FunctionManager
+import com.qw.photo.work.Worker
 import java.io.File
 
 /**
@@ -13,13 +14,20 @@ import java.io.File
  *Date: Created in 2020/9/8 3:06 PM
  */
 class DisposeBuilder(fm: FunctionManager) :
-    BaseFunctionBuilder<DisposeBuilder, DisposeResult>(fm, DisposeWorker(fm.container)) {
+    BaseFunctionBuilder<DisposeBuilder, DisposeResult>(fm) {
 
-    private lateinit var targetFile: File
+    internal lateinit var targetFile: File
 
-    private var disposer: ImageDisposer = DefaultImageDisposer.getDefault()
+    internal var originPath: String? = null
 
-    private var callBack: DisposeCallBack? = null
+    internal var disposer: ImageDisposer = DefaultImageDisposer.getDefault()
+
+    internal var disposeCallBack: DisposeCallBack? = null
+
+    fun origin(originPath: String): DisposeBuilder {
+        this.originPath = originPath
+        return this
+    }
 
     fun target(file: File): DisposeBuilder {
         this.targetFile = file
@@ -32,12 +40,16 @@ class DisposeBuilder(fm: FunctionManager) :
     }
 
     fun callBack(callBack: DisposeCallBack): DisposeBuilder {
-        this.callBack = callBack
+        this.disposeCallBack = callBack
         return this
     }
 
     override fun getParamsBuilder(): DisposeBuilder {
         return this
+    }
+
+    override fun generateWorker(builder: DisposeBuilder): Worker<DisposeBuilder, DisposeResult> {
+        return DisposeWorker(functionManager.container, builder)
     }
 
 }

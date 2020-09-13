@@ -8,18 +8,11 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
-import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
-import com.qw.photo.callback.CompressListener
-import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Host
 import com.qw.photo.constant.Constant
-import com.qw.photo.dispose.DisposerManager
-import com.qw.photo.dispose.WorkThread
-import com.qw.photo.dispose.disposer.ImageDisposer
-import com.qw.photo.pojo.BaseResult
 import java.io.*
 
 
@@ -115,46 +108,6 @@ object Utils {
         return true
     }
 
-    /**
-     * 处理图片
-     * @param originPath 图片原始路径
-     * @param targetFile 图片处理之后的保存文件 可为空
-     * @param disposer 图片处理器
-     * @param result 结果
-     * @param callBack 回调
-     */
-//    fun <Result : BaseResult> disposeImage(
-//        host: Host, originPath: String, targetFile: File?,
-//        disposer: ImageDisposer,
-//        result: Result,
-//        callBack: GetImageCallBack<Result>
-//    ) {
-//        DisposerManager.dispose(host, originPath, targetFile, disposer, object : CompressListener {
-//            override fun onStart(path: String) {
-//                callBack.onDisposeStart()
-//            }
-//
-//            override fun onFinish(disposeResult: BaseResult) {
-//                result.compressBitmap = disposeResult.compressBitmap
-//                result.targetFile = disposeResult.targetFile
-//                result.extra = disposeResult.extra
-//                DevUtil.d(Constant.TAG, "onSuccess $result")
-//                callBack.onSuccess(result)
-//                WorkThread.release()
-//            }
-//
-//            override fun onError(e: Exception) {
-//                if (isOnMainThread()) {
-//                    callBack.onFailed(e)
-//                    return
-//                }
-//                Handler(Looper.getMainLooper()).post {
-//                    callBack.onFailed(e)
-//                }
-//            }
-//        })
-//    }
-
     internal fun getBitmapFromFile(filePath: String): Bitmap? {
         var bis: BufferedInputStream? = null
         var fis: FileInputStream? = null
@@ -178,7 +131,7 @@ object Utils {
         }
     }
 
-    private fun isOnMainThread(): Boolean {
+    internal fun isOnMainThread(): Boolean {
         return Looper.myLooper() == Looper.getMainLooper()
     }
 

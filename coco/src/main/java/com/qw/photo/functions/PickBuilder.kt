@@ -5,9 +5,10 @@ import com.qw.photo.callback.PickCallBack
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.work.FunctionManager
 import com.qw.photo.work.PickPhotoWorker
+import com.qw.photo.work.Worker
 
 class PickBuilder(fm: FunctionManager) :
-    BaseFunctionBuilder<PickBuilder, PickResult>(fm, PickPhotoWorker(fm.container)) {
+    BaseFunctionBuilder<PickBuilder, PickResult>(fm) {
 
     companion object {
 
@@ -45,6 +46,10 @@ class PickBuilder(fm: FunctionManager) :
 
     override fun getParamsBuilder(): PickBuilder {
         return this
+    }
+
+    override fun generateWorker(builder: PickBuilder): Worker<PickBuilder, PickResult> {
+        return PickPhotoWorker(functionManager.container, builder)
     }
 
 }

@@ -4,6 +4,6 @@ import com.qw.photo.callback.CoCoCallBack
 
 interface Worker<Builder, ResultData> {
 
-    fun start(params: Builder, callBack: CoCoCallBack<ResultData>)
+    fun start(formerResult: Any?, callBack: CoCoCallBack<ResultData>)
 
 }

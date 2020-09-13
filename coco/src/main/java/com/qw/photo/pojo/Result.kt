@@ -20,14 +20,27 @@ open class BaseResult {
     var extra: Any? = null
 }
 
-/**
- * 拍照的结果
- */
-class TakeResult : BaseResult() {
+open class SaveFileResult : BaseResult() {
     /**
      * 完成后写成的文件
      */
     var savedFile: File? = null
+}
+
+/**
+ * 拍照的结果
+ */
+class TakeResult : SaveFileResult()
+
+/**
+ * 处理的结果
+ */
+class DisposeResult : SaveFileResult() {
+
+    var originPath: String? = null
+
+    var compressBitmap: Bitmap? = null
+
 }
 
 /**
@@ -46,8 +59,3 @@ class PickResult : BaseResult() {
 
 }
 
-class DisposeResult : BaseResult() {
-
-    var compressBitmap: Bitmap? = null
-
-}

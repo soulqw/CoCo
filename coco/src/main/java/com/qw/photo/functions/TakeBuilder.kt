@@ -7,10 +7,11 @@ import com.qw.photo.constant.Constant
 import com.qw.photo.pojo.TakeResult
 import com.qw.photo.work.FunctionManager
 import com.qw.photo.work.TakePhotoWorker
+import com.qw.photo.work.Worker
 import java.io.File
 
 class TakeBuilder(fm: FunctionManager) :
-    BaseFunctionBuilder<TakeBuilder, TakeResult>(fm, TakePhotoWorker(fm.container)) {
+    BaseFunctionBuilder<TakeBuilder, TakeResult>(fm) {
 
     companion object {
 
@@ -35,7 +36,10 @@ class TakeBuilder(fm: FunctionManager) :
      * 指定被最终写到的文件
      */
     fun fileToSave(fileToSave: File): TakeBuilder {
-        DevUtil.d(Constant.TAG, "capture: saveFilePath: " + (fileToSave.path ?: "originUri is null"))
+        DevUtil.d(
+            Constant.TAG,
+            "capture: saveFilePath: " + (fileToSave.path ?: "originUri is null")
+        )
         this.fileToSave = fileToSave
         return this
     }
@@ -52,5 +56,9 @@ class TakeBuilder(fm: FunctionManager) :
 
     override fun getParamsBuilder(): TakeBuilder {
         return this
+    }
+
+    override fun generateWorker(builder: TakeBuilder): Worker<TakeBuilder, TakeResult> {
+        return TakePhotoWorker(functionManager.container, builder)
     }
 }

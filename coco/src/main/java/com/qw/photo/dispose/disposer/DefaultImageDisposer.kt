@@ -11,7 +11,7 @@ import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.CompressFactory
 import com.qw.photo.exception.CompressFailedException
 import com.qw.photo.exception.MissCompressStrategyException
-import com.qw.photo.pojo.BaseResult
+import com.qw.photo.pojo.DisposeResult
 import java.io.File
 
 
@@ -48,7 +48,7 @@ class DefaultImageDisposer : ImageDisposer {
         return this
     }
 
-    override fun disposeImage(originPath: String, targetSaveFile: File?): BaseResult {
+    override fun disposeImage(originPath: String, targetSaveFile: File?): DisposeResult {
         if (null == strategy) {
             throw MissCompressStrategyException()
         }
@@ -77,9 +77,10 @@ class DefaultImageDisposer : ImageDisposer {
         if (!saveResult) {
             throw CompressFailedException("save bitmap as file failed")
         }
-        val result = BaseResult()
-//        result.compressBitmap = bitmap
-//        result.targetFile = targetSaveFile
+        val result = DisposeResult()
+        result.originPath = originPath
+        result.compressBitmap = bitmap
+        result.savedFile = targetSaveFile
         return result
     }
 

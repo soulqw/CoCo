@@ -17,13 +17,13 @@ import com.qw.photo.pojo.TakeResult
 /**
  * Created by rocket on 2019/6/18.
  */
-class TakePhotoWorker(handler: IContainer) :
-    BaseWorker<TakeBuilder, TakeResult>(handler) {
+class TakePhotoWorker(handler: IContainer, builder: TakeBuilder) :
+    BaseWorker<TakeBuilder, TakeResult>(handler, builder) {
 
-    lateinit var mParams: TakeBuilder
-
-    override fun start(params: TakeBuilder, callBack: CoCoCallBack<TakeResult>) {
-        this.mParams = params
+    override fun start(
+        formerResult: Any?,
+        callBack: CoCoCallBack<TakeResult>
+    ) {
         val activity = iContainer.provideActivity()
         activity ?: return
         takePhoto(activity, callBack)
@@ -91,6 +91,5 @@ class TakePhotoWorker(handler: IContainer) :
             callBack.onSuccess(result)
         }
     }
-
 
 }

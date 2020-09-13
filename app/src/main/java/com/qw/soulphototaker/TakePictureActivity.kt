@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.Toast
 import com.qw.photo.CoCo
-import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.CompressStrategy
 import com.qw.photo.dispose.disposer.DefaultImageDisposer
 import com.qw.photo.functions.TakeBuilder

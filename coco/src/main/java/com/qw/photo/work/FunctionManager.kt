@@ -19,10 +19,10 @@ class FunctionManager(internal val container: IContainer) {
 
     /**
      * 系统相机拍照
-     * @param targetFile 拍照完成后的存储路径，如果指定压缩，也是此路径（必传）
+     * @param fileToSave 拍照完成后的存储路径，如果指定压缩，也是此路径（必传）
      */
-    fun take(targetFile: File): TakeBuilder =
-        TakeBuilder(this).fileToSave(targetFile)
+    fun take(fileToSave: File): TakeBuilder =
+        TakeBuilder(this).fileToSave(fileToSave)
 
     /**
      * 系统选择照片
@@ -30,10 +30,10 @@ class FunctionManager(internal val container: IContainer) {
     fun pick(): PickBuilder =
         PickBuilder(this)
 
-    /**
-     * 系统裁剪照片
-     */
-    fun crop() {}
+//    /**
+//     * 系统裁剪照片
+//     */
+//    fun crop() {}
 
     /**
      * 处理图片（可自定义）

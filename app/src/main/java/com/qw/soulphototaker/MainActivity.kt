@@ -6,10 +6,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.qw.photo.CoCo
 import com.qw.photo.callback.CoCoCallBack
-import com.qw.photo.callback.SimpleGetImageAdapter
-import com.qw.photo.dispose.QualityCompressor
-import com.qw.photo.dispose.disposer.ImageDisposer
-import com.qw.photo.pojo.BaseResult
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
@@ -30,11 +26,42 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initViewComponent() {
-        btn_capture.apply {
+        btn_capture.setOnClickListener {
+            CoCo.with(this@MainActivity)
+                .take(createSDCardFile())
+                .start(object : CoCoCallBack<TakeResult> {
+
+                    override fun onSuccess(data: TakeResult) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            data.savedFile!!.absolutePath.toString(),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                    }
+                })
+        }
+        btn_capture.setOnLongClickListener {
+            CoCo.with(this@MainActivity)
+                .take(createSDCardFile())
+                .then()
+                .dispose()
+                .start(object : CoCoCallBack<DisposeResult> {
+
+                    override fun onSuccess(data: DisposeResult) {
+                        iv_image.setImageBitmap(data.compressBitmap)
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                    }
+                })
+            true
+        }
+        btn_pick.apply {
             setOnClickListener {
                 CoCo.with(this@MainActivity)
-                    .pick()
-                    .then()
                     .pick()
                     .start(object : CoCoCallBack<PickResult> {
                         override fun onSuccess(data: PickResult) {

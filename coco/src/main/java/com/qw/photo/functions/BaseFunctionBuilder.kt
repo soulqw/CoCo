@@ -7,39 +7,41 @@ import com.qw.photo.work.Worker
 /**
  * @author cd5160866
  */
-abstract class BaseFunctionBuilder<P, Result>(
-    private val functionManager: FunctionManager,
-    private val worker: Worker<P, Result>
+abstract class BaseFunctionBuilder<Builder, Result>(
+    internal val functionManager: FunctionManager
 ) {
 
-    init {
-        this.functionManager.workerFlows.add(this)
-    }
-
     fun then(): FunctionManager {
+        this.functionManager.workerFlows.add(generateWorker(getParamsBuilder()))
         return this.functionManager
     }
 
     /**
-     * 应用参数为后续操作做准备
+     * 开始
      */
     fun start(callback: CoCoCallBack<Result>) {
-        val iterator = functionManager.workerFlows.iterator()
-        if (!iterator.hasNext()) {
-            return
+        synchronized(functionManager) {
+            this.functionManager.workerFlows.add(generateWorker(getParamsBuilder()))
+            val iterator = functionManager.workerFlows.iterator()
+            if (!iterator.hasNext()) {
+                return
+            }
+            realApply(null, iterator, callback)
         }
-        realApply(iterator, callback)
     }
 
-    internal abstract fun getParamsBuilder(): P
+    private fun realApply(
+        formerResult: Any?,
+        iterator: MutableIterator<Any>,
+        callback: CoCoCallBack<Result>
+    ) {
+        val worker: Worker<Builder, Result> = iterator.next() as Worker<Builder, Result>
+        worker.start(formerResult, object : CoCoCallBack<Result> {
 
-    private fun realApply(iterator: MutableIterator<Any>, callback: CoCoCallBack<Result>) {
-        val worker = (iterator.next() as BaseFunctionBuilder<P, Result>).worker
-        worker.start(getParamsBuilder(), object : CoCoCallBack<Result> {
             override fun onSuccess(data: Result) {
                 if (iterator.hasNext()) {
                     iterator.remove()
-                    realApply(iterator, callback)
+                    realApply(data, iterator, callback)
                 } else {
                     callback.onSuccess(data)
                 }
@@ -50,5 +52,9 @@ abstract class BaseFunctionBuilder<P, Result>(
             }
         })
     }
+
+    internal abstract fun getParamsBuilder(): Builder
+
+    internal abstract fun generateWorker(builder: Builder): Worker<Builder, Result>
 
 }

@@ -5,10 +5,10 @@ import android.graphics.Bitmap
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.text.TextUtils
 import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.callback.CompressListener
-import com.qw.photo.callback.GetImageCallBack
 import com.qw.photo.constant.Host
 import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.disposer.ImageDisposer
@@ -18,6 +18,7 @@ import com.qw.photo.pojo.PickResult
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.NullPointerException
 
 /**
  * disposer 管理器
@@ -31,15 +32,19 @@ internal object DisposerManager {
      */
     fun dispose(
         lifecycleHost: Host,
-        originPath: String,
+        originPath: String?,
         targetSaveFile: File?,
         disposer: ImageDisposer,
         listener: CompressListener
     ) {
-        listener.onStart(originPath)
+        if (TextUtils.isEmpty(originPath)) {
+            listener.onError(NullPointerException("try to dispose image with an null path"))
+            return
+        }
+        listener.onStart(originPath!!)
         WorkThread.addWork(Runnable {
             try {
-                val result = disposer.disposeImage(originPath, targetSaveFile)
+                val result = disposer.disposeImage(originPath!!, targetSaveFile)
                 if (!checkContainerStatus(lifecycleHost, "dispose the Image")) {
                     return@Runnable
                 }

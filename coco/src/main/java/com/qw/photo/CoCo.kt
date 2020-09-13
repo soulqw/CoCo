@@ -3,7 +3,6 @@ package com.qw.photo
 import android.app.Activity
 import android.app.Fragment
 import com.qw.photo.exception.ActivityStatusException
-import com.qw.photo.pojo.BaseResult
 import com.qw.photo.work.FunctionManager
 
 
@@ -41,4 +40,5 @@ object CoCo {
             throw ActivityStatusException()
         }
     }
+
 }

@@ -14,20 +14,20 @@ import com.qw.photo.pojo.PickResult
 /**
  * Created by rocket on 2019/6/18.
  */
-class PickPhotoWorker(iContainer: IContainer) :
-    BaseWorker<PickBuilder, PickResult>(iContainer) {
+class PickPhotoWorker(iContainer: IContainer,builder: PickBuilder) :
+    BaseWorker<PickBuilder, PickResult>(iContainer,builder) {
 
-    lateinit var params: PickBuilder
-
-    override fun start(params: PickBuilder, callBack: CoCoCallBack<PickResult>) {
-        this.params = params
+    override fun start(
+        formerResult: Any?,
+        callBack: CoCoCallBack<PickResult>
+    ) {
         val activity = iContainer.provideActivity()
         activity ?: return
         pickPhoto(activity, callBack)
     }
 
     private fun pickPhoto(activity: Activity, callBack: CoCoCallBack<PickResult>) {
-        val pickIntent = if (params.pickRange == PickBuilder.PICK_DICM) {
+        val pickIntent = if (mParams.pickRange == PickBuilder.PICK_DICM) {
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         } else {
             Intent(Intent.ACTION_GET_CONTENT, null).also {
@@ -55,14 +55,15 @@ class PickPhotoWorker(iContainer: IContainer) :
         callBack: CoCoCallBack<PickResult>
     ) {
         if (resultCode == Activity.RESULT_CANCELED) {
-            if (null != params.pickCallBack) {
-                params.pickCallBack!!.onCancel()
+            if (null != mParams.pickCallBack) {
+                mParams.pickCallBack!!.onCancel()
             }
             return
         }
         if (null != intentData && null != intentData.data) {
             val result = PickResult()
             result.originUri = intentData.data!!
+
 //            //判断当前状态是否可处理
 //            if (null != intentData.data && Utils.isActivityAvailable(activity)) {
 //                var localPath: String? = null

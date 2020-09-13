@@ -1,6 +1,6 @@
 package com.qw.photo.callback
 
-import com.qw.photo.pojo.BaseResult
+import com.qw.photo.pojo.DisposeResult
 
 
 /**
@@ -17,7 +17,7 @@ interface CompressListener {
     /**
      * 任务结束
      */
-    fun onFinish(disposeResult: BaseResult)
+    fun onFinish(disposeResult: DisposeResult)
 
     /**
      * 发生错误

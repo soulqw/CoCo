@@ -1,6 +1,6 @@
 package com.qw.photo.dispose.disposer
 
-import com.qw.photo.pojo.BaseResult
+import com.qw.photo.pojo.DisposeResult
 import java.io.File
 
 /**
@@ -15,6 +15,6 @@ interface ImageDisposer {
      * @param originPath 原图路径
      * @param targetSaveFile 指定要存如的路径
      */
-    fun disposeImage(originPath: String, targetSaveFile: File?): BaseResult
+    fun disposeImage(originPath: String, targetSaveFile: File?): DisposeResult
 
 }
