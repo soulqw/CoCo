@@ -3,6 +3,9 @@ package com.qw.photo.work
 import android.app.Activity
 import android.content.Intent
 import android.provider.MediaStore
+import android.text.TextUtils
+import com.qw.photo.DevUtil
+import com.qw.photo.Utils
 import com.qw.photo.agent.IContainer
 import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.constant.Constant
@@ -14,8 +17,8 @@ import com.qw.photo.pojo.PickResult
 /**
  * Created by rocket on 2019/6/18.
  */
-class PickPhotoWorker(iContainer: IContainer,builder: PickBuilder) :
-    BaseWorker<PickBuilder, PickResult>(iContainer,builder) {
+class PickPhotoWorker(iContainer: IContainer, builder: PickBuilder) :
+    BaseWorker<PickBuilder, PickResult>(iContainer, builder) {
 
     override fun start(
         formerResult: Any?,
@@ -23,6 +26,9 @@ class PickPhotoWorker(iContainer: IContainer,builder: PickBuilder) :
     ) {
         val activity = iContainer.provideActivity()
         activity ?: return
+        if (null != mParams.pickCallBack) {
+            mParams.pickCallBack!!.onCancel()
+        }
         pickPhoto(activity, callBack)
     }
 
@@ -63,6 +69,15 @@ class PickPhotoWorker(iContainer: IContainer,builder: PickBuilder) :
         if (null != intentData && null != intentData.data) {
             val result = PickResult()
             result.originUri = intentData.data!!
+            var localPath: String? = null
+            try {
+                localPath = Utils.uriToImagePath(iContainer.provideActivity()!!, intentData.data!!)
+            } catch (e: Exception) {
+                DevUtil.e(Constant.TAG, e.toString())
+            }
+            if (!TextUtils.isEmpty(localPath)) {
+                result.localPath = localPath!!
+            }
 
 //            //判断当前状态是否可处理
 //            if (null != intentData.data && Utils.isActivityAvailable(activity)) {
@@ -97,6 +112,9 @@ class PickPhotoWorker(iContainer: IContainer,builder: PickBuilder) :
 //                    return
 //                }
 //            }
+            if (null != mParams.pickCallBack) {
+                mParams.pickCallBack!!.onFinish(result)
+            }
             callBack.onSuccess(result)
         } else {
             callBack.onFailed(BaseException("null result intentData"))

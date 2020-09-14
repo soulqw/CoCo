@@ -16,7 +16,7 @@ import java.io.File
 class DisposeBuilder(fm: FunctionManager) :
     BaseFunctionBuilder<DisposeBuilder, DisposeResult>(fm) {
 
-    internal lateinit var targetFile: File
+    internal var targetFile: File? = null
 
     internal var originPath: String? = null
 

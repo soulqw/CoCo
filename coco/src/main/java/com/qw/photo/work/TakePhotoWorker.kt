@@ -26,6 +26,9 @@ class TakePhotoWorker(handler: IContainer, builder: TakeBuilder) :
     ) {
         val activity = iContainer.provideActivity()
         activity ?: return
+        if (null != mParams.takeCallBack) {
+            mParams.takeCallBack!!.onStart()
+        }
         takePhoto(activity, callBack)
     }
 
@@ -88,6 +91,9 @@ class TakePhotoWorker(handler: IContainer, builder: TakeBuilder) :
         if (null != mParams.fileToSave) {
             val result = TakeResult()
             result.savedFile = mParams.fileToSave
+            if (null != mParams.takeCallBack) {
+                mParams.takeCallBack!!.onFinish(result)
+            }
             callBack.onSuccess(result)
         }
     }

@@ -53,7 +53,7 @@ class PickResult : BaseResult() {
     lateinit var originUri: Uri
 
     /**
-     * 本地path
+     * uri转化的本地path
      */
     lateinit var localPath: String
 

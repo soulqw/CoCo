@@ -1,7 +1,7 @@
 package com.qw.photo.callback
 
-interface DisposeCallBack {
+import com.qw.photo.pojo.DisposeResult
 
-    fun onStart()
-
+interface DisposeCallBack : BaseFunctionCallBack {
+    fun onFinish(result: DisposeResult)
 }
