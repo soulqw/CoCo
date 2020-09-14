@@ -2,6 +2,7 @@ package com.qw.photo.exception
 
 import com.qw.photo.DevUtil
 import com.qw.photo.constant.Constant
+import com.qw.photo.pojo.PickResult
 
 /**
  * @author cd5160866
@@ -20,3 +21,7 @@ class PickNoResultException : BaseException("try to get local image with no resu
 
 class ActivityStatusException :
     BaseException("activity is destroyed or in a error status check your current activity status before use coco")
+
+class BadConvertException(val result: PickResult) :
+    BaseException("convert uri to path failed"){
+}

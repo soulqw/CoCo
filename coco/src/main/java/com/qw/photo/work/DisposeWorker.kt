@@ -15,6 +15,7 @@ import com.qw.photo.constant.Constant
 import com.qw.photo.constant.Host
 import com.qw.photo.dispose.WorkThread
 import com.qw.photo.dispose.disposer.ImageDisposer
+import com.qw.photo.exception.BadConvertException
 import com.qw.photo.exception.PickNoResultException
 import com.qw.photo.functions.DisposeBuilder
 import com.qw.photo.pojo.DisposeResult
@@ -36,9 +37,9 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
         formerResult: Any?,
         callBack: CoCoCallBack<DisposeResult>
     ) {
-        //if former has result  convert to current params
-        convertFormerResultToCurrent(formerResult)
         try {
+            //if former has result  convert to current params
+            convertFormerResultToCurrent(formerResult)
             dispose(
                 iContainer.getLifecycleHost(),
                 mParams.originPath,
@@ -46,24 +47,18 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
                 mParams.disposer,
                 runCompressListener(callBack)
             )
-        } catch (e: java.lang.Exception) {
-            callBack.onFailed(e)
-        }
-    }
-
-    private fun getOriginPath(
-        params: DisposeBuilder,
-        formerResult: Any?
-    ): String? {
-        if (!TextUtils.isEmpty(params.originPath)) {
-            return params.originPath
-        }
-        if (null != formerResult) {
-            if (formerResult is TakeResult) {
-                return formerResult.savedFile!!.absolutePath;
+        } catch (e: Exception) {
+            if (e is BadConvertException) {
+                generateLocalPathAndHandResultWhenConvertUriFailed(
+                    iContainer.provideActivity()!!,
+                    iContainer.getLifecycleHost(),
+                    e.result,
+                    callBack
+                )
+            } else {
+                callBack.onFailed(e)
             }
         }
-        return null
     }
 
     private fun convertFormerResultToCurrent(
@@ -92,6 +87,8 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
                 if (null == mParams.targetFile) {
                     mParams.targetFile = File(mParams.originPath)
                 }
+            } else {
+                throw BadConvertException(formerResult)
             }
         }
     }
@@ -132,7 +129,7 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
     /**
      * 当将uri 转化为 path失败时 将原图在应用路径内生成并处理
      */
-    fun generateLocalPathAndHandResultWhenConvertUriFailed(
+    private fun generateLocalPathAndHandResultWhenConvertUriFailed(
         activity: Activity,
         host: Host,
         result: PickResult,

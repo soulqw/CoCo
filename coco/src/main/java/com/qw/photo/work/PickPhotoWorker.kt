@@ -78,40 +78,6 @@ class PickPhotoWorker(iContainer: IContainer, builder: PickBuilder) :
             if (!TextUtils.isEmpty(localPath)) {
                 result.localPath = localPath!!
             }
-
-//            //判断当前状态是否可处理
-//            if (null != intentData.data && Utils.isActivityAvailable(activity)) {
-//                var localPath: String? = null
-//                try {
-//                    localPath = Utils.uriToImagePath(activity, intentData.data!!)
-//                } catch (e: Exception) {
-//                    DevUtil.e(Constant.TAG, e.toString())
-//                }
-//                //uri convert to local path failed
-//                //change another way to generate local path
-//                if (TextUtils.isEmpty(localPath)) {
-//                    DisposerManager.generateLocalPathAndHandResultWhenConvertUriFailed(
-//                        activity,
-//                        mHandler.getLifecycleHost(),
-//                        mParams,
-//                        result,
-//                        callBack
-//                    )
-//                    return
-//                }
-//                result.localPath = localPath!!
-//                if (null != mParams.disposer) {
-//                    Utils.disposeImage(
-//                        mHandler.getLifecycleHost(),
-//                        localPath,
-//                        mParams.file,
-//                        mParams.disposer!!,
-//                        result,
-//                        callBack
-//                    )
-//                    return
-//                }
-//            }
             if (null != mParams.pickCallBack) {
                 mParams.pickCallBack!!.onFinish(result)
             }
