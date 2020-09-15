@@ -2,10 +2,14 @@ package com.qw.soulphototaker
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.qw.photo.CoCo
 import com.qw.photo.callback.CoCoCallBack
+import com.qw.photo.callback.DisposeCallBack
+import com.qw.photo.callback.PickCallBack
+import com.qw.photo.callback.TakeCallBack
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
@@ -17,11 +21,16 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val TAG = "CoCoDemo"
+    }
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViewComponent()
-        CoCo.setDebug(true)
+        CoCo.setDebug(BuildConfig.DEBUG)
 
     }
 
@@ -46,8 +55,34 @@ class MainActivity : AppCompatActivity() {
         btn_capture.setOnLongClickListener {
             CoCo.with(this@MainActivity)
                 .take(createSDCardFile())
+                .callBack(object : TakeCallBack {
+
+                    override fun onFinish(result: TakeResult) {
+                        Log.d(TAG, "take onFinish${result}")
+                    }
+
+                    override fun onCancel() {
+                        Log.d(TAG, "take onCancel")
+                    }
+
+                    override fun onStart() {
+                        Log.d(TAG, "take onStart")
+                    }
+
+                })
                 .then()
                 .dispose()
+                .callBack(object : DisposeCallBack {
+
+                    override fun onFinish(result: DisposeResult) {
+                        Log.d(TAG, "dispose onFinish${result}")
+                    }
+
+                    override fun onStart() {
+                        Log.d(TAG, "dispose onStart")
+                    }
+
+                })
                 .start(object : CoCoCallBack<DisposeResult> {
 
                     override fun onSuccess(data: DisposeResult) {
@@ -55,7 +90,9 @@ class MainActivity : AppCompatActivity() {
                     }
 
                     override fun onFailed(exception: Exception) {
+                        Log.d(TAG, "final onFailed${exception}")
                     }
+
                 })
             true
         }
@@ -75,20 +112,48 @@ class MainActivity : AppCompatActivity() {
                         override fun onFailed(exception: Exception) {
                         }
                     })
-//                CoCo.with(this@MainActivity)
-//                    .take(createSDCardFile())
-//                    .applyWithDispose()
-//                    .start(object : SimpleGetImageAdapter<TakeResult>() {
-//
-//                        override fun onSuccess(data: TakeResult) {
-//                            Toast.makeText(this@MainActivity, "拍照操作最终成功", Toast.LENGTH_SHORT).show()
-//                            iv_image.setImageBitmap(data.compressBitmap)
-//                        }
-//
-//                    })
             }
             setOnLongClickListener {
-                startActivity(Intent(this@MainActivity, TakePictureActivity::class.java))
+//                startActivity(Intent(this@MainActivity, TakePictureActivity::class.java))
+                CoCo.with(this@MainActivity)
+                    .pick()
+                    .callBack(object : PickCallBack {
+
+                        override fun onFinish(result: PickResult) {
+                            Log.d(TAG, "pick onFinish${result}")
+                        }
+
+                        override fun onCancel() {
+                            Log.d(TAG, "pick onCancel")
+                        }
+
+                        override fun onStart() {
+                            Log.d(TAG, "pick onStart")
+                        }
+                    })
+                    .then()
+                    .dispose()
+                    .target(createSDCardFile())
+                    .callBack(object : DisposeCallBack {
+
+                        override fun onFinish(result: DisposeResult) {
+                            Log.d(TAG, "dispose onFinish")
+                        }
+
+                        override fun onStart() {
+                            Log.d(TAG, "dispose onStart")
+                        }
+
+                    })
+                    .start(object : CoCoCallBack<DisposeResult> {
+                        override fun onSuccess(data: DisposeResult) {
+                            iv_image.setImageBitmap(data.compressBitmap)
+                        }
+
+                        override fun onFailed(exception: Exception) {
+                            Log.d(TAG, "final onFailed${exception}")
+                        }
+                    })
                 true
             }
         }

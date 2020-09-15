@@ -27,7 +27,7 @@ class PickPhotoWorker(iContainer: IContainer, builder: PickBuilder) :
         val activity = iContainer.provideActivity()
         activity ?: return
         if (null != mParams.pickCallBack) {
-            mParams.pickCallBack!!.onCancel()
+            mParams.pickCallBack!!.onStart()
         }
         pickPhoto(activity, callBack)
     }

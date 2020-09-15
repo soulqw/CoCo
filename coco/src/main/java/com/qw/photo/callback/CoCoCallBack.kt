@@ -6,11 +6,15 @@ package com.qw.photo.callback
  */
 interface CoCoCallBack<ResultData> {
 
+    /**
+     * get final result data
+     * @param data CoCo.with.xxx.then.xxx.start ->  result data
+     */
     fun onSuccess(data: ResultData)
 
     /**
      * 失败
-     * @param exception 任意一步发生异常
+     * @param exception 任意位置发生异常
      */
     fun onFailed(exception: Exception)
 

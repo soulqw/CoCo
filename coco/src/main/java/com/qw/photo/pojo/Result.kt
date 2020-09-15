@@ -30,7 +30,12 @@ open class SaveFileResult : BaseResult() {
 /**
  * 拍照的结果
  */
-class TakeResult : SaveFileResult()
+class TakeResult : SaveFileResult() {
+
+    override fun toString(): String {
+        return "TakeResult(savedFile=${savedFile.toString()}, \nextra=$extra)"
+    }
+}
 
 /**
  * 处理的结果
@@ -41,6 +46,9 @@ class DisposeResult : SaveFileResult() {
 
     var compressBitmap: Bitmap? = null
 
+    override fun toString(): String {
+        return "DisposeResult(savedFile=${savedFile.toString()},\n extra=$extra,\noriginPath=$originPath, \ncompressBitmap=$compressBitmap)"
+    }
 }
 
 /**
@@ -56,6 +64,10 @@ class PickResult : BaseResult() {
      * uri转化的本地path
      */
     lateinit var localPath: String
+
+    override fun toString(): String {
+        return "PickResult( extra=$extra,\noriginUri=$originUri,\n localPath='$localPath')"
+    }
 
 }
 
