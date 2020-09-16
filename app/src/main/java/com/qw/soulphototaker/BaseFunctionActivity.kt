@@ -2,7 +2,6 @@ package com.qw.soulphototaker
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Environment
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import android.widget.ImageView
@@ -20,10 +19,6 @@ import java.util.*
  * @author cd5160866
  */
 abstract class BaseFunctionActivity : AppCompatActivity() {
-
-    companion object {
-        const val TAG = "functionFragment"
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,20 +40,6 @@ abstract class BaseFunctionActivity : AppCompatActivity() {
 
             }
         })
-        tb_container.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                iv_image.visibility = View.GONE
-                tv_result.visibility = View.GONE
-                fl_fragment.visibility = View.VISIBLE
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fl_fragment, FunctionFragment(), TAG)
-                    .commitAllowingStateLoss()
-            } else {
-                tv_result.visibility = View.VISIBLE
-                iv_image.visibility = View.VISIBLE
-                fl_fragment.visibility = View.GONE
-            }
-        }
         btn_begin.setOnClickListener {
             val isMatrix = rg_strategy.checkedRadioButtonId == R.id.matrix
             val degree = if (cb_compress.isChecked) {
@@ -66,11 +47,11 @@ abstract class BaseFunctionActivity : AppCompatActivity() {
             } else {
                 -1
             }
-            start(tb_container.isChecked, isMatrix, degree)
+            start(isMatrix, degree)
         }
     }
 
-    protected abstract fun start(isFragment: Boolean, isMatrix: Boolean, degree: Int)
+    protected abstract fun start(isMatrix: Boolean, degree: Int)
 
     protected fun getImageView(): ImageView {
         return iv_image
@@ -97,4 +78,5 @@ abstract class BaseFunctionActivity : AppCompatActivity() {
             storageDir /* directory */
         )
     }
+
 }

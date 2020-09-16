@@ -20,7 +20,7 @@ class DisposeBuilder(fm: FunctionManager) :
 
     internal var originPath: String? = null
 
-    internal var disposer: ImageDisposer = DefaultImageDisposer.getDefault()
+    lateinit var disposer: ImageDisposer
 
     internal var disposeCallBack: DisposeCallBack? = null
 

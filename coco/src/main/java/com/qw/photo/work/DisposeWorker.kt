@@ -69,9 +69,9 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
         }
 
         if (formerResult is TakeResult) {
-            mParams.originPath = formerResult.savedFile!!.absolutePath
+            mParams.originPath = formerResult.savedFile.absolutePath
             if (null == mParams.targetFile) {
-                mParams.targetFile = formerResult.savedFile!!
+                mParams.targetFile = formerResult.savedFile
             }
         }
         if (formerResult is PickResult) {

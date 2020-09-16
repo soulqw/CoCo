@@ -12,23 +12,28 @@
         android:orientation="vertical"
         tools:context=".MainActivity">
 
-        <Button
-            android:id="@+id/btn_capture"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="拍照(长按详细调试)" />
+            android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/btn_pick"
+            android:id="@+id/base"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="选择(长按详细调试)" />
+            android:text="基本用法" />
 
         <Button
-            android:id="@+id/btn_custom_disposer"
+            android:id="@+id/others"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="拍照(自定义图片处理器)" />
+            android:text="回调以及其它功能" />
+
+        <Button
+            android:id="@+id/comb"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="组合操作符使用" />
 
         <ImageView
             android:id="@+id/iv_image"

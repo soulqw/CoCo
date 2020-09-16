@@ -108,7 +108,7 @@ object Utils {
         return true
     }
 
-    internal fun getBitmapFromFile(filePath: String): Bitmap? {
+    fun getBitmapFromFile(filePath: String): Bitmap? {
         var bis: BufferedInputStream? = null
         var fis: FileInputStream? = null
         try {

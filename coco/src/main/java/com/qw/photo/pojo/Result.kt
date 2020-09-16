@@ -24,7 +24,8 @@ open class SaveFileResult : BaseResult() {
     /**
      * 完成后写成的文件
      */
-    var savedFile: File? = null
+    lateinit var savedFile: File
+
 }
 
 /**
@@ -44,7 +45,7 @@ class DisposeResult : SaveFileResult() {
 
     var originPath: String? = null
 
-    var compressBitmap: Bitmap? = null
+    lateinit var compressBitmap: Bitmap
 
     override fun toString(): String {
         return "DisposeResult(savedFile=${savedFile.toString()},\n extra=$extra,\noriginPath=$originPath, \ncompressBitmap=$compressBitmap)"

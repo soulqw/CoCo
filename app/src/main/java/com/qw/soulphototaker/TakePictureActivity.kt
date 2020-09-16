@@ -1,94 +1,89 @@
 package com.qw.soulphototaker
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.widget.Toast
+import android.os.Bundle
+import android.util.Log
 import com.qw.photo.CoCo
-import com.qw.photo.constant.CompressStrategy
-import com.qw.photo.dispose.disposer.DefaultImageDisposer
+import com.qw.photo.Utils
+import com.qw.photo.callback.CoCoCallBack
+import com.qw.photo.callback.TakeCallBack
 import com.qw.photo.functions.TakeBuilder
+import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.TakeResult
-import kotlinx.android.synthetic.main.activity_funtion_detail.*
-
+import kotlinx.android.synthetic.main.activity_take_photo.*
 
 /**
  * @author cd5160866
  */
-class TakePictureActivity : BaseFunctionActivity() {
+class TakePictureActivity : BaseToolbarActivity() {
 
-    override fun start(isFragment: Boolean, isMatrix: Boolean, degree: Int) {
-        if (isFragment) {
-            val fragment: FunctionFragment =
-                supportFragmentManager.findFragmentByTag(TAG) as FunctionFragment
-            fragment.takePhoto(isMatrix, degree)
-            return
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_take_photo)
+        setSupportActionBar(toolbar)
+        title = "TakePhotoDetail"
+
+        //base usage
+        base.setOnClickListener {
+            CoCo.with(this@TakePictureActivity)
+                .take(createSDCardFile())
+                .start(object : CoCoCallBack<TakeResult> {
+
+                    override fun onSuccess(data: TakeResult) {
+                        iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile.absolutePath))
+                    }
+
+                    override fun onFailed(exception: Exception) {}
+                })
         }
-        if (degree == -1) {
-//            CoCo.with(this)
-//                .take(createSDCardFile())
-//                .apply()
-//                .start(object : GetImageCallBack<TakeResult> {
-//                    override fun onSuccess(data: TakeResult) {
-//                        Toast.makeText(this@TakePictureActivity, "拍照操作最终成功", Toast.LENGTH_SHORT)
-//                            .show()
-//                        val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
-//                        getImageView().setImageBitmap(bitmap)
-//                        tv_result.text = getImageSizeDesc(bitmap)
-//                    }
-//
-//                    override fun onFailed(exception: Exception) {
-//                        Toast.makeText(
-//                            this@TakePictureActivity,
-//                            "拍照异常: $exception",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//
-//                })
-        } else {
-            val strategy: CompressStrategy = if (isMatrix) {
-                CompressStrategy.MATRIX
-            } else {
-                CompressStrategy.QUALITY
-            }
-            var cameraFace = TakeBuilder.BACK
-            if (tb_camera_face.isChecked) {
-                cameraFace = TakeBuilder.FRONT
-            }
-//            CoCo.with(this@TakePictureActivity)
-//                .take(createSDCardFile())
-//                .cameraFace(cameraFace)
-//                .applyWithDispose(
-//                    DefaultImageDisposer().degree(degree)
-//                        .strategy(strategy)
-//                )
-//                .start(object : GetImageCallBack<TakeResult> {
-//
-//                    override fun onDisposeStart() {
-//                        Toast.makeText(this@TakePictureActivity, "拍照成功,开始处理", Toast.LENGTH_SHORT)
-//                            .show()
-//                    }
-//
-//                    override fun onCancel() {
-//                        Toast.makeText(this@TakePictureActivity, "拍照取消", Toast.LENGTH_SHORT).show()
-//                    }
-//
-//                    override fun onFailed(exception: Exception) {
-//                        Toast.makeText(
-//                            this@TakePictureActivity,
-//                            "拍照异常: $exception",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                    }
-//
-//                    override fun onSuccess(data: TakeResult) {
-//                        Toast.makeText(this@TakePictureActivity, "拍照操作最终成功", Toast.LENGTH_SHORT)
-//                            .show()
-//                        getImageView().setImageBitmap(data.compressBitmap)
-//                        tv_result.text = getImageSizeDesc(data.compressBitmap!!)
-//                    }
-//
-//                })
+
+        //other functions in take operate
+        others.setOnClickListener {
+            CoCo.with(this@TakePictureActivity)
+                .take(createSDCardFile())
+                .cameraFace(TakeBuilder.FRONT)
+                .callBack(object : TakeCallBack {
+
+                    override fun onFinish(result: TakeResult) {
+                        Log.d(MainActivity.TAG, "take onFinish${result}")
+                    }
+
+                    override fun onCancel() {
+                        Log.d(MainActivity.TAG, "take onCancel")
+                    }
+
+                    override fun onStart() {
+                        Log.d(MainActivity.TAG, "take onStart")
+                    }
+
+                }).start(object : CoCoCallBack<TakeResult> {
+
+                    override fun onSuccess(data: TakeResult) {
+                        iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile.absolutePath))
+                    }
+
+                    override fun onFailed(exception: Exception) {}
+                })
         }
+
+        //work with other operate
+        //take photo first then dispose image to makes result smaller
+        comb.setOnClickListener {
+            CoCo.with(this@TakePictureActivity)
+                .take(createSDCardFile())
+                .then()
+                .dispose()
+                .start(object : CoCoCallBack<DisposeResult> {
+
+                    override fun onSuccess(data: DisposeResult) {
+                        iv_image.setImageBitmap(data.compressBitmap)
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                    }
+
+                })
+        }
+
+
     }
 }

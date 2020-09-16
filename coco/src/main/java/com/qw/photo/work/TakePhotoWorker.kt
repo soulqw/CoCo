@@ -90,7 +90,7 @@ class TakePhotoWorker(handler: IContainer, builder: TakeBuilder) :
         }
         if (null != mParams.fileToSave) {
             val result = TakeResult()
-            result.savedFile = mParams.fileToSave
+            result.savedFile = mParams.fileToSave!!
             if (null != mParams.takeCallBack) {
                 mParams.takeCallBack!!.onFinish(result)
             }

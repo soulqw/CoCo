@@ -22,13 +22,7 @@ class PickPictureActivity : BaseFunctionActivity() {
         tb_camera_face.visibility = View.GONE
     }
 
-    override fun start(isFragment: Boolean, isMatrix: Boolean, degree: Int) {
-        if (isFragment) {
-            val fragment: FunctionFragment =
-                supportFragmentManager.findFragmentByTag(TAG) as FunctionFragment
-            fragment.pick(isMatrix, degree)
-            return
-        }
+    override fun start( isMatrix: Boolean, degree: Int) {
         if (degree == -1) {
 //            CoCo.with(this)
 //                .pick(createSDCardFile())

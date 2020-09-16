@@ -20,7 +20,7 @@ import java.io.File
  *附带纠正图图片旋转角度等
  * @author cd5160866
  */
-class DefaultImageDisposer : ImageDisposer {
+open class DefaultImageDisposer : ImageDisposer {
 
     companion object {
 
@@ -79,7 +79,7 @@ class DefaultImageDisposer : ImageDisposer {
         }
         val result = DisposeResult()
         result.originPath = originPath
-        result.compressBitmap = bitmap
+        result.compressBitmap = bitmap!!
         result.savedFile = targetSaveFile
         return result
     }

@@ -1,5 +1,6 @@
 package com.qw.soulphototaker
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -13,25 +14,42 @@ import com.qw.photo.callback.TakeCallBack
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
+import com.qw.soul.permission.SoulPermission
+import com.qw.soul.permission.bean.Permission
+import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
 import kotlinx.android.synthetic.main.activity_main.*
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseToolbarActivity() {
 
     companion object {
         const val TAG = "CoCoDemo"
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initViewComponent()
-        CoCo.setDebug(BuildConfig.DEBUG)
+        SoulPermission.getInstance()
+            .checkAndRequestPermission("android.permission.READ_EXTERNAL_STORAGE", object :
+                CheckRequestPermissionListener {
+                override fun onPermissionOk(permission: Permission?) {
+                    initViewComponent()
+                }
 
+                override fun onPermissionDenied(permission: Permission?) {
+                    Toast.makeText(
+                        this@MainActivity,
+                        "need permission first to pick Photo",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    finish()
+                }
+
+            })
+        CoCo.setDebug(BuildConfig.DEBUG)
     }
 
     private fun initViewComponent() {
@@ -43,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                     override fun onSuccess(data: TakeResult) {
                         Toast.makeText(
                             this@MainActivity,
-                            data.savedFile!!.absolutePath.toString(),
+                            data.savedFile.absolutePath.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -53,47 +71,7 @@ class MainActivity : AppCompatActivity() {
                 })
         }
         btn_capture.setOnLongClickListener {
-            CoCo.with(this@MainActivity)
-                .take(createSDCardFile())
-                .callBack(object : TakeCallBack {
-
-                    override fun onFinish(result: TakeResult) {
-                        Log.d(TAG, "take onFinish${result}")
-                    }
-
-                    override fun onCancel() {
-                        Log.d(TAG, "take onCancel")
-                    }
-
-                    override fun onStart() {
-                        Log.d(TAG, "take onStart")
-                    }
-
-                })
-                .then()
-                .dispose()
-                .callBack(object : DisposeCallBack {
-
-                    override fun onFinish(result: DisposeResult) {
-                        Log.d(TAG, "dispose onFinish${result}")
-                    }
-
-                    override fun onStart() {
-                        Log.d(TAG, "dispose onStart")
-                    }
-
-                })
-                .start(object : CoCoCallBack<DisposeResult> {
-
-                    override fun onSuccess(data: DisposeResult) {
-                        iv_image.setImageBitmap(data.compressBitmap)
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Log.d(TAG, "final onFailed${exception}")
-                    }
-
-                })
+            startActivity(Intent(this@MainActivity, TakePictureActivity::class.java))
             true
         }
         btn_pick.apply {
@@ -200,21 +178,6 @@ class MainActivity : AppCompatActivity() {
 //        }
     }
 
-
-    @Throws(IOException::class)
-    private fun createSDCardFile(): File {
-        // Create an image file name
-        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir = File(externalCacheDir!!.path + "/" + timeStamp)
-        if (!storageDir.exists()) {
-            storageDir.mkdir()
-        }
-        return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
-        )
-    }
 
     /**
      * 自定义图片处理器

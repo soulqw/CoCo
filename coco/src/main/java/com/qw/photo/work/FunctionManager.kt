@@ -4,6 +4,7 @@ import android.app.Activity
 import androidx.fragment.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
 import com.qw.photo.agent.IContainer
+import com.qw.photo.dispose.disposer.DefaultImageDisposer
 import com.qw.photo.functions.DisposeBuilder
 import com.qw.photo.functions.PickBuilder
 import com.qw.photo.functions.TakeBuilder
@@ -30,15 +31,12 @@ class FunctionManager(internal val container: IContainer) {
     fun pick(): PickBuilder =
         PickBuilder(this)
 
-//    /**
-//     * 系统裁剪照片
-//     */
-//    fun crop() {}
-
     /**
      * 处理图片（可自定义）
      */
     fun dispose(): DisposeBuilder = DisposeBuilder(this)
+        //you can also custom disposer
+        .disposer(DefaultImageDisposer.getDefault())
 
     companion object {
         internal fun create(activity: Activity) =
@@ -51,4 +49,5 @@ class FunctionManager(internal val container: IContainer) {
             FunctionManager(AcceptActivityResultHandlerFactory.create(fragment))
 
     }
+
 }
