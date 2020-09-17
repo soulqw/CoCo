@@ -29,7 +29,7 @@ class DisposeBuilder(fm: FunctionManager) :
      * @see FunctionManager.pick()
      * or
      * @see FunctionManager.take()
-     * the origin path will set from former result automatic
+     * the origin path will be set from former result automatic
      *
      * @param originPath the origin path to dispose
      */
@@ -39,6 +39,10 @@ class DisposeBuilder(fm: FunctionManager) :
     }
 
     /**
+     * if dispose work after other operate
+     * @see FunctionManager.pick()
+     * the  targetFile will be set from former result automatic
+     *
      * @param file the dispose result to save
      */
     fun target(file: File): DisposeBuilder {
