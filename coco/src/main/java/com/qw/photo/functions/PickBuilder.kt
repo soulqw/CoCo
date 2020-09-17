@@ -2,6 +2,7 @@ package com.qw.photo.functions
 
 import com.qw.photo.annotations.PickRange
 import com.qw.photo.callback.PickCallBack
+import com.qw.photo.constant.Range
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.work.FunctionManager
 import com.qw.photo.work.PickPhotoWorker
@@ -10,21 +11,7 @@ import com.qw.photo.work.Worker
 class PickBuilder(fm: FunctionManager) :
     BaseFunctionBuilder<PickBuilder, PickResult>(fm) {
 
-    companion object {
-
-        /**
-         * 系统相册
-         */
-        const val PICK_DICM = 0
-
-        /**
-         * 全文件路径
-         */
-        const val PICK_CONTENT = 1
-
-    }
-
-    internal var pickRange = PICK_DICM
+    internal var pickRange = Range.PICK_DICM
 
     internal var pickCallBack: PickCallBack? = null
 
@@ -36,8 +23,8 @@ class PickBuilder(fm: FunctionManager) :
     /**
      * 选择范围根据你自己需要
      * @param pickRange 筛选范围
-     * @see PICK_DICM
-     * @see PICK_CONTENT
+     * @see Range.PICK_DICM
+     * @see Range.PICK_CONTENT
      */
     fun range(@PickRange pickRange: Int): PickBuilder {
         this.pickRange = pickRange

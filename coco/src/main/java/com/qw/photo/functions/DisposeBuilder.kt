@@ -24,16 +24,34 @@ class DisposeBuilder(fm: FunctionManager) :
 
     internal var disposeCallBack: DisposeCallBack? = null
 
+    /**
+     * set the origin file path to dispose, if dispose work after other operate such as
+     * @see FunctionManager.pick()
+     * or
+     * @see FunctionManager.take()
+     * the origin path will set from former result automatic
+     *
+     * @param originPath the origin path to dispose
+     */
     fun origin(originPath: String): DisposeBuilder {
         this.originPath = originPath
         return this
     }
 
+    /**
+     * @param file the dispose result to save
+     */
     fun target(file: File): DisposeBuilder {
         this.targetFile = file
         return this
     }
 
+    /**
+     *
+     * @param disposer how to dispose image ,compress, rotation and so on
+     * @see ImageDisposer  the interface that you can custom
+     * @see DefaultImageDisposer  the default imp of ImageDisposer .it can compress,rotation the image
+     */
     fun disposer(disposer: ImageDisposer): DisposeBuilder {
         this.disposer = disposer
         return this

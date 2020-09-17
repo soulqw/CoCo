@@ -6,6 +6,7 @@ import com.qw.photo.CoCo
 import com.qw.photo.Utils
 import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.callback.TakeCallBack
+import com.qw.photo.constant.Face
 import com.qw.photo.functions.TakeBuilder
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.TakeResult
@@ -40,7 +41,7 @@ class TakePictureActivity : BaseToolbarActivity() {
         others.setOnClickListener {
             CoCo.with(this@TakePictureActivity)
                 .take(createSDCardFile())
-                .cameraFace(TakeBuilder.FRONT)
+                .cameraFace(Face.FRONT)
                 .callBack(object : TakeCallBack {
 
                     override fun onFinish(result: TakeResult) {
@@ -83,7 +84,5 @@ class TakePictureActivity : BaseToolbarActivity() {
 
                 })
         }
-
-
     }
 }

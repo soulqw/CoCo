@@ -11,6 +11,7 @@ import java.io.File
 interface ImageDisposer {
 
     /**
+     * how to dispose your file, it will work on backGround thread
      * 处理图片 此方法本身会在额外的线程池处理
      * @param originPath 原图路径
      * @param targetSaveFile 指定要存如的路径

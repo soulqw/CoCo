@@ -1,14 +1,13 @@
 package com.qw.photo.annotations
 
 import androidx.annotation.IntDef
+import com.qw.photo.constant.Face.BACK
+import com.qw.photo.constant.Face.FRONT
 import com.qw.photo.constant.Host.Status.Companion.INIT
 import com.qw.photo.constant.Host.Status.Companion.LIVE
 import com.qw.photo.constant.Host.Status.Companion.DEAD
-import com.qw.photo.functions.PickBuilder.Companion.PICK_CONTENT
-import com.qw.photo.functions.PickBuilder.Companion.PICK_DICM
-import com.qw.photo.functions.TakeBuilder.Companion.BACK
-import com.qw.photo.functions.TakeBuilder.Companion.FRONT
-
+import com.qw.photo.constant.Range.PICK_CONTENT
+import com.qw.photo.constant.Range.PICK_DICM
 
 /**
  *
@@ -23,6 +22,6 @@ annotation class CameraFace
 @Retention(AnnotationRetention.SOURCE)
 annotation class PickRange
 
-@IntDef(INIT, LIVE,DEAD)
+@IntDef(INIT, LIVE, DEAD)
 @Retention(AnnotationRetention.SOURCE)
 annotation class HostStatus

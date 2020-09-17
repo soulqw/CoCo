@@ -10,6 +10,7 @@ import com.qw.photo.Utils
 import com.qw.photo.agent.IContainer
 import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.constant.Constant
+import com.qw.photo.constant.Face
 import com.qw.photo.exception.BaseException
 import com.qw.photo.functions.TakeBuilder
 import com.qw.photo.pojo.TakeResult
@@ -69,7 +70,7 @@ class TakePhotoWorker(handler: IContainer, builder: TakeBuilder) :
 
     private fun setCameraFace(intent: Intent) {
         when (mParams.cameraFace) {
-            TakeBuilder.FRONT -> {
+            Face.FRONT -> {
                 intent.putExtra(
                     "android.intent.extras.CAMERA_FACING",
                     Camera.CameraInfo.CAMERA_FACING_FRONT
