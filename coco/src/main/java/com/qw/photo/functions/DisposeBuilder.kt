@@ -45,7 +45,7 @@ class DisposeBuilder(fm: FunctionManager) :
      *
      * @param file the dispose result to save
      */
-    fun target(file: File): DisposeBuilder {
+    fun fileToSaveResult(file: File): DisposeBuilder {
         this.targetFile = file
         return this
     }
