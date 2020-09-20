@@ -1,6 +1,7 @@
 package com.qw.photo.functions
 
 import com.qw.photo.callback.CoCoCallBack
+import com.qw.photo.dispose.WorkThread
 import com.qw.photo.work.FunctionManager
 import com.qw.photo.work.Worker
 
@@ -11,13 +12,17 @@ abstract class BaseFunctionBuilder<Builder, Result>(
     internal val functionManager: FunctionManager
 ) {
 
+    /**
+     * make you can convert to other operate to combine other functions
+     * take().then().dispose()....
+     */
     fun then(): FunctionManager {
         this.functionManager.workerFlows.add(generateWorker(getParamsBuilder()))
         return this.functionManager
     }
 
     /**
-     * 开始
+     * call start to begin the workflow
      */
     fun start(callback: CoCoCallBack<Result>) {
         synchronized(functionManager) {
@@ -44,11 +49,15 @@ abstract class BaseFunctionBuilder<Builder, Result>(
                     realApply(data, iterator, callback)
                 } else {
                     callback.onSuccess(data)
+                    //final release
+                    WorkThread.release()
                 }
             }
 
             override fun onFailed(exception: Exception) {
                 callback.onFailed(exception)
+                //final release
+                WorkThread.release()
             }
         })
     }

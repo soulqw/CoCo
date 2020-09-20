@@ -9,37 +9,35 @@ import java.io.File
  *
  * @author cd5160866
  */
-/**
- * 通用的结果
- */
+
 open class BaseResult {
 
     /**
-     * 如果需要额外的参数的话
+     * you can also set the extra data if needed
      */
     var extra: Any? = null
 }
 
 open class SaveFileResult : BaseResult() {
     /**
-     * 完成后写成的文件
+     * the file that write the result
      */
-    lateinit var savedFile: File
+    var savedFile: File? = null
 
 }
 
 /**
- * 拍照的结果
+ * the result of take
  */
 class TakeResult : SaveFileResult() {
 
     override fun toString(): String {
-        return "TakeResult(savedFile=${savedFile.toString()}, \nextra=$extra)"
+        return "TakeResult(savedFile=${savedFile}, \nextra=$extra)"
     }
 }
 
 /**
- * 处理的结果
+ * The result form dispose
  */
 class DisposeResult : SaveFileResult() {
 
@@ -48,21 +46,21 @@ class DisposeResult : SaveFileResult() {
     lateinit var compressBitmap: Bitmap
 
     override fun toString(): String {
-        return "DisposeResult(savedFile=${savedFile.toString()},\n extra=$extra,\noriginPath=$originPath, \ncompressBitmap=$compressBitmap)"
+        return "DisposeResult(savedFile=${savedFile},\n extra=$extra,\noriginPath=$originPath, \ncompressBitmap=$compressBitmap)"
     }
 }
 
 /**
- * 选择的结果
+ * The result form pick
  */
 class PickResult : BaseResult() {
     /**
-     * 选择图片的uri
+     * the URI or the picked file
      */
     lateinit var originUri: Uri
 
     /**
-     * uri转化的本地path
+     * the path that convert form URI
      */
     lateinit var localPath: String
 

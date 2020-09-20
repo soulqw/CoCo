@@ -104,7 +104,7 @@ class PickPictureActivity : BaseToolbarActivity() {
             .pick()
             .then()
             .dispose()
-            .fileToSaveResult(createSDCardFile())
+//            .fileToSaveResult(createSDCardFile())
             .start(object : CoCoCallBack<DisposeResult> {
 
                 override fun onSuccess(data: DisposeResult) {

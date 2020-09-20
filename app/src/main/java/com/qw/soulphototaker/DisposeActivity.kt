@@ -1,16 +1,11 @@
 package com.qw.soulphototaker
 
 import android.os.Bundle
-import android.util.Log
 import com.qw.photo.CoCo
-import com.qw.photo.Utils
 import com.qw.photo.callback.CoCoCallBack
-import com.qw.photo.callback.TakeCallBack
-import com.qw.photo.constant.Face
-import com.qw.photo.functions.TakeBuilder
 import com.qw.photo.pojo.DisposeResult
-import com.qw.photo.pojo.TakeResult
-import kotlinx.android.synthetic.main.activity_take_photo.*
+import kotlinx.android.synthetic.main.activity_dispose.*
+import java.io.File
 
 /**
  * @author cd5160866
@@ -22,6 +17,23 @@ class DisposeActivity : BaseToolbarActivity() {
         setContentView(R.layout.activity_dispose)
         setSupportActionBar(toolbar)
         title = "DisposeDetail"
+
+        base.setOnClickListener {
+
+            CoCo.with(this)
+                .dispose()
+                .origin("file:///android_asset/ic_launcher_round.png")
+                .start(object : CoCoCallBack<DisposeResult> {
+                    override fun onSuccess(data: DisposeResult) {
+                        iv_image.setImageBitmap(data.compressBitmap)
+                    }
+
+                    override fun onFailed(exception: Exception) {
+                    }
+
+                })
+
+        }
 
     }
 }

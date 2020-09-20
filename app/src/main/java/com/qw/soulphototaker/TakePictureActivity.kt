@@ -30,7 +30,7 @@ class TakePictureActivity : BaseToolbarActivity() {
                 .start(object : CoCoCallBack<TakeResult> {
 
                     override fun onSuccess(data: TakeResult) {
-                        iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile.absolutePath))
+                        iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
                     }
 
                     override fun onFailed(exception: Exception) {}
@@ -59,7 +59,7 @@ class TakePictureActivity : BaseToolbarActivity() {
                 }).start(object : CoCoCallBack<TakeResult> {
 
                     override fun onSuccess(data: TakeResult) {
-                        iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile.absolutePath))
+                        iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
                     }
 
                     override fun onFailed(exception: Exception) {}

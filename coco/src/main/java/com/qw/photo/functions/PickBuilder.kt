@@ -21,10 +21,10 @@ class PickBuilder(fm: FunctionManager) :
     }
 
     /**
-     * 选择范围根据你自己需要
-     * @param pickRange 筛选范围
-     * @see Range.PICK_DICM
-     * @see Range.PICK_CONTENT
+     *
+     * @param pickRange the range you can choose
+     * @see Range.PICK_DICM  the system gallery
+     * @see Range.PICK_CONTENT the system content file
      */
     fun range(@PickRange pickRange: Int): PickBuilder {
         this.pickRange = pickRange

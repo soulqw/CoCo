@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
 import com.qw.photo.agent.IContainer
 import com.qw.photo.dispose.disposer.DefaultImageDisposer
-import com.qw.photo.dispose.disposer.ImageDisposer
+import com.qw.photo.dispose.disposer.Disposer
 import com.qw.photo.functions.DisposeBuilder
 import com.qw.photo.functions.PickBuilder
 import com.qw.photo.functions.TakeBuilder
@@ -27,7 +27,7 @@ class FunctionManager(internal val container: IContainer) {
         TakeBuilder(this).fileToSave(fileToSave)
 
     /**
-     * select a photo from system gallery of file system
+     * select a photo from system gallery or file system
      */
     fun pick(): PickBuilder =
         PickBuilder(this)
@@ -35,10 +35,10 @@ class FunctionManager(internal val container: IContainer) {
     /**
      * dispose an file in background thread ,and will bind the lifecycle with current container
      * @param disposer you can also custom disposer
-     * @see ImageDisposer
+     * @see Disposer
      */
     @JvmOverloads
-    fun dispose(disposer: ImageDisposer = DefaultImageDisposer.getDefault()): DisposeBuilder =
+    fun dispose(disposer: Disposer = DefaultImageDisposer.get()): DisposeBuilder =
         DisposeBuilder(this)
             .disposer(disposer)
 

@@ -26,7 +26,7 @@ class TakeBuilder(fm: FunctionManager) :
     }
 
     /**
-     * 指定被最终写到的文件
+     * the result of capture jpg will be saved
      */
     fun fileToSave(fileToSave: File): TakeBuilder {
         DevUtil.d(
@@ -38,9 +38,9 @@ class TakeBuilder(fm: FunctionManager) :
     }
 
     /**
-     * 相机的方向，默认后摄像头
-     * 这个方法不一定对所有手机生效
-     * @see CameraFace
+     * the face of camera
+     * this method may not work good for all phone
+     * @see Face
      */
     fun cameraFace(@CameraFace face: Int): TakeBuilder {
         this.cameraFace = face

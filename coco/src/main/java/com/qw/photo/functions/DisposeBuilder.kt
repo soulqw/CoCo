@@ -2,7 +2,7 @@ package com.qw.photo.functions
 
 import com.qw.photo.callback.DisposeCallBack
 import com.qw.photo.dispose.disposer.DefaultImageDisposer
-import com.qw.photo.dispose.disposer.ImageDisposer
+import com.qw.photo.dispose.disposer.Disposer
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.work.DisposeWorker
 import com.qw.photo.work.FunctionManager
@@ -20,12 +20,12 @@ class DisposeBuilder(fm: FunctionManager) :
 
     internal var originPath: String? = null
 
-    lateinit var disposer: ImageDisposer
+    lateinit var disposer: Disposer
 
     internal var disposeCallBack: DisposeCallBack? = null
 
     /**
-     * set the origin file path to dispose, if dispose work after other operate such as
+     * Set the origin file path to dispose, if dispose work after other operate such as
      * @see FunctionManager.pick()
      * or
      * @see FunctionManager.take()
@@ -39,6 +39,22 @@ class DisposeBuilder(fm: FunctionManager) :
     }
 
     /**
+     * Set the origin file  to dispose, if dispose work after other operate such as
+     * @see FunctionManager.pick()
+     * or
+     * @see FunctionManager.take()
+     * the origin path will be set from former result automatic
+     *
+     * @param originFile the origin File to dispose
+     */
+    fun origin(originFile: File): DisposeBuilder {
+        return origin(originFile.absolutePath)
+    }
+
+    /**
+     * Set the file that save the result of dispose ,
+     * if not set, the result of dispose will not be save
+     *
      * if dispose work after other operate
      * @see FunctionManager.pick()
      * the  targetFile will be set from former result automatic
@@ -51,12 +67,13 @@ class DisposeBuilder(fm: FunctionManager) :
     }
 
     /**
+     * Set the disposer to dispose file work on background thread
      *
-     * @param disposer how to dispose image ,compress, rotation and so on
-     * @see ImageDisposer  the interface that you can custom
+     * @param disposer how to dispose the file : compress, rotation and so on
      * @see DefaultImageDisposer  the default imp of ImageDisposer .it can compress,rotation the image
+     *  @see Disposer  the interface that you can also custom
      */
-    fun disposer(disposer: ImageDisposer): DisposeBuilder {
+    fun disposer(disposer: Disposer): DisposeBuilder {
         this.disposer = disposer
         return this
     }

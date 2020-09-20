@@ -16,15 +16,14 @@ import java.io.File
 
 
 /**
- * 图片处理者，主要是压缩处理
- *附带纠正图图片旋转角度等
+ * the default implement to provided for dispose image for pick or take form system
  * @author cd5160866
  */
-open class DefaultImageDisposer : ImageDisposer {
+open class DefaultImageDisposer : Disposer {
 
     companion object {
 
-        fun getDefault(): DefaultImageDisposer {
+        fun get(): DefaultImageDisposer {
             return DefaultImageDisposer()
                 .strategy(CompressStrategy.MATRIX)
                 .degree(50)
@@ -48,14 +47,12 @@ open class DefaultImageDisposer : ImageDisposer {
         return this
     }
 
-    override fun disposeImage(originPath: String, targetSaveFile: File?): DisposeResult {
+    override fun disposeFile(originPath: String, targetToSaveResult: File?): DisposeResult {
         if (null == strategy) {
             throw MissCompressStrategyException()
         }
-        if (null == targetSaveFile) {
-            throw CompressFailedException("target file is null")
-        }
         DevUtil.d(Constant.TAG, "start dispose")
+        val result = DisposeResult()
         try {
             DevUtil.d(Constant.TAG, "start compress")
             bitmap = CompressFactory.create(strategy!!)
@@ -66,21 +63,23 @@ open class DefaultImageDisposer : ImageDisposer {
         } catch (e: Exception) {
             throw CompressFailedException("error on compress or Rotate $e")
         }
-
         //check result
         if (null == bitmap) {
             throw CompressFailedException("try to dispose bitmap get a null result")
         }
-        //save file as bitmap if needed
-        DevUtil.d(Constant.TAG, "start save bitmap to file")
-        val saveResult = Utils.bitmapToFile(targetSaveFile, bitmap!!)
-        if (!saveResult) {
-            throw CompressFailedException("save bitmap as file failed")
-        }
-        val result = DisposeResult()
         result.originPath = originPath
         result.compressBitmap = bitmap!!
-        result.savedFile = targetSaveFile
+        //save file as bitmap if needed
+        if (null != targetToSaveResult) {
+            DevUtil.d(Constant.TAG, "start save bitmap to file")
+            val saveResult = Utils.bitmapToFile(targetToSaveResult, bitmap!!)
+            if (!saveResult) {
+                throw CompressFailedException("save bitmap as file failed")
+            }
+            result.savedFile = targetToSaveResult
+        } else {
+            DevUtil.d(Constant.TAG, "no target file did not write file")
+        }
         return result
     }
 

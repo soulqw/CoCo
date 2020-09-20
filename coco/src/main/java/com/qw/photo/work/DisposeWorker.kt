@@ -14,7 +14,7 @@ import com.qw.photo.callback.CompressListener
 import com.qw.photo.constant.Constant
 import com.qw.photo.constant.Host
 import com.qw.photo.dispose.WorkThread
-import com.qw.photo.dispose.disposer.ImageDisposer
+import com.qw.photo.dispose.disposer.Disposer
 import com.qw.photo.exception.BadConvertException
 import com.qw.photo.exception.PickNoResultException
 import com.qw.photo.functions.DisposeBuilder
@@ -69,7 +69,7 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
         }
 
         if (formerResult is TakeResult) {
-            mParams.originPath = formerResult.savedFile.absolutePath
+            mParams.originPath = formerResult.savedFile!!.absolutePath
             if (null == mParams.targetFile) {
                 mParams.targetFile = formerResult.savedFile
             }
@@ -84,9 +84,6 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
             }
             if (!TextUtils.isEmpty(localPath)) {
                 mParams.originPath = localPath
-                if (null == mParams.targetFile) {
-                    mParams.targetFile = File(mParams.originPath)
-                }
             } else {
                 throw BadConvertException(formerResult)
             }
@@ -97,7 +94,7 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
         lifecycleHost: Host,
         originPath: String?,
         targetSaveFile: File?,
-        disposer: ImageDisposer,
+        disposer: Disposer,
         listener: CompressListener
     ) {
         if (TextUtils.isEmpty(originPath)) {
@@ -107,7 +104,7 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
         listener.onStart(originPath!!)
         WorkThread.addWork(Runnable {
             try {
-                val result = disposer.disposeImage(originPath, targetSaveFile)
+                val result = disposer.disposeFile(originPath, targetSaveFile)
                 if (!checkContainerStatus(lifecycleHost, "dispose the Image")) {
                     return@Runnable
                 }
@@ -187,7 +184,6 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
                     mParams.disposeCallBack!!.onFinish(disposeResult)
                 }
                 callBack.onSuccess(disposeResult)
-                WorkThread.release()
             }
 
             override fun onError(e: Exception) {

@@ -7,12 +7,12 @@ import android.widget.Toast
 import com.qw.photo.CoCo
 import com.qw.photo.Utils
 import com.qw.photo.callback.CoCoCallBack
+
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.iv_image
-import kotlinx.android.synthetic.main.activity_take_photo.*
 
 class MainActivity : BaseToolbarActivity() {
 
@@ -29,7 +29,6 @@ class MainActivity : BaseToolbarActivity() {
 
     private fun initViewComponent() {
         btn_capture.setOnClickListener {
-
             CoCo.with(this@MainActivity)
                 .take(createSDCardFile())
                 .start(object : CoCoCallBack<TakeResult> {
@@ -37,16 +36,15 @@ class MainActivity : BaseToolbarActivity() {
                     override fun onSuccess(data: TakeResult) {
                         Toast.makeText(
                             this@MainActivity,
-                            data.savedFile.absolutePath.toString(),
+                            data.savedFile!!.absolutePath.toString(),
                             Toast.LENGTH_SHORT
                         ).show()
-                        iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile.absolutePath))
+                        iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
                     }
 
                     override fun onFailed(exception: Exception) {
                     }
                 })
-
         }
         btn_capture.setOnLongClickListener {
             startActivity(Intent(this@MainActivity, TakePictureActivity::class.java))
@@ -87,7 +85,7 @@ class MainActivity : BaseToolbarActivity() {
                     .start(object : CoCoCallBack<DisposeResult> {
 
                         override fun onSuccess(data: DisposeResult) {
-                            iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile.absolutePath))
+                            iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
                         }
 
                         override fun onFailed(exception: Exception) {

@@ -7,7 +7,7 @@ import com.qw.photo.pojo.DisposeResult
  *
  * @author cd5160866
  */
-interface CompressListener {
+internal interface CompressListener {
 
     /**
      * 开始压缩
