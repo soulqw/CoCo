@@ -34,22 +34,22 @@
             android:layout_height="wrap_content"
             android:text="回调以及其它功能" />
 
-        <Button
-            android:id="@+id/custom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="自定义处理器" />
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="组合使用" />
 
         <Button
-            android:id="@+id/comb"
+            android:id="@+id/comb_take"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="组合其它操作符使用" />
+            android:text="拍照+处理" />
+
+        <Button
+            android:id="@+id/comb_pick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="选择+处理" />
 
         <ImageView
             android:id="@+id/iv_image"

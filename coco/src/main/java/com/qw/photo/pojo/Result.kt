@@ -62,7 +62,7 @@ class PickResult : BaseResult() {
     /**
      * the path that convert form URI
      */
-    lateinit var localPath: String
+    var localPath: String? = null
 
     override fun toString(): String {
         return "PickResult( extra=$extra,\noriginUri=$originUri,\n localPath='$localPath')"

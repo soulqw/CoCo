@@ -23,4 +23,17 @@ open class BaseToolbarActivity : AppCompatActivity() {
         )
     }
 
+    @Throws(IOException::class)
+    fun createSDCardFile(fileName: String?): File {
+        // Create an image file name
+        val storageDir = File(externalCacheDir!!.path + "/" + fileName)
+        if (!storageDir.exists()) {
+            storageDir.mkdir()
+        }
+        return File.createTempFile(
+            "JPEG_test",
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        )
+    }
 }
