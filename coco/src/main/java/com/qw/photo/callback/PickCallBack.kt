@@ -8,7 +8,13 @@ import com.qw.photo.pojo.PickResult
  */
 interface PickCallBack : BaseFunctionCallBack {
 
+    /**
+     * do when get the pick result
+     */
     fun onFinish(result: PickResult)
 
+    /**
+     * do when pick canceled
+     */
     fun onCancel()
 }

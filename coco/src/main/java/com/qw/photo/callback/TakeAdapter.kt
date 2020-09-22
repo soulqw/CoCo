@@ -7,6 +7,5 @@ abstract class TakeAdapter : TakeCallBack {
     }
 
     override fun onCancel() {
-
     }
 }

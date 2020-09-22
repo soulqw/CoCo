@@ -101,20 +101,4 @@ class MainActivity : BaseToolbarActivity() {
         }
     }
 
-    /**
-     * 自定义图片处理器
-     * 自定义想要处理的任意结果
-     */
-//    class CustomDisposer : ImageDisposer {
-//
-//        override fun disposeImage(originPath: String, targetSaveFile: File?): BaseResult {
-//            return BaseResult().also {
-//                val bitmap = QualityCompressor()
-//                    .compress(originPath, 5)
-//                it.targetFile = targetSaveFile
-//                it.compressBitmap = bitmap
-//            }
-//        }
-//
-//    }
 }

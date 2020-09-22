@@ -26,7 +26,7 @@ class TakeBuilder(fm: FunctionManager) :
     }
 
     /**
-     * the result of capture jpg will be saved
+     * the result of capture result will be saved
      */
     fun fileToSave(fileToSave: File): TakeBuilder {
         DevUtil.d(
@@ -38,8 +38,8 @@ class TakeBuilder(fm: FunctionManager) :
     }
 
     /**
-     * the face of camera
-     * this method may not work good for all phone
+     * choose the face of camera
+     * but this method may not covered for all phone
      * @see Face
      */
     fun cameraFace(@CameraFace face: Int): TakeBuilder {

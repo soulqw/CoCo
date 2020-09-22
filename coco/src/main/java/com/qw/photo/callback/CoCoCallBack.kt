@@ -13,8 +13,8 @@ interface CoCoCallBack<ResultData> {
     fun onSuccess(data: ResultData)
 
     /**
-     * 失败
-     * @param exception 任意位置发生异常
+     * failed in any position
+     * @param exception
      */
     fun onFailed(exception: Exception)
 
