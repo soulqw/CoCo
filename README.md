@@ -1,5 +1,5 @@
 # CoCo
- [![Hex.pm](https://img.shields.io/badge/download-0.3.1-green)](https://www.apache.org/licenses/LICENSE-2.0)
+ [![Hex.pm](https://img.shields.io/badge/download-1.0.0-green)](https://www.apache.org/licenses/LICENSE-2.0)
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
@@ -23,17 +23,11 @@
 
 ```java
 dependencies {
-    implementation 'com.qw:coco:0.3.1'
+    implementation 'com.qw:coco:1.0.0'
 }
 ```
-此后迭代的版本全部基于AndroidX,如果你的应用还没适配,未适配Android X的版本最多支持到 0.2.0,源码在 master_old 分支,且不再维护.
+CoCo 1.0.0+ 将迎来历史上最大的更新，全新重构的APi，更易于理解，更解耦，更灵活，强烈建议您迁移到最新的APi，方便后续新功能的拓展，老版本最后Release 版本将维护至[0.3.1](https://github.com/soulqw/CoCo/blob/developer/README_OLD.md)，后续不再更新。
 
-未适配AndroidX的最后支持版本(分支 master_old):
-```
-dependencies {
-    implementation 'com.qw:coco:0.2.0'
-}
-```
 ## Usage：
 #### 调用系统相机拍照
 
