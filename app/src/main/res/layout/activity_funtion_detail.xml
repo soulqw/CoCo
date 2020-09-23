@@ -1,102 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:ignore="HardcodedText">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="HardcodedText">
 
     <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp">
-        <ToggleButton
-            android:id="@+id/tb_camera_face"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:textOff="后摄像头"
-            android:textOn="前摄像头" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
 
         <CheckBox
-                android:id="@+id/cb_compress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:checked="true"
-                android:text="压缩" />
+            android:id="@+id/cb_compress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="压缩" />
 
         <LinearLayout
-                android:id="@+id/ly_compress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:id="@+id/ly_compress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="策略" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="策略" />
 
             <RadioGroup
-                    android:id="@+id/rg_strategy"
-                    android:layout_width="match_parent"
+                android:id="@+id/rg_strategy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/matrix"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:checked="true"
+                    android:text="Matrix" />
 
                 <RadioButton
-                        android:id="@+id/matrix"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Matrix" />
-
-                <RadioButton
-                        android:id="@+id/quality"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Quality" />
+                    android:id="@+id/quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quality" />
 
             </RadioGroup>
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="程度" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="程度" />
 
             <SeekBar
-                    android:id="@+id/sb_degree"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:max="100"
-                    android:progress="50" />
+                android:id="@+id/sb_degree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:progress="50" />
 
             <TextView
-                    android:id="@+id/tv_degree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="50" />
+                android:id="@+id/tv_degree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50" />
         </LinearLayout>
 
         <Button
-                android:id="@+id/btn_begin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="开始" />
+            android:id="@+id/btn_begin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="开始" />
 
         <TextView
-                android:id="@+id/tv_result"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:id="@+id/tv_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <ImageView
-                android:id="@+id/iv_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="fitCenter" />
-
-        <FrameLayout
-            android:id="@+id/fl_fragment"
+            android:id="@+id/iv_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:scaleType="fitCenter" />
 
     </LinearLayout>
 

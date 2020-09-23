@@ -51,6 +51,13 @@
             android:layout_height="wrap_content"
             android:text="选择+处理" />
 
+        <Button
+            android:id="@+id/debug_for_default_disposer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自带处理器调试（DefaultImageDisposer）"
+            android:textAllCaps="false" />
+
         <ImageView
             android:id="@+id/iv_image"
             android:layout_width="match_parent"

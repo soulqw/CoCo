@@ -1,6 +1,7 @@
 package com.qw.soulphototaker
 
 import android.Manifest
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Matrix
 import android.os.Bundle
@@ -24,7 +25,7 @@ import java.io.InputStream
  * @author cd5160866
  */
 class DisposeActivity : BaseToolbarActivity() {
-    lateinit var imageFile: File
+    private lateinit var imageFile: File
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -142,7 +143,10 @@ class DisposeActivity : BaseToolbarActivity() {
                         Log.d(MainActivity.TAG, exception.toString())
                     }
                 })
+        }
 
+        debug_for_default_disposer.setOnClickListener {
+            startActivity(Intent(this, DebugDisposerActivity::class.java))
         }
     }
 
