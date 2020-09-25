@@ -29,108 +29,123 @@ dependencies {
 CoCo 1.0.0+ 将迎来历史上最大的更新，全新重构的APi，更易于理解，更解耦，更灵活，强烈建议您迁移到最新的APi，方便后续新功能的拓展，老版本最后Release 版本将维护至[0.3.1](https://github.com/soulqw/CoCo/blob/developer/README_OLD.md)，后续不再更新。
 
 ## Usage：
-#### 调用系统相机拍照
+#### 基本用法
 
-- 默认原图的情形
+- 调用系统相机拍照
 ```kotlin
-  CoCo.with(this)
-        .take(createSDCardFile())
-        .apply()
-        .start(object : GetImageCallBack<CaptureResult> {
-        
-                override fun onSuccess(data: CaptureResult) {
-                    val bitmap: Bitmap = BitmapFactory.decodeFile(data.targetFile!!.path)
-                    getImageView().setImageBitmap(bitmap)
-                }
+       CoCo.with(this@MainActivity)
+                .take(createSDCardFile())
+                .start(object : CoCoCallBack<TakeResult> {
 
-                override fun onCancel() {
-                    Toast.makeText(this@TakePictureActivity, "拍照取消", Toast.LENGTH_SHORT).show()
-                }
+                    override fun onSuccess(data: TakeResult) {
+                       iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
+                    }
 
-                override fun onFailed(exception: Exception) {
-                    Toast.makeText(this@TakePictureActivity, "拍照异常: $exception", Toast.LENGTH_SHORT).show()
-                }
-            })
+                    override fun onFailed(exception: Exception) {
+                    }
+                })
 ```
-- 如果你需要拍完照对图片做一些处理（applyWithDispose 目前自带的处理器可支持两种压缩策略）：
+- 调用系统相册选择图片：
 
 ```kotlin
-                CoCo.with(this)
-                    .take(createSDCardFile())
-                    //默认处理器使用缩放压缩法，压缩50%
-//                    .applyWithDispose()
-                    //也可传入参数自己控制程度和策略
-                    .applyWithDispose(DefaultImageDisposer().degree(10).strategy(CompressStrategy.MATRIX))
-                    .start(object : GetImageCallBack<TakeResult> {
+        CoCo.with(this@MainActivity)
+                    .pick()
+                    .start(object : CoCoCallBack<PickResult> {
+                        override fun onSuccess(data: PickResult) {
 
-                        override fun onSuccess(data: TakeResult) {
-                            Toast.makeText(this@MainActivity, "拍照操作最终成功", Toast.LENGTH_SHORT).show()
-                            iv_image.setImageBitmap(data.compressBitmap)
+                        iv_image.setImageURI(data.originUri)
+
                         }
 
                         override fun onFailed(exception: Exception) {
-                            Toast.makeText(
-                                this@MainActivity,
-                                "拍照异常: $exception",
-                                Toast.LENGTH_SHORT
-                            ).show()
                         }
-
                     })
 ```
 ##### 效果图:
-![image](https://upload-images.jianshu.io/upload_images/4346197-95a4098e9d4b7e98.gif)
 
 #### 系统相册选择
 APi与拍照相似，同样支持压缩，选择照片结果中提供原始Uri
 - 仅仅是从系统相册选一张图片：
 
 ```kotlin
- CoCo.with(this)
-    .pick()
-    .apply()
-    .start(object :GetImageCallBack<PickResult>{
-
-          override fun onSuccess(data: PickResult) {
-              Toast.makeText(
-                  this@MainActivity,
-                    "选择操作最终成功 path: ${data.originUri.path}",
-                          Toast.LENGTH_SHORT
+    CoCo.with(this@MainActivity)
+                    .pick()
+                    .start(object : CoCoCallBack<PickResult> {
+                        override fun onSuccess(data: PickResult) {
+                            Toast.makeText(
+                                this@MainActivity,
+                                data.originUri.toString(),
+                                Toast.LENGTH_SHORT
                             ).show()
-           }
+                            iv_image.setImageURI(data.originUri)
+                        }
 
-         override fun onFailed(exception: Exception) {
-                Toast.makeText(this@MainActivity, "选择异常: $exception", Toast.LENGTH_SHORT).show()
-           }
-     })
+                        override fun onFailed(exception: Exception) {
+                        }
+                    })
 ```
-- 如果需要跟拍照一样,选完后对图片做处理：
+- 处理我们拿到的原图：
+
+上述以上是原图的情形，通常情况下，我们常常要对原图做一些处理，比如压缩等，所以CoCo 提供了dispose操作符，方便获得图片之后做一些处理：
 ```kotlin
- CoCo.with(this)
-    .pick(createSDCardFile())
-    .applyWithDispose()
-    .start(object : GetImageCallBack<PickResult> {
-
-        override fun onDisposeStart() {
-                        Toast.makeText(this@PickPictureActivity, "选择成功,开始处理", Toast.LENGTH_SHORT)
-                            .show()
+        //选择图片后压缩
+         CoCo.with(this)
+                .pick()
+                //切换操作符
+                .then()
+                .dispose()
+                .start(object : CoCoCallBack<DisposeResult> {
+                    override fun onSuccess(data: DisposeResult) {
+                        iv_image.setImageBitmap(data.compressBitmap)
                     }
 
-        override fun onSuccess(data: PickResult) {
-                        Toast.makeText(
-                            this@PickPictureActivity,
-                            "选择操作最终成功 path: ${data.originUri.path}",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        getImageView().setImageBitmap(data.compressBitmap)
-                        tv_result.text = getImageSizeDesc(data.compressBitmap!!)
+                    override fun onFailed(exception: Exception) {
+                        Log.d(MainActivity.TAG, exception.toString())
+                    }
+                })
+
+```
+我们通过 then 操作符来完成操作符的组合，可以进行一些列操作符的串联流式处理。
+
+- dispose 操作符
+
+dispose操作符可以让我们在子线程处理我们的文件，并且异步任务自动绑定我们with 操作符的生命周期
+
+###### 它可以单独使用：
+```kotlin
+        CoCo.with(this)
+                .dispose()
+                .origin(imageFile.path)
+                .start(object : CoCoCallBack<DisposeResult> {
+
+                    override fun onSuccess(data: DisposeResult) {
+                        iv_image.setImageBitmap(data.compressBitmap)
                     }
 
-
-        override fun onFailed(exception: Exception) {
+                    override fun onFailed(exception: Exception) {
+                        Log.d(MainActivity.TAG, exception.toString())
                     }
                 })
 ```
+###### 它也可以组合其它操作符使用：
+```
+     CoCo.with(this@MainActivity)
+                    .take(createSDCardFile())
+                    .then()
+                    .dispose()
+                    .start(object : CoCoCallBack<DisposeResult> {
+
+                        override fun onSuccess(data: DisposeResult) {
+                            iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
+                        }
+
+                        override fun onFailed(exception: Exception) {
+
+                        }
+                    })
+```
+
+
 自定义压缩策略:
 
 ```kotlin
