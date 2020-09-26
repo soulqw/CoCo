@@ -99,7 +99,7 @@ dependencies {
 dispose操作符可以让我们在子线程处理我们的文件，并且异步任务自动绑定我们with 操作符的生命周期
 
 ###### 它不仅可以和其它操作符组合使用：
-```
+```kotlin
  CoCo.with(this)
                 .take(createSDCardFile())
                 .then()
@@ -133,7 +133,7 @@ dispose操作符可以让我们在子线程处理我们的文件，并且异步�
 ```
 ###### 系统默认Default 图片处理器可以帮我们完成图片处理，也可自定义处理逻辑：
 
-```
+```kotlin
               CoCo.with(this)
                 .dispose()
                 .disposer(CustomDisposer())
@@ -175,7 +175,7 @@ dispose操作符可以让我们在子线程处理我们的文件，并且异步�
 - 其它功能：
 ###### 每个操作符都可以添加回调监听：
 
-```
+```kotlin
   CoCo.with(this@PickPictureActivity)
                 .pick()
                 .range(Range.PICK_CONTENT)
