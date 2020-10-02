@@ -96,7 +96,7 @@ dependencies {
 
 ##### dispose 操作符：
 
-dispose操作符可以让我们在子线程处理我们的文件，并且异步任务自动绑定我们with 操作符的生命周期
+dispose操作符可以自动在子线程处理我们要处理的文件，并且自动绑定with()容器中的生命周期
 
 ###### 它不仅可以和其它操作符组合使用：
 ```kotlin
@@ -205,9 +205,6 @@ dispose操作符可以让我们在子线程处理我们的文件，并且异步�
 ```
 更多功能可参考Demo
 
-
-
 ### 截图：
 ![image](https://cdn.nlark.com/yuque/0/2020/png/1502571/1601094243032-2d14deb1-e487-4d6e-906e-fafe6845c654.png)
 
-[GitHub地址](https://github.com/soulqw/SoulPhotoTaker/)
