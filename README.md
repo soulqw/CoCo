@@ -10,8 +10,7 @@
  - 支持Activity、Fragment,图片异步处理自动绑定相关容器生命周期
  - 全新设计的APi-更灵活-更易于理解
  - 完全基于Kotlin编写，与Java兼容
- - 全面适配AndroidX、配置简单，导入方便
- - 支持debug模式
+ - 全面适配AndroidX、配置简单，导入方便 
 ## Installation：
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
