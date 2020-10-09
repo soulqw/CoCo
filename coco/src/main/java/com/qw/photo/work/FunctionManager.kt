@@ -1,11 +1,13 @@
 package com.qw.photo.work
 
 import android.app.Activity
+import android.net.Uri
 import androidx.fragment.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
 import com.qw.photo.agent.IContainer
 import com.qw.photo.dispose.disposer.DefaultImageDisposer
 import com.qw.photo.dispose.disposer.Disposer
+import com.qw.photo.functions.CropBuilder
 import com.qw.photo.functions.DisposeBuilder
 import com.qw.photo.functions.PickBuilder
 import com.qw.photo.functions.TakeBuilder
@@ -41,6 +43,18 @@ class FunctionManager(internal val container: IContainer) {
     fun dispose(disposer: Disposer = DefaultImageDisposer.get()): DisposeBuilder =
         DisposeBuilder(this)
             .disposer(disposer)
+
+
+    /**
+     * crop image by system crop function
+     * @param afterCropFile File after crop file you want
+     * @param cropWidth Int Int the crop width and height you want
+     * @param cropHeight Int Int the crop width and height you want
+     * @param originFile File? defalut is null if you just want crop pick or take result?, null is ok more see [Result]
+     * @return CropBuilder
+     */
+    @JvmOverloads
+    fun crop(afterCropFile : File,cropWidth:Int = 500,cropHeight:Int = 500,originFile : File? = null):CropBuilder = CropBuilder(this).afterCropFile(afterCropFile).cropSize(cropWidth,cropHeight).file(originFile)
 
     companion object {
         internal fun create(activity: Activity) =

@@ -8,6 +8,7 @@ import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.callback.TakeCallBack
 import com.qw.photo.constant.Face
 import com.qw.photo.functions.TakeBuilder
+import com.qw.photo.pojo.CropResult
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.TakeResult
 import kotlinx.android.synthetic.main.activity_take_photo.*
@@ -73,10 +74,12 @@ class TakePictureActivity : BaseToolbarActivity() {
                 .take(createSDCardFile())
                 .then()
                 .dispose()
-                .start(object : CoCoCallBack<DisposeResult> {
+                .then()
+                .crop(createSDCardFile(),100,500)
+                .start(object : CoCoCallBack<CropResult> {
 
-                    override fun onSuccess(data: DisposeResult) {
-                        iv_image.setImageBitmap(data.compressBitmap)
+                    override fun onSuccess(data: CropResult) {
+                        iv_image.setImageBitmap(data.cropBitmap)
                     }
 
                     override fun onFailed(exception: Exception) {
