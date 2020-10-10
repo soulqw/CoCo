@@ -8,6 +8,7 @@ import com.qw.photo.CoCo
 import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.callback.PickCallBack
 import com.qw.photo.constant.Range
+import com.qw.photo.pojo.CropResult
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.soul.permission.SoulPermission
@@ -104,11 +105,13 @@ class PickPictureActivity : BaseToolbarActivity() {
             .pick()
             .then()
             .dispose()
+            .then()
+            .crop(createSDCardFile(),100,500)
 //            .fileToSaveResult(createSDCardFile())
-            .start(object : CoCoCallBack<DisposeResult> {
+            .start(object : CoCoCallBack<CropResult> {
 
-                override fun onSuccess(data: DisposeResult) {
-                    iv_image.setImageBitmap(data.compressBitmap)
+                override fun onSuccess(data: CropResult) {
+                    iv_image.setImageBitmap(data.cropBitmap)
                 }
 
                 override fun onFailed(exception: Exception) {

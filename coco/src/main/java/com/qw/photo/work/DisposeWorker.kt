@@ -18,6 +18,7 @@ import com.qw.photo.dispose.disposer.Disposer
 import com.qw.photo.exception.BadConvertException
 import com.qw.photo.exception.PickNoResultException
 import com.qw.photo.functions.DisposeBuilder
+import com.qw.photo.pojo.CropResult
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
@@ -74,6 +75,14 @@ class DisposeWorker(handler: IContainer, builder: DisposeBuilder) :
                 mParams.targetFile = formerResult.savedFile
             }
         }
+
+        if (formerResult is CropResult) {
+            mParams.originPath = formerResult.savedFile!!.absolutePath
+            if (null == mParams.targetFile) {
+                mParams.targetFile = formerResult.savedFile
+            }
+        }
+
         if (formerResult is PickResult) {
             var localPath: String? = null
             try {

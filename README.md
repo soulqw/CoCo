@@ -10,8 +10,7 @@
  - 支持Activity、Fragment,图片异步处理自动绑定相关容器生命周期
  - 全新设计的APi-更灵活-更易于理解
  - 完全基于Kotlin编写，与Java兼容
- - 全面适配AndroidX、配置简单，导入方便
- - 支持debug模式
+ - 全面适配AndroidX、配置简单，导入方便 
 ## Installation：
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
@@ -96,10 +95,10 @@ dependencies {
 
 ##### dispose 操作符：
 
-dispose操作符可以让我们在子线程处理我们的文件，并且异步任务自动绑定我们with 操作符的生命周期
+dispose操作符可以自动在子线程处理我们要处理的文件，并且自动绑定with()容器中的生命周期
 
 ###### 它不仅可以和其它操作符组合使用：
-```
+```kotlin
  CoCo.with(this)
                 .take(createSDCardFile())
                 .then()
@@ -133,7 +132,7 @@ dispose操作符可以让我们在子线程处理我们的文件，并且异步�
 ```
 ###### 系统默认Default 图片处理器可以帮我们完成图片处理，也可自定义处理逻辑：
 
-```
+```kotlin
               CoCo.with(this)
                 .dispose()
                 .disposer(CustomDisposer())
@@ -175,7 +174,7 @@ dispose操作符可以让我们在子线程处理我们的文件，并且异步�
 - 其它功能：
 ###### 每个操作符都可以添加回调监听：
 
-```
+```kotlin
   CoCo.with(this@PickPictureActivity)
                 .pick()
                 .range(Range.PICK_CONTENT)
@@ -205,9 +204,6 @@ dispose操作符可以让我们在子线程处理我们的文件，并且异步�
 ```
 更多功能可参考Demo
 
-
-
 ### 截图：
 ![image](https://cdn.nlark.com/yuque/0/2020/png/1502571/1601094243032-2d14deb1-e487-4d6e-906e-fafe6845c654.png)
 
-[GitHub地址](https://github.com/soulqw/SoulPhotoTaker/)

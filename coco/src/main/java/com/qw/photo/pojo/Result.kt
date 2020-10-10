@@ -37,7 +37,7 @@ class TakeResult : SaveFileResult() {
 }
 
 /**
- * The result form dispose
+ * The result from dispose
  */
 class DisposeResult : SaveFileResult() {
 
@@ -51,7 +51,7 @@ class DisposeResult : SaveFileResult() {
 }
 
 /**
- * The result form pick
+ * The result from pick
  */
 class PickResult : BaseResult() {
     /**
@@ -60,7 +60,7 @@ class PickResult : BaseResult() {
     lateinit var originUri: Uri
 
     /**
-     * the path that convert form URI
+     * the path that convert from URI
      */
     var localPath: String? = null
 
@@ -68,5 +68,19 @@ class PickResult : BaseResult() {
         return "PickResult( extra=$extra,\noriginUri=$originUri,\n localPath='$localPath')"
     }
 
+}
+
+/**
+ * The crop from crop
+ */
+class CropResult : SaveFileResult() {
+
+    var originFile: File? = null
+
+    lateinit var cropBitmap: Bitmap
+
+    override fun toString(): String {
+        return "CropResult(savedFile=${savedFile},\n extra=$extra,\noriginFile=$originFile, \ncompressBitmap=$cropBitmap)"
+    }
 }
 
