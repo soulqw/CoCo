@@ -163,7 +163,7 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         }
         if (formerResult is DisposeResult){
             // TODO: 2020/10/9 这里需要优化
-            mParams.originFile = formerResult.savedFile
+            mParams.originFile = File(formerResult.originPath)
         }
     }
 }
