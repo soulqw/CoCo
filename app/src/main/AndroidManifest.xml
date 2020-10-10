@@ -37,6 +37,7 @@
             android:name=".DebugDisposerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
+        <activity android:name=".CropActivity" />
     </application>
 
 </manifest>

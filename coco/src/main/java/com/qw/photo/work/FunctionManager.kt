@@ -50,7 +50,7 @@ class FunctionManager(internal val container: IContainer) {
      * @param afterCropFile File after crop file you want
      * @param cropWidth Int Int the crop width and height you want
      * @param cropHeight Int Int the crop width and height you want
-     * @param originFile File? defalut is null if you just want crop pick or take result?, null is ok more see [Result]
+     * @param originFile File? default is null if you just want crop pick or take result?, null is ok more see [Result]
      * @return CropBuilder
      */
     @JvmOverloads
