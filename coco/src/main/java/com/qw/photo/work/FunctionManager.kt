@@ -1,7 +1,6 @@
 package com.qw.photo.work
 
 import android.app.Activity
-import android.net.Uri
 import androidx.fragment.app.Fragment
 import com.qw.photo.agent.AcceptActivityResultHandlerFactory
 import com.qw.photo.agent.IContainer
@@ -43,7 +42,6 @@ class FunctionManager(internal val container: IContainer) {
     fun dispose(disposer: Disposer = DefaultImageDisposer.get()): DisposeBuilder =
         DisposeBuilder(this)
             .disposer(disposer)
-
 
     /**
      * crop image by system crop function
