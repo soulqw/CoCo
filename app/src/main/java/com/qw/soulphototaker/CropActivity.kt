@@ -106,7 +106,7 @@ class CropActivity : BaseToolbarActivity() {
             .then()
             .dispose()
             .then()
-            .crop(createSDCardFile(),100,500)
+            .crop(createSDCardFile(),1080,1920)
 //            .fileToSaveResult(createSDCardFile())
             .start(object : CoCoCallBack<CropResult> {
 

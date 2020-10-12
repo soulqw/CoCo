@@ -14,15 +14,17 @@ import java.io.File
  */
 
 class CropBuilder(fm: FunctionManager) :
-    BaseFunctionBuilder<CropBuilder, CropResult>(fm){
+    BaseFunctionBuilder<CropBuilder, CropResult>(fm) {
 
-    var originFile : File? = null
-    lateinit var afterCropFile : File
-    var cropWidth : Int = 500
-    var cropHeight : Int = 500
+    var originFile: File? = null
+
+    lateinit var afterCropFile: File
+
+    var cropWidth: Int = 500
+
+    var cropHeight: Int = 500
 
     internal var cropCallBack: CropCallBack? = null
-
 
     /**
      * crop image callback
@@ -36,10 +38,10 @@ class CropBuilder(fm: FunctionManager) :
 
     /**
      * init crop file
-     * @param file File? the file you want crop
+     * @param originFile File? the file you want crop
      * @return CropBuilder
      */
-    fun file(originFile : File?):CropBuilder{
+    fun file(originFile: File?): CropBuilder {
         this.originFile = originFile
         return this
     }
@@ -50,7 +52,7 @@ class CropBuilder(fm: FunctionManager) :
      * @param cropHeight Int
      * @return CropBuilder
      */
-    fun cropSize(cropWidth : Int,cropHeight : Int):CropBuilder{
+    fun cropSize(cropWidth: Int, cropHeight: Int): CropBuilder {
         this.cropWidth = cropWidth
         this.cropHeight = cropHeight
         return this
@@ -61,7 +63,7 @@ class CropBuilder(fm: FunctionManager) :
      * @param afterCropFile File
      * @return CropBuilder
      */
-    fun afterCropFile(afterCropFile: File):CropBuilder{
+    fun afterCropFile(afterCropFile: File): CropBuilder {
         this.afterCropFile = afterCropFile
         return this
     }
@@ -71,7 +73,7 @@ class CropBuilder(fm: FunctionManager) :
     }
 
     override fun generateWorker(builder: CropBuilder): Worker<CropBuilder, CropResult> {
-        return CropWorker(functionManager.container,builder)
+        return CropWorker(functionManager.container, builder)
     }
 
 }

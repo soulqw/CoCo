@@ -29,7 +29,6 @@ import java.io.File
 class CropWorker(handler: IContainer, builder: CropBuilder) :
     BaseWorker<CropBuilder, CropResult>(handler, builder) {
 
-
     override fun start(formerResult: Any?, callBack: CoCoCallBack<CropResult>) {
         convertFormerResultToCurrent(formerResult)
         if (mParams.cropCallBack != null) {
@@ -92,7 +91,6 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
                 intent.putExtra("aspectX", cropWidth)
                 intent.putExtra("aspectY", cropHeight)
             }
-
         } else {
             intent.putExtra("aspectX", cropWidth)
             intent.putExtra("aspectY", cropHeight)
