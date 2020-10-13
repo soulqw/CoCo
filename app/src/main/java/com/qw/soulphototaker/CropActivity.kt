@@ -1,5 +1,6 @@
 package com.qw.soulphototaker
 
+import android.Manifest
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -16,6 +17,9 @@ import com.qw.soul.permission.bean.Permission
 import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
 import kotlinx.android.synthetic.main.activity_funtion_detail.iv_image
 import kotlinx.android.synthetic.main.activity_take_photo.*
+import java.io.File
+import java.io.FileOutputStream
+import java.io.InputStream
 import kotlin.system.exitProcess
 
 
@@ -24,20 +28,40 @@ import kotlin.system.exitProcess
  */
 class CropActivity : BaseToolbarActivity() {
 
+    private lateinit var imageFile: File
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_crop_photo)
         setSupportActionBar(toolbar)
         title = "CropPhotoDetail"
+        SoulPermission.getInstance()
+            .checkAndRequestPermission(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                object : CheckRequestPermissionListener {
+
+                    override fun onPermissionOk(permission: Permission?) {
+                        createDefaultFile()
+                    }
+
+                    override fun onPermissionDenied(permission: Permission?) {
+                        Toast.makeText(
+                            applicationContext,
+                            "Need permission to start",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        finish()
+                    }
+                })
 
         //base usage
         base.setOnClickListener {
             CoCo.with(this@CropActivity)
-                .pick()
-                .start(object : CoCoCallBack<PickResult> {
+                .crop(createSDCardFile(), 30, 30, imageFile)
+                .start(object : CoCoCallBack<CropResult> {
 
-                    override fun onSuccess(data: PickResult) {
-                        iv_image.setImageURI(data.originUri)
+                    override fun onSuccess(data: CropResult) {
+                        iv_image.setImageBitmap(data.cropBitmap)
                     }
 
                     override fun onFailed(exception: Exception) {}
@@ -106,7 +130,7 @@ class CropActivity : BaseToolbarActivity() {
             .then()
             .dispose()
             .then()
-            .crop(createSDCardFile(),1080,1920)
+            .crop(createSDCardFile(), 1080, 1920)
 //            .fileToSaveResult(createSDCardFile())
             .start(object : CoCoCallBack<CropResult> {
 
@@ -118,4 +142,29 @@ class CropActivity : BaseToolbarActivity() {
                 }
             })
     }
+
+    private fun createDefaultFile() {
+        imageFile = createSDCardFile()
+        createSdImageFile(imageFile.path)
+    }
+
+    /**
+     * create a file from asset Path
+     */
+    private fun createSdImageFile(fileName: String) {
+        return try {
+            val inStream: InputStream = resources.assets.open("ic_launcher_round.png")
+            val outStream = FileOutputStream(fileName, true)
+            val buffer = ByteArray(1024)
+            var len = -1
+            while (inStream.read(buffer).also { len = it } != -1) {
+                outStream.write(buffer, 0, len)
+            }
+            outStream.close()
+            inStream.close()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
+    }
+
 }
