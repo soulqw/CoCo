@@ -33,6 +33,13 @@
             android:text="Dispose(Long Press for detail)"
             android:textAllCaps="false" />
 
+        <Button
+            android:id="@+id/btn_crop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Crop(Long Press for detail)"
+            android:textAllCaps="false" />
+
         <ImageView
             android:id="@+id/iv_image"
             android:layout_width="match_parent"

@@ -74,12 +74,10 @@ class TakePictureActivity : BaseToolbarActivity() {
                 .take(createSDCardFile())
                 .then()
                 .dispose()
-                .then()
-                .crop(createSDCardFile(),100,500)
-                .start(object : CoCoCallBack<CropResult> {
+                .start(object : CoCoCallBack<DisposeResult> {
 
-                    override fun onSuccess(data: CropResult) {
-                        iv_image.setImageBitmap(data.cropBitmap)
+                    override fun onSuccess(data: DisposeResult) {
+                        iv_image.setImageBitmap(data.compressBitmap)
                     }
 
                     override fun onFailed(exception: Exception) {
