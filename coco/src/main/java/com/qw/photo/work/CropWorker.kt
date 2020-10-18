@@ -42,7 +42,6 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         activity ?: return
         val uri =
             Utils.createUriFromFile(iContainer.provideActivity() as Context, mParams.originFile!!)
-
         val intent = routeToCrop(uri, mParams.cropWidth, mParams.cropHeight)
         iContainer.startActivityResult(
             intent,
@@ -98,7 +97,10 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         intent.putExtra("outputX", cropWidth)
         intent.putExtra("outputY", cropHeight)
         intent.putExtra("return-data", false)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mParams.afterCropFile))
+        intent.putExtra(
+            MediaStore.EXTRA_OUTPUT,
+            Utils.createUriFromFile(iContainer.provideActivity()!!, mParams.afterCropFile)
+        )
         DevUtil.d("EXTRA_OUTPUT", mParams.afterCropFile.absolutePath)
         return intent
     }
