@@ -45,14 +45,14 @@ class FunctionManager(internal val container: IContainer) {
 
     /**
      * crop image by system crop function
-     * @param afterCropFile File after crop file you want
-     * @param cropWidth Int Int the crop width and height you want
-     * @param cropHeight Int Int the crop width and height you want
+     * @param fileToSaveResult File after crop file you want
      * @param originFile File? default is null if you just want crop pick or take result?, null is ok more see [Result]
      * @return CropBuilder
      */
     @JvmOverloads
-    fun crop(afterCropFile : File,cropWidth:Int = 500,cropHeight:Int = 500,originFile : File? = null):CropBuilder = CropBuilder(this).afterCropFile(afterCropFile).cropSize(cropWidth,cropHeight).file(originFile)
+    fun crop(fileToSaveResult: File, originFile: File? = null): CropBuilder = CropBuilder(this)
+        .fileToSaveResult(fileToSaveResult)
+        .file(originFile)
 
     companion object {
         internal fun create(activity: Activity) =

@@ -57,7 +57,7 @@ class CropActivity : BaseToolbarActivity() {
         //base usage
         base.setOnClickListener {
             CoCo.with(this@CropActivity)
-                .crop(createSDCardFile(), 30, 30, imageFile)
+                .crop(createSDCardFile(), imageFile)
                 .start(object : CoCoCallBack<CropResult> {
 
                     override fun onSuccess(data: CropResult) {
@@ -130,7 +130,7 @@ class CropActivity : BaseToolbarActivity() {
             .then()
             .dispose()
             .then()
-            .crop(createSDCardFile(), 1080, 1920)
+            .crop(createSDCardFile())
 //            .fileToSaveResult(createSDCardFile())
             .start(object : CoCoCallBack<CropResult> {
 

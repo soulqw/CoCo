@@ -43,6 +43,18 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         val uri =
             Utils.createUriFromFile(iContainer.provideActivity() as Context, mParams.originFile!!)
         val intent = routeToCrop(uri, mParams.cropWidth, mParams.cropHeight)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            activity.grantUriPermission(
+                activity.packageName,
+                uri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            activity.revokeUriPermission(
+                uri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+        }
         iContainer.startActivityResult(
             intent,
             Constant.REQUEST_CODE_CORP_IMAGE
@@ -61,11 +73,11 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
             }
             return
         }
-        if (mParams.afterCropFile.exists() && mParams.afterCropFile.length() > 0) {
+        if (mParams.savedResultFile.exists() && mParams.savedResultFile.length() > 0) {
             val result = CropResult()
             result.originFile = mParams.originFile
-            result.savedFile = mParams.afterCropFile
-            result.cropBitmap = Utils.getBitmapFromFile(mParams.afterCropFile.absolutePath)!!
+            result.savedFile = mParams.savedResultFile
+            result.cropBitmap = Utils.getBitmapFromFile(mParams.savedResultFile.absolutePath)!!
             if (null != mParams.cropCallBack) {
                 mParams.cropCallBack!!.onFinish(result)
             }
@@ -99,9 +111,9 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         intent.putExtra("return-data", false)
         intent.putExtra(
             MediaStore.EXTRA_OUTPUT,
-            Utils.createUriFromFile(iContainer.provideActivity()!!, mParams.afterCropFile)
+            Uri.fromFile(mParams.savedResultFile)
         )
-        DevUtil.d("EXTRA_OUTPUT", mParams.afterCropFile.absolutePath)
+        DevUtil.d("EXTRA_OUTPUT", mParams.savedResultFile.absolutePath)
         return intent
     }
 

@@ -10,9 +10,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.DisplayMetrics
+import android.view.WindowManager
 import androidx.core.content.FileProvider
-import com.qw.photo.constant.Host
 import com.qw.photo.constant.Constant
+import com.qw.photo.constant.Host
 import java.io.*
 
 
@@ -133,6 +135,28 @@ object Utils {
 
     internal fun isOnMainThread(): Boolean {
         return Looper.myLooper() == Looper.getMainLooper()
+    }
+
+    /**
+     * 获取屏幕的高度
+     */
+    internal fun getScreenHeight(context: Context): Int {
+        val wm = context
+            .getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val outMetrics = DisplayMetrics()
+        wm.defaultDisplay.getMetrics(outMetrics)
+        return outMetrics.heightPixels
+    }
+
+    /**
+     * 获取屏幕的宽度
+     */
+    internal fun getScreenWidth(context: Context): Int {
+        val wm = context
+            .getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val outMetrics = DisplayMetrics()
+        wm.defaultDisplay.getMetrics(outMetrics)
+        return outMetrics.widthPixels
     }
 
     private fun bitmapToBytes(bm: Bitmap): ByteArray {

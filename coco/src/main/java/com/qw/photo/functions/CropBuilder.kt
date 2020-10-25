@@ -1,5 +1,6 @@
 package com.qw.photo.functions
 
+import com.qw.photo.Utils
 import com.qw.photo.callback.CropCallBack
 import com.qw.photo.pojo.CropResult
 import com.qw.photo.work.CropWorker
@@ -18,11 +19,11 @@ class CropBuilder(fm: FunctionManager) :
 
     var originFile: File? = null
 
-    lateinit var afterCropFile: File
+    lateinit var savedResultFile: File
 
-    var cropWidth: Int = 500
+    var cropWidth: Int = Utils.getScreenWidth(fm.container.provideActivity()!!)
 
-    var cropHeight: Int = 500
+    var cropHeight: Int = Utils.getScreenHeight(fm.container.provideActivity()!!)
 
     internal var cropCallBack: CropCallBack? = null
 
@@ -50,6 +51,8 @@ class CropBuilder(fm: FunctionManager) :
      * init crop size
      * @param cropWidth Int
      * @param cropHeight Int
+     * @param cropWidth Int Int the crop width and height you want
+     * @param cropHeight Int Int the crop width and height you want
      * @return CropBuilder
      */
     fun cropSize(cropWidth: Int, cropHeight: Int): CropBuilder {
@@ -60,11 +63,11 @@ class CropBuilder(fm: FunctionManager) :
 
     /**
      * int afterCropFile path
-     * @param afterCropFile File
+     * @param fileToSaveResult File
      * @return CropBuilder
      */
-    fun afterCropFile(afterCropFile: File): CropBuilder {
-        this.afterCropFile = afterCropFile
+    fun fileToSaveResult(fileToSaveResult: File): CropBuilder {
+        this.savedResultFile = fileToSaveResult
         return this
     }
 
