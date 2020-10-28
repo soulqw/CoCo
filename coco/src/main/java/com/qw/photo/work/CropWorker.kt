@@ -13,6 +13,7 @@ import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.exception.BadConvertException
 import com.qw.photo.exception.BaseException
+import com.qw.photo.exception.CoCoException
 import com.qw.photo.functions.CropBuilder
 import com.qw.photo.pojo.CropResult
 import com.qw.photo.pojo.DisposeResult
@@ -30,7 +31,12 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
     BaseWorker<CropBuilder, CropResult>(handler, builder) {
 
     override fun start(formerResult: Any?, callBack: CoCoCallBack<CropResult>) {
-        convertFormerResultToCurrent(formerResult)
+        try {
+            convertFormerResultToCurrent(formerResult)
+        } catch (e: Exception) {
+            callBack.onFailed(e)
+            return
+        }
         if (mParams.cropCallBack != null) {
             mParams.cropCallBack!!.onStart()
         }
@@ -94,7 +100,7 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         }
         intent.setDataAndType(uri, "image/*")
         intent.putExtra("crop", true)
-        if (Build.MANUFACTURER == "HUAWEI") {
+        if (Build.MANUFACTURER == Constant.ROM_HUA_WEI) {
             if (cropWidth == cropHeight) {
                 intent.putExtra("aspectX", 9998)
                 intent.putExtra("aspectY", 9999)
@@ -148,8 +154,11 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
             }
         }
         if (formerResult is DisposeResult) {
-            // TODO: 2020/10/9 这里需要优化
-            mParams.originFile = File(formerResult.originPath)
+            if (null == formerResult.savedFile) {
+                throw CoCoException("if you want crop after dispose ,you should create a file for dispose to save the result")
+            }
+            mParams.originFile = formerResult.savedFile
         }
     }
+
 }

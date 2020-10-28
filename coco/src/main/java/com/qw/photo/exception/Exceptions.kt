@@ -13,6 +13,8 @@ open class BaseException(override val message: String) : IllegalStateException()
     }
 }
 
+class CoCoException(override val message: String) : BaseException(message)
+
 class CompressFailedException(override val message: String) : BaseException(message)
 
 class MissCompressStrategyException : BaseException("compress image must have a strategy")

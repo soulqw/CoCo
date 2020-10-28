@@ -10,4 +10,6 @@ object Constant {
 
     const val TAG = "CoCo"
 
+    const val ROM_HUA_WEI = "HUAWEI"
+
 }

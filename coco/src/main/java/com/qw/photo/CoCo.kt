@@ -5,7 +5,6 @@ import android.app.Fragment
 import com.qw.photo.exception.ActivityStatusException
 import com.qw.photo.work.FunctionManager
 
-
 /**
  * @author cd5160866
  */
@@ -28,11 +27,6 @@ object CoCo {
     fun with(fragment: Fragment): FunctionManager {
         checkStatusFirst(fragment.activity)
         return FunctionManager.create(fragment)
-    }
-
-    @JvmStatic
-    fun setDebug(isDebug: Boolean) {
-        DevUtil.isDebug = isDebug
     }
 
     private fun checkStatusFirst(activity: Activity?) {
