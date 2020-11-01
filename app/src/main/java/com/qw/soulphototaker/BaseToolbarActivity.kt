@@ -17,7 +17,7 @@ open class BaseToolbarActivity : AppCompatActivity() {
             storageDir.mkdir()
         }
         return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
+            "JPEG_${timeStamp}_demo", /* prefix */
             ".jpg", /* suffix */
             storageDir /* directory */
         )

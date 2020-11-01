@@ -2,25 +2,23 @@ package com.qw.soulphototaker
 
 import android.Manifest
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import com.qw.photo.CoCo
 import com.qw.photo.callback.CoCoCallBack
-import com.qw.photo.callback.PickCallBack
-import com.qw.photo.constant.Range
+import com.qw.photo.callback.CropCallBack
 import com.qw.photo.pojo.CropResult
-import com.qw.photo.pojo.DisposeResult
-import com.qw.photo.pojo.PickResult
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
 import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
+import kotlinx.android.synthetic.main.activity_crop_photo.*
 import kotlinx.android.synthetic.main.activity_funtion_detail.iv_image
-import kotlinx.android.synthetic.main.activity_take_photo.*
+import kotlinx.android.synthetic.main.activity_take_photo.base
+import kotlinx.android.synthetic.main.activity_take_photo.others
+import kotlinx.android.synthetic.main.activity_take_photo.toolbar
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import kotlin.system.exitProcess
 
 
 /**
@@ -57,7 +55,7 @@ class CropActivity : BaseToolbarActivity() {
         //base usage
         base.setOnClickListener {
             CoCo.with(this@CropActivity)
-                .crop(createSDCardFile(), imageFile)
+                .crop(imageFile)
                 .start(object : CoCoCallBack<CropResult> {
 
                     override fun onSuccess(data: CropResult) {
@@ -71,76 +69,68 @@ class CropActivity : BaseToolbarActivity() {
         //other functions in take operate
         others.setOnClickListener {
             CoCo.with(this@CropActivity)
-                .pick()
-                .range(Range.PICK_CONTENT)
-//                .range(Range.PICK_DICM)
-                .callBack(object : PickCallBack {
+                .crop(imageFile)
+                .callBack(object : CropCallBack {
 
-                    override fun onFinish(result: PickResult) {
-                        Log.d(MainActivity.TAG, "take onFinish${result}")
+                    override fun onFinish(result: CropResult) {
+                        Log.d(MainActivity.TAG, "crop onFinish $result")
                     }
 
                     override fun onCancel() {
-                        Log.d(MainActivity.TAG, "take onCancel")
+                        Log.d(MainActivity.TAG, "crop onCancel")
                     }
 
                     override fun onStart() {
-                        Log.d(MainActivity.TAG, "take onStart")
+                        Log.d(MainActivity.TAG, "crop onStart")
                     }
 
-                }).start(object : CoCoCallBack<PickResult> {
+                }).start(object : CoCoCallBack<CropResult> {
 
-                    override fun onSuccess(data: PickResult) {
-                        iv_image.setImageURI(data.originUri)
+                    override fun onSuccess(data: CropResult) {
+                        iv_image.setImageBitmap(data.cropBitmap)
                     }
 
                     override fun onFailed(exception: Exception) {}
                 })
         }
 
-        //work with other operate
-        //pick photo first then dispose image to makes result smaller
-        comb.setOnClickListener {
-            //dispose need operate IO APi, so if you dispose sd card file you will need storage permission
-            //https://github.com/soulqw/SoulPermission
-            SoulPermission.getInstance()
-                .checkAndRequestPermission("android.permission.READ_EXTERNAL_STORAGE", object :
-                    CheckRequestPermissionListener {
+        //work with other operate 1
+        //pick photo first then crop image
+        comb_1.setOnClickListener {
+            CoCo.with(this@CropActivity)
+                .pick()
+                .then()
+                .crop()
+                .start(object : CoCoCallBack<CropResult> {
 
-                    override fun onPermissionOk(permission: Permission?) {
-                        pickAndDisposeImage()
+                    override fun onSuccess(data: CropResult) {
+                        iv_image.setImageBitmap(data.cropBitmap)
                     }
 
-                    override fun onPermissionDenied(permission: Permission?) {
-                        Toast.makeText(
-                            this@CropActivity,
-                            "need permission first to pick Photo",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        Handler().postDelayed({ exitProcess(0) }, 500);
+                    override fun onFailed(exception: Exception) {
                     }
-
                 })
         }
-    }
 
-    fun pickAndDisposeImage() {
-        CoCo.with(this@CropActivity)
-            .pick()
-            .then()
-            .dispose()
-            .then()
-            .crop(createSDCardFile())
-//            .fileToSaveResult(createSDCardFile())
-            .start(object : CoCoCallBack<CropResult> {
+        //work with other operate 2
+        //take then dispose then crop
+        comb_2.setOnClickListener {
+            CoCo.with(this@CropActivity)
+                .take(createSDCardFile())
+                .then()
+                .dispose()
+                .then()
+                .crop()
+                .start(object : CoCoCallBack<CropResult> {
 
-                override fun onSuccess(data: CropResult) {
-                    iv_image.setImageBitmap(data.cropBitmap)
-                }
+                    override fun onSuccess(data: CropResult) {
+                        iv_image.setImageBitmap(data.cropBitmap)
+                    }
 
-                override fun onFailed(exception: Exception) {
-                }
-            })
+                    override fun onFailed(exception: Exception) {
+                    }
+                })
+        }
     }
 
     private fun createDefaultFile() {
@@ -153,7 +143,7 @@ class CropActivity : BaseToolbarActivity() {
      */
     private fun createSdImageFile(fileName: String) {
         return try {
-            val inStream: InputStream = resources.assets.open("ic_launcher_round.png")
+            val inStream: InputStream = resources.assets.open("coco_demo.webp")
             val outStream = FileOutputStream(fileName, true)
             val buffer = ByteArray(1024)
             var len = -1

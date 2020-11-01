@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.qw.photo.CoCo
+import com.qw.photo.CoCoConfigs
 import com.qw.photo.Utils
 import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.pojo.CropResult
@@ -14,7 +15,6 @@ import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.iv_image
-import kotlinx.android.synthetic.main.activity_take_photo.*
 
 class MainActivity : BaseToolbarActivity() {
 
@@ -26,7 +26,10 @@ class MainActivity : BaseToolbarActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initViewComponent()
-        CoCo.setDebug(BuildConfig.DEBUG)
+        CoCoConfigs.apply {
+            setDebug(BuildConfig.DEBUG)
+            configCropsResultFile(createSDCardFile().absolutePath)
+        }
     }
 
     private fun initViewComponent() {
@@ -106,9 +109,9 @@ class MainActivity : BaseToolbarActivity() {
             setOnClickListener {
 
                 CoCo.with(this@MainActivity)
-                    .take(createSDCardFile())
+                    .pick()
                     .then()
-                    .crop(createSDCardFile())
+                    .crop()
                     .start(object : CoCoCallBack<CropResult> {
 
                         override fun onSuccess(data: CropResult) {
