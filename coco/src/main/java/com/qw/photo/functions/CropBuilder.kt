@@ -19,7 +19,7 @@ class CropBuilder(fm: FunctionManager) :
 
     var originFile: File? = null
 
-    lateinit var savedResultFile: File
+    var savedResultFile: File? = null
 
     var cropWidth: Int = Utils.getScreenWidth(fm.container.provideActivity()!!)
 
@@ -62,7 +62,7 @@ class CropBuilder(fm: FunctionManager) :
     }
 
     /**
-     * int afterCropFile path
+     * if not set , coco will create an temple file to save the crop result
      * @param fileToSaveResult File
      * @return CropBuilder
      */

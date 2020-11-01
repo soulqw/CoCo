@@ -23,12 +23,14 @@ class FunctionManager(internal val container: IContainer) {
     /**
      * take photo from system camera
      * @param fileToSave the result of take photo to save
+     * @see TakeBuilder
      */
     fun take(fileToSave: File): TakeBuilder =
         TakeBuilder(this).fileToSave(fileToSave)
 
     /**
      * select a photo from system gallery or file system
+     * @see PickBuilder
      */
     fun pick(): PickBuilder =
         PickBuilder(this)
@@ -45,13 +47,13 @@ class FunctionManager(internal val container: IContainer) {
 
     /**
      * crop image by system crop function
-     * @param fileToSaveResult File after crop file you want
-     * @param originFile File? default is null if you just want crop pick or take result?, null is ok more see [Result]
-     * @return CropBuilder
+     * @param originFile the file to crop,
+     * if use pick or take before crop ,the origin file will be set form former result automatic
+     * @return com.qw.photo.functions.CropBuilder
+     * @see CropBuilder
      */
     @JvmOverloads
-    fun crop(fileToSaveResult: File, originFile: File? = null): CropBuilder = CropBuilder(this)
-        .fileToSaveResult(fileToSaveResult)
+    fun crop(originFile: File? = null): CropBuilder = CropBuilder(this)
         .file(originFile)
 
     companion object {

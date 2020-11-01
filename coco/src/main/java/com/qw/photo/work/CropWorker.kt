@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
+import com.qw.photo.CoCoConfigs
 import com.qw.photo.DevUtil
 import com.qw.photo.Utils
 import com.qw.photo.agent.IContainer
@@ -31,6 +32,7 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
     BaseWorker<CropBuilder, CropResult>(handler, builder) {
 
     override fun start(formerResult: Any?, callBack: CoCoCallBack<CropResult>) {
+        addConfigFromCoCoConfig()
         try {
             convertFormerResultToCurrent(formerResult)
         } catch (e: Exception) {
@@ -46,9 +48,15 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         }
         val activity = iContainer.provideActivity()
         activity ?: return
+        var intent: Intent?
         val uri =
             Utils.createUriFromFile(iContainer.provideActivity() as Context, mParams.originFile!!)
-        val intent = routeToCrop(uri, mParams.cropWidth, mParams.cropHeight)
+        try {
+            intent = routeToCrop(activity, uri, mParams.cropWidth, mParams.cropHeight)
+        } catch (e: Exception) {
+            callBack.onFailed(e)
+            return
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
             activity.grantUriPermission(
@@ -69,6 +77,12 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         }
     }
 
+    private fun addConfigFromCoCoConfig() {
+        if (null != CoCoConfigs.cropsResultFile) {
+            mParams.savedResultFile = File(CoCoConfigs.cropsResultFile)
+        }
+    }
+
     private fun handleResult(
         resultCode: Int,
         callBack: CoCoCallBack<CropResult>
@@ -79,21 +93,17 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
             }
             return
         }
-        if (mParams.savedResultFile.exists() && mParams.savedResultFile.length() > 0) {
-            val result = CropResult()
-            result.originFile = mParams.originFile
-            result.savedFile = mParams.savedResultFile
-            result.cropBitmap = Utils.getBitmapFromFile(mParams.savedResultFile.absolutePath)!!
-            if (null != mParams.cropCallBack) {
-                mParams.cropCallBack!!.onFinish(result)
-            }
-            callBack.onSuccess(result)
-        } else {
-            callBack.onFailed(BaseException("after crop file is null or size == 0"))
+        val result = CropResult()
+        result.originFile = mParams.originFile
+        result.savedFile = mParams.savedResultFile
+        result.cropBitmap = Utils.getBitmapFromFile(mParams.savedResultFile!!.absolutePath)!!
+        if (null != mParams.cropCallBack) {
+            mParams.cropCallBack!!.onFinish(result)
         }
+        callBack.onSuccess(result)
     }
 
-    private fun routeToCrop(uri: Uri?, cropWidth: Int, cropHeight: Int): Intent {
+    private fun routeToCrop(context: Context, uri: Uri?, cropWidth: Int, cropHeight: Int): Intent {
         val intent = Intent("com.android.camera.action.CROP")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION or Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -115,11 +125,15 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         intent.putExtra("outputX", cropWidth)
         intent.putExtra("outputY", cropHeight)
         intent.putExtra("return-data", false)
+        //if did not set a file to save result ,this file will create in app package location automatic
+        if (null == mParams.savedResultFile) {
+            mParams.savedResultFile = Utils.createSDCardFile(context)
+        }
         intent.putExtra(
             MediaStore.EXTRA_OUTPUT,
             Uri.fromFile(mParams.savedResultFile)
         )
-        DevUtil.d("EXTRA_OUTPUT", mParams.savedResultFile.absolutePath)
+        DevUtil.d("EXTRA_OUTPUT", mParams.savedResultFile!!.absolutePath)
         return intent
     }
 

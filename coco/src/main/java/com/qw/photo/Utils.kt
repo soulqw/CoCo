@@ -16,6 +16,8 @@ import androidx.core.content.FileProvider
 import com.qw.photo.constant.Constant
 import com.qw.photo.constant.Host
 import java.io.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 /**
@@ -157,6 +159,22 @@ object Utils {
         val outMetrics = DisplayMetrics()
         wm.defaultDisplay.getMetrics(outMetrics)
         return outMetrics.widthPixels
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    @Throws(IOException::class)
+    internal fun createSDCardFile(context: Context): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val storageDir = File(context.externalCacheDir!!.path + "/" + timeStamp)
+        if (!storageDir.exists()) {
+            storageDir.mkdir()
+        }
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        )
     }
 
     private fun bitmapToBytes(bm: Bitmap): ByteArray {

@@ -1,16 +1,13 @@
 package com.qw.photo
 
-import java.io.File
-
 class CoCoConfigs {
 
     companion object Builder {
 
-        internal var cropsResultFile: File? = null
-            get() = field
+        internal var cropsResultFile: String? = null
 
         @JvmStatic
-        fun configCropsResultFile(file: File) {
+        fun configCropsResultFile(file: String) {
             this.cropsResultFile = file
         }
 
