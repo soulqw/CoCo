@@ -3,14 +3,14 @@
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
-#### 一款小而美的的Android系统相机拍照和系统相册选择库🐵
- - 一行代码完成从系统相机拍照或者系统相册选择图片
+#### 一款小而美的的Android系统相机拍照、系统相册选择、裁剪库🐵
+ - 一行代码完成从系统相机拍照、系统相册选择图片、系统裁剪
  - 内部适配 7.0 FileProvider文件处理，无需自己额外处理
  - 默认图片处理器自带两种图片压缩策略，并可按需自定义图片处理器
  - 支持Activity、Fragment,图片异步处理自动绑定相关容器生命周期
  - 全新设计的APi-更灵活-更易于理解
  - 完全基于Kotlin编写，与Java兼容
- - 全面适配AndroidX、配置简单，导入方便 
+ - 全面适配AndroidX、配置简单，导入方便
 ## Installation：
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
@@ -22,10 +22,10 @@ dependencies {
 }
 ```
 ###### 最新Release 改动：
-- 全新重构的APi，更易于理解。
-- 更解耦，组合操作更灵活
+- 新增系统裁剪API
+- 新增CoCoConfig 配置类，统一管理配置
 
- CoCo 1.0.0  将迎来历史上最大的更新：
+ CoCo 1.0.0 + 将迎来历史上最大的更新：
 
  强烈建议您迁移到最新的APi，方便后续新功能的拓展，老版本最后Release 版本将维护至[0.3.1](https://github.com/soulqw/CoCo/blob/developer/README_OLD.md)，后续不再更新(分支master_1.0.0_below)。
 
@@ -171,6 +171,41 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
             }
 
 ```
+#### Crop操作符：
+让我可以指定一个图片文件提供给系统裁剪处理：
+
+```
+    CoCo.with(this@CropActivity)
+                .crop(imageFile)
+                .start(object : CoCoCallBack<CropResult> {
+
+                    override fun onSuccess(data: CropResult) {
+                        iv_image.setImageBitmap(data.cropBitmap)
+                    }
+
+                    override fun onFailed(exception: Exception) {}
+                })
+```
+当然，也可以组合原有操作符一起使用：
+
+```
+  CoCo.with(this@MainActivity)
+                    .pick()
+                    .then()
+                    .crop()
+                    .start(object : CoCoCallBack<CropResult> {
+
+                        override fun onSuccess(data: CropResult) {
+                            iv_image.setImageBitmap(data.cropBitmap)
+                        }
+
+                        override fun onFailed(exception: Exception) {
+                        }
+                    })
+```
+效果图：
+![image](https://cdn.nlark.com/yuque/0/2020/gif/2754987/1604806023853-516cb14c-dd91-4afc-878e-7c51badfd430.gif)
+
 - 其它功能：
 ###### 每个操作符都可以添加回调监听：
 
