@@ -174,7 +174,7 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
 #### Crop操作符：
 让我可以指定一个图片文件提供给系统裁剪处理：
 
-```
+```kotlin
     CoCo.with(this@CropActivity)
                 .crop(imageFile)
                 .start(object : CoCoCallBack<CropResult> {
@@ -188,7 +188,7 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
 ```
 当然，也可以组合原有操作符一起使用：
 
-```
+```kotlin
   CoCo.with(this@MainActivity)
                     .pick()
                     .then()
@@ -204,7 +204,7 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                     })
 ```
 效果图：
-![image](https://cdn.nlark.com/yuque/0/2020/gif/2754987/1604806023853-516cb14c-dd91-4afc-878e-7c51badfd430.gif)
+![image](https://upload-images.jianshu.io/upload_images/11595074-7fba783db175f9ed.gif?imageMogr2/auto-orient/strip)
 
 - 其它功能：
 ###### 每个操作符都可以添加回调监听：
