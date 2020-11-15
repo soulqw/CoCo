@@ -15,7 +15,6 @@
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
 
-最新版本(Based on Android X):
 ```java
 dependencies {
     implementation 'com.qw:coco:1.1.0'
@@ -204,6 +203,7 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                     })
 ```
 效果图：
+
 ![image](https://upload-images.jianshu.io/upload_images/11595074-7fba783db175f9ed.gif?imageMogr2/auto-orient/strip)
 
 - 其它功能：
@@ -237,6 +237,7 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                     override fun onFailed(exception: Exception) {}
                 })
 ```
+
 更多功能可参考Demo
 
 ### 截图：
