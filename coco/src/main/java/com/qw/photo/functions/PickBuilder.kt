@@ -26,7 +26,7 @@ class PickBuilder(fm: FunctionManager) :
      * @see Range.PICK_DICM  the system gallery
      * @see Range.PICK_CONTENT the system content file
      */
-    fun range(@PickRange pickRange: Int): PickBuilder {
+    fun range(@PickRange pickRange: Int = Range.PICK_DICM): PickBuilder {
         this.pickRange = pickRange
         return this
     }

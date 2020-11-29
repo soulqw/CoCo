@@ -8,6 +8,7 @@ import com.qw.photo.CoCo
 import com.qw.photo.CoCoConfigs
 import com.qw.photo.Utils
 import com.qw.photo.callback.CoCoCallBack
+import com.qw.photo.constant.Range
 import com.qw.photo.pojo.CropResult
 
 import com.qw.photo.pojo.DisposeResult
@@ -60,6 +61,7 @@ class MainActivity : BaseToolbarActivity() {
 
                 CoCo.with(this@MainActivity)
                     .pick()
+                    .range(Range.PICK_CONTENT)
                     .start(object : CoCoCallBack<PickResult> {
                         override fun onSuccess(data: PickResult) {
                             Toast.makeText(

@@ -38,6 +38,7 @@ class PickPhotoWorker(iContainer: IContainer, builder: PickBuilder) :
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         } else {
             Intent(Intent.ACTION_GET_CONTENT, null).also {
+//                it.type = "image/png"
                 it.type = "image/*"
             }
         }

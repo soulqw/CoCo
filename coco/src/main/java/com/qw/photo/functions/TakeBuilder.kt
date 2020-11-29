@@ -42,7 +42,7 @@ class TakeBuilder(fm: FunctionManager) :
      * but this method may not covered for all phone
      * @see Face
      */
-    fun cameraFace(@CameraFace face: Int): TakeBuilder {
+    fun cameraFace(@CameraFace face: Int = Face.BACK): TakeBuilder {
         this.cameraFace = face
         return this
     }
