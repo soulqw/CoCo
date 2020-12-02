@@ -1,7 +1,9 @@
 package com.qw.photo.functions
 
+import com.qw.photo.annotations.FileType
 import com.qw.photo.annotations.PickRange
 import com.qw.photo.callback.PickCallBack
+import com.qw.photo.constant.Type
 import com.qw.photo.constant.Range
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.work.FunctionManager
@@ -12,6 +14,8 @@ class PickBuilder(fm: FunctionManager) :
     BaseFunctionBuilder<PickBuilder, PickResult>(fm) {
 
     internal var pickRange = Range.PICK_DICM
+
+    internal var fileType = Type.ALL
 
     internal var pickCallBack: PickCallBack? = null
 
@@ -28,6 +32,14 @@ class PickBuilder(fm: FunctionManager) :
      */
     fun range(@PickRange pickRange: Int = Range.PICK_DICM): PickBuilder {
         this.pickRange = pickRange
+        return this
+    }
+
+    /**
+     * set the file type to be choose
+     */
+    fun type(@FileType type: Int = Type.ALL): PickBuilder {
+        this.fileType = type
         return this
     }
 
