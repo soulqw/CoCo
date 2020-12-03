@@ -10,6 +10,7 @@ import com.qw.photo.agent.IContainer
 import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.constant.Range
+import com.qw.photo.constant.Type
 import com.qw.photo.exception.BaseException
 import com.qw.photo.functions.PickBuilder
 import com.qw.photo.pojo.PickResult
@@ -38,8 +39,20 @@ class PickPhotoWorker(iContainer: IContainer, builder: PickBuilder) :
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         } else {
             Intent(Intent.ACTION_GET_CONTENT, null).also {
-//                it.type = "image/png"
-                it.type = "image/*"
+                when (mParams.fileType) {
+                    Type.ALL -> {
+                        it.type = "image/*"
+                    }
+                    Type.GIF -> {
+                        it.type = "image/gif"
+                    }
+                    Type.PNG -> {
+                        it.type = "image/png"
+                    }
+                    Type.JPG -> {
+                        it.type = "image/jpg"
+                    }
+                }
             }
         }
         if (null === pickIntent.resolveActivity(activity.packageManager)) {
