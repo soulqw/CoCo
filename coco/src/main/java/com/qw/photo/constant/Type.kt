@@ -4,7 +4,7 @@ object Type {
 
     const val ALL = 0
 
-    const val JPG = 1 shl 1
+    const val JPEG = 1 shl 1
 
     const val PNG = 1 shl 2
 

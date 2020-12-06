@@ -29,6 +29,8 @@ class PickBuilder(fm: FunctionManager) :
      * @param pickRange the range you can choose
      * @see Range.PICK_DICM  the system gallery
      * @see Range.PICK_CONTENT the system content file
+     *
+     * if you choose the  PICK_CONTENT, you can also use type to file the type you want
      */
     fun range(@PickRange pickRange: Int = Range.PICK_DICM): PickBuilder {
         this.pickRange = pickRange
@@ -36,7 +38,9 @@ class PickBuilder(fm: FunctionManager) :
     }
 
     /**
-     * set the file type to be choose
+     * set the file type to be choose from file system when use in
+     * @see Range.PICK_CONTENT
+     * @param type the file type to be filter
      */
     fun type(@FileType type: Int = Type.ALL): PickBuilder {
         this.fileType = type

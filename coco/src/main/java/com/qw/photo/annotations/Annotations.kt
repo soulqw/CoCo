@@ -5,7 +5,7 @@ import com.qw.photo.constant.Face.BACK
 import com.qw.photo.constant.Face.FRONT
 import com.qw.photo.constant.Type.ALL
 import com.qw.photo.constant.Type.GIF
-import com.qw.photo.constant.Type.JPG
+import com.qw.photo.constant.Type.JPEG
 import com.qw.photo.constant.Type.PNG
 import com.qw.photo.constant.Host.Status.Companion.INIT
 import com.qw.photo.constant.Host.Status.Companion.LIVE
@@ -30,6 +30,6 @@ annotation class PickRange
 @Retention(AnnotationRetention.SOURCE)
 annotation class HostStatus
 
-@IntDef(ALL, JPG, PNG, GIF)
+@IntDef(ALL, JPEG, PNG, GIF)
 @Retention(AnnotationRetention.SOURCE)
 annotation class FileType

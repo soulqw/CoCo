@@ -49,8 +49,8 @@ class PickPhotoWorker(iContainer: IContainer, builder: PickBuilder) :
                     Type.PNG -> {
                         it.type = "image/png"
                     }
-                    Type.JPG -> {
-                        it.type = "image/jpg"
+                    Type.JPEG -> {
+                        it.type = "image/jpeg"
                     }
                 }
             }

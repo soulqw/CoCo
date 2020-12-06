@@ -63,7 +63,7 @@ class MainActivity : BaseToolbarActivity() {
                 CoCo.with(this@MainActivity)
                     .pick()
                     .range(Range.PICK_CONTENT)
-                    .type(Type.GIF)
+                    .type(Type.JPEG)
                     .start(object : CoCoCallBack<PickResult> {
                         override fun onSuccess(data: PickResult) {
                             Toast.makeText(
