@@ -237,6 +237,8 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                     override fun onFailed(exception: Exception) {}
                 })
 ```
+- 流程UML：
+![image](https://img-blog.csdnimg.cn/20201205192151591.png)
 
 更多功能可参考Demo
 
