@@ -7,7 +7,7 @@ import android.widget.Toast
 import com.qw.photo.CoCo
 import com.qw.photo.CoCoConfigs
 import com.qw.photo.Utils
-import com.qw.photo.callback.CoCoCallBack
+import com.qw.photo.callback.CoCoAdapter
 import com.qw.photo.constant.Range
 import com.qw.photo.constant.Type
 import com.qw.photo.pojo.CropResult
@@ -38,18 +38,10 @@ class MainActivity : BaseToolbarActivity() {
         btn_capture.setOnClickListener {
             CoCo.with(this@MainActivity)
                 .take(createSDCardFile())
-                .start(object : CoCoCallBack<TakeResult> {
+                .start(object : CoCoAdapter<TakeResult>() {
 
                     override fun onSuccess(data: TakeResult) {
-                        Toast.makeText(
-                            this@MainActivity,
-                            data.savedFile!!.absolutePath.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
                         iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
-                    }
-
-                    override fun onFailed(exception: Exception) {
                     }
                 })
         }
@@ -64,7 +56,7 @@ class MainActivity : BaseToolbarActivity() {
                     .pick()
                     .range(Range.PICK_CONTENT)
                     .type(Type.JPEG)
-                    .start(object : CoCoCallBack<PickResult> {
+                    .start(object : CoCoAdapter<PickResult>() {
                         override fun onSuccess(data: PickResult) {
                             Toast.makeText(
                                 this@MainActivity,
@@ -72,9 +64,6 @@ class MainActivity : BaseToolbarActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
                             iv_image.setImageURI(data.originUri)
-                        }
-
-                        override fun onFailed(exception: Exception) {
                         }
                     })
 
@@ -91,14 +80,10 @@ class MainActivity : BaseToolbarActivity() {
                     .take(createSDCardFile())
                     .then()
                     .dispose()
-                    .start(object : CoCoCallBack<DisposeResult> {
+                    .start(object : CoCoAdapter<DisposeResult>() {
 
                         override fun onSuccess(data: DisposeResult) {
                             iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
-                        }
-
-                        override fun onFailed(exception: Exception) {
-
                         }
                     })
 
@@ -116,13 +101,10 @@ class MainActivity : BaseToolbarActivity() {
                     .pick()
                     .then()
                     .crop()
-                    .start(object : CoCoCallBack<CropResult> {
+                    .start(object : CoCoAdapter<CropResult>() {
 
                         override fun onSuccess(data: CropResult) {
                             iv_image.setImageBitmap(data.cropBitmap)
-                        }
-
-                        override fun onFailed(exception: Exception) {
                         }
                     })
 

@@ -34,16 +34,13 @@ dependencies {
 - 调用系统相机拍照
 ```kotlin
        CoCo.with(this@MainActivity)
-                .take(createSDCardFile())
-                .start(object : CoCoCallBack<TakeResult> {
+                       .take(createSDCardFile())
+                       .start(object : CoCoAdapter<TakeResult>() {
 
-                    override fun onSuccess(data: TakeResult) {
-                       iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                    }
-                })
+                           override fun onSuccess(data: TakeResult) {
+                               iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
+                           }
+                       })
 ```
 效果图：
 
@@ -54,14 +51,11 @@ dependencies {
 ```kotlin
         CoCo.with(this@MainActivity)
                     .pick()
-                    .start(object : CoCoCallBack<PickResult> {
+                    .start(object : CoCoAdapter<PickResult>() {
                         override fun onSuccess(data: PickResult) {
 
                         iv_image.setImageURI(data.originUri)
 
-                        }
-
-                        override fun onFailed(exception: Exception) {
                         }
                     })
 ```
@@ -79,13 +73,9 @@ dependencies {
                 //切换操作符
                 .then()
                 .dispose()
-                .start(object : CoCoCallBack<DisposeResult> {
+                .start(object : CoCoAdapter<DisposeResult>() {
                     override fun onSuccess(data: DisposeResult) {
                         iv_image.setImageBitmap(data.compressBitmap)
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Log.d(MainActivity.TAG, exception.toString())
                     }
                 })
 
@@ -102,14 +92,10 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                 .take(createSDCardFile())
                 .then()
                 .dispose()
-                .start(object : CoCoCallBack<DisposeResult> {
+                .start(object : CoCoAdapter<DisposeResult>() {
 
                     override fun onSuccess(data: DisposeResult) {
                         iv_image.setImageBitmap(Utils.getBitmapFromFile(data.savedFile!!.absolutePath))
-                    }
-
-                    override fun onFailed(exception: Exception) {
-
                     }
                 })
 ```
@@ -118,14 +104,10 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
         CoCo.with(this)
                 .dispose()
                 .origin(imageFile.path)
-                .start(object : CoCoCallBack<DisposeResult> {
+                .start(object : CoCoAdapter<DisposeResult>() {
 
                     override fun onSuccess(data: DisposeResult) {
                         iv_image.setImageBitmap(data.compressBitmap)
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Log.d(MainActivity.TAG, exception.toString())
                     }
                 })
 ```
@@ -137,14 +119,10 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                 .disposer(CustomDisposer())
               //.disposer(DefaultImageDisposer())
                 .origin(imageFile.path)
-                .start(object : CoCoCallBack<DisposeResult> {
+                .start(object : CoCoAdapter<DisposeResult>() {
 
                     override fun onSuccess(data: DisposeResult) {
                         iv_image.setImageBitmap(data.compressBitmap)
-                    }
-
-                    override fun onFailed(exception: Exception) {
-                        Log.d(MainActivity.TAG, exception.toString())
                     }
                 })
 
@@ -176,13 +154,12 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
 ```kotlin
     CoCo.with(this@CropActivity)
                 .crop(imageFile)
-                .start(object : CoCoCallBack<CropResult> {
+                .start(object : CoCoAdapter<CropResult>() {
 
                     override fun onSuccess(data: CropResult) {
                         iv_image.setImageBitmap(data.cropBitmap)
                     }
 
-                    override fun onFailed(exception: Exception) {}
                 })
 ```
 当然，也可以组合原有操作符一起使用：
@@ -192,13 +169,10 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                     .pick()
                     .then()
                     .crop()
-                    .start(object : CoCoCallBack<CropResult> {
+                    .start(object : CoCoAdapter<CropResult>() {
 
                         override fun onSuccess(data: CropResult) {
                             iv_image.setImageBitmap(data.cropBitmap)
-                        }
-
-                        override fun onFailed(exception: Exception) {
                         }
                     })
 ```
