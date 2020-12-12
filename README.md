@@ -1,5 +1,5 @@
 # CoCo
- [![Hex.pm](https://img.shields.io/badge/download-1.1.0-green)](https://www.apache.org/licenses/LICENSE-2.0)
+ [![Hex.pm](https://img.shields.io/badge/download-1.1.1-green)](https://www.apache.org/licenses/LICENSE-2.0)
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
@@ -17,12 +17,12 @@
 
 ```java
 dependencies {
-    implementation 'com.qw:coco:1.1.0'
+    implementation 'com.qw:coco:1.1.1'
 }
 ```
 ###### 最新Release 改动：
-- 新增系统裁剪API
-- 新增CoCoConfig 配置类，统一管理配置
+- Pick 选图在 Range.PICK_CONTENT 模式下可以指定过滤文件类型，如PNG、JPG、GIF等，默认所有格式
+- CoCo 默认回调增加抽象类实现 CoCoAdapter
 
  CoCo 1.0.0 + 将迎来历史上最大的更新：
 
