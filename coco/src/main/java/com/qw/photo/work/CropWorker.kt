@@ -14,7 +14,7 @@ import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.constant.Constant
 import com.qw.photo.exception.BadConvertException
 import com.qw.photo.exception.BaseException
-import com.qw.photo.exception.CoCoException
+import com.qw.photo.exception.NoFileProvidedException
 import com.qw.photo.functions.CropBuilder
 import com.qw.photo.pojo.CropResult
 import com.qw.photo.pojo.DisposeResult
@@ -133,7 +133,7 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
             MediaStore.EXTRA_OUTPUT,
             Uri.fromFile(mParams.savedResultFile)
         )
-        DevUtil.d("EXTRA_OUTPUT", mParams.savedResultFile!!.absolutePath)
+        DevUtil.d(Constant.TAG, mParams.savedResultFile!!.absolutePath)
         return intent
     }
 
@@ -143,25 +143,19 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         if (null == formerResult) {
             return
         }
-
         if (formerResult is TakeResult) {
             mParams.originFile = formerResult.savedFile!!
         }
         if (formerResult is PickResult) {
-            var localPath: String? = null
-            try {
-                localPath =
-                    Utils.uriToImagePath(iContainer.provideActivity()!!, formerResult.originUri)
-                if (!localPath.isNullOrBlank()) {
-                    val f = File(localPath)
-                    if (f.exists()) {
-                        mParams.originFile = f
-                    } else {
-                        throw BadConvertException(formerResult)
-                    }
+            val localPath =
+                Utils.uriToImagePath(iContainer.provideActivity()!!, formerResult.originUri)
+            if (!localPath.isNullOrBlank()) {
+                val f = File(localPath)
+                if (f.exists()) {
+                    mParams.originFile = f
+                } else {
+                    throw BadConvertException(formerResult)
                 }
-            } catch (e: Exception) {
-                DevUtil.e(Constant.TAG, e.toString())
             }
             if (localPath.isNullOrBlank()) {
                 throw BadConvertException(formerResult)
@@ -169,7 +163,7 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         }
         if (formerResult is DisposeResult) {
             if (null == formerResult.savedFile) {
-                throw CoCoException("if you want crop after dispose ,you should create a file for dispose to save the result")
+                throw NoFileProvidedException("DisposeBuilder.fileToSaveResult")
             }
             mParams.originFile = formerResult.savedFile
         }

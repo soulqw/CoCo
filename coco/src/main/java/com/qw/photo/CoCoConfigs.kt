@@ -2,6 +2,10 @@ package com.qw.photo
 
 class CoCoConfigs {
 
+
+    /**
+     *  set the default configs if you needed
+     */
     companion object Builder {
 
         internal var cropsResultFile: String? = null

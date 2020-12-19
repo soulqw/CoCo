@@ -11,6 +11,7 @@ import com.qw.photo.constant.Constant
 import com.qw.photo.dispose.CompressFactory
 import com.qw.photo.exception.CompressFailedException
 import com.qw.photo.exception.MissCompressStrategyException
+import com.qw.photo.exception.NoFileProvidedException
 import com.qw.photo.pojo.DisposeResult
 import java.io.File
 
@@ -70,16 +71,15 @@ open class DefaultImageDisposer : Disposer {
         result.originPath = originPath
         result.compressBitmap = bitmap!!
         //save file as bitmap if needed
-        if (null != targetToSaveResult) {
-            DevUtil.d(Constant.TAG, "start save bitmap to file")
-            val saveResult = Utils.bitmapToFile(targetToSaveResult, bitmap!!)
-            if (!saveResult) {
-                throw CompressFailedException("save bitmap as file failed")
-            }
-            result.savedFile = targetToSaveResult
-        } else {
-            DevUtil.d(Constant.TAG, "no target file did not write file")
+        if (null == targetToSaveResult) {
+            throw NoFileProvidedException("DisposeBuilder.fileToSaveResult")
         }
+        DevUtil.d(Constant.TAG, "start save bitmap to file")
+        val saveResult = Utils.bitmapToFile(targetToSaveResult, bitmap!!)
+        if (!saveResult) {
+            throw CompressFailedException("save bitmap as file failed")
+        }
+        result.savedFile = targetToSaveResult
         return result
     }
 
