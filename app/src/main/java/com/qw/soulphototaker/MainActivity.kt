@@ -1,6 +1,7 @@
 package com.qw.soulphototaker
 
 
+import android.Manifest
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -15,6 +16,9 @@ import com.qw.photo.pojo.CropResult
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
 import com.qw.photo.pojo.TakeResult
+import com.qw.soul.permission.SoulPermission
+import com.qw.soul.permission.bean.Permission
+import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.iv_image
 
@@ -96,17 +100,47 @@ class MainActivity : BaseToolbarActivity() {
 
         btn_crop.apply {
             setOnClickListener {
+                //request permission
+                SoulPermission.getInstance()
+                    .checkAndRequestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        object : CheckRequestPermissionListener {
+                            override fun onPermissionOk(permission: Permission?) {
 
-                CoCo.with(this@MainActivity)
-                    .pick()
-                    .then()
-                    .crop()
-                    .start(object : CoCoAdapter<CropResult>() {
+//                                CoCo.with(this@MainActivity)
+//                                    .pick()
+//                                    .then()
+//                                    .crop()
+//                                    .then()
+//                                    .dispose()
+//                                    .start(object : CoCoAdapter<DisposeResult>() {
+//
+//                                        override fun onSuccess(data: DisposeResult) {
+//                                            iv_image.setImageBitmap(data.compressBitmap)
+//                                        }
+//                                    })
+                                CoCo.with(this@MainActivity)
+                                    .pick()
+                                    .then()
+                                    .dispose()
+                                    .fileToSaveResult(createSDCardFile())
+                                    .then()
+                                    .crop()
+                                    .start(object : CoCoAdapter<CropResult>() {
 
-                        override fun onSuccess(data: CropResult) {
-                            iv_image.setImageBitmap(data.cropBitmap)
-                        }
-                    })
+                                        override fun onSuccess(data: CropResult) {
+                                            iv_image.setImageBitmap(data.cropBitmap)
+                                        }
+                                    })
+                            }
+
+                            override fun onPermissionDenied(permission: Permission?) {
+                                Toast.makeText(
+                                    applicationContext,
+                                    "need file permission first",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        })
 
             }
             setOnLongClickListener {
