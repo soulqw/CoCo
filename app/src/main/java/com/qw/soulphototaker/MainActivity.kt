@@ -106,31 +106,31 @@ class MainActivity : BaseToolbarActivity() {
                         object : CheckRequestPermissionListener {
                             override fun onPermissionOk(permission: Permission?) {
 
-//                                CoCo.with(this@MainActivity)
-//                                    .pick()
-//                                    .then()
-//                                    .crop()
-//                                    .then()
-//                                    .dispose()
-//                                    .start(object : CoCoAdapter<DisposeResult>() {
-//
-//                                        override fun onSuccess(data: DisposeResult) {
-//                                            iv_image.setImageBitmap(data.compressBitmap)
-//                                        }
-//                                    })
                                 CoCo.with(this@MainActivity)
                                     .pick()
                                     .then()
-                                    .dispose()
-                                    .fileToSaveResult(createSDCardFile())
-                                    .then()
                                     .crop()
-                                    .start(object : CoCoAdapter<CropResult>() {
+                                    .then()
+                                    .dispose()
+                                    .start(object : CoCoAdapter<DisposeResult>() {
 
-                                        override fun onSuccess(data: CropResult) {
-                                            iv_image.setImageBitmap(data.cropBitmap)
+                                        override fun onSuccess(data: DisposeResult) {
+                                            iv_image.setImageBitmap(data.compressBitmap)
                                         }
                                     })
+//                                CoCo.with(this@MainActivity)
+//                                    .pick()
+//                                    .then()
+//                                    .dispose()
+//                                    .fileToSaveResult(createSDCardFile())
+//                                    .then()
+//                                    .crop()
+//                                    .start(object : CoCoAdapter<CropResult>() {
+//
+//                                        override fun onSuccess(data: CropResult) {
+//                                            iv_image.setImageBitmap(data.cropBitmap)
+//                                        }
+//                                    })
                             }
 
                             override fun onPermissionDenied(permission: Permission?) {

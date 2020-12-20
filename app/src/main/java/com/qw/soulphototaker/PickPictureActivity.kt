@@ -93,7 +93,6 @@ class PickPictureActivity : BaseToolbarActivity() {
                             "need permission first to pick Photo",
                             Toast.LENGTH_SHORT
                         ).show()
-                        Handler().postDelayed({ exitProcess(0) }, 500);
                     }
 
                 })
@@ -105,7 +104,7 @@ class PickPictureActivity : BaseToolbarActivity() {
             .pick()
             .then()
             .dispose()
-//            .fileToSaveResult(createSDCardFile())
+            .fileToSaveResult(createSDCardFile())
             .start(object : CoCoCallBack<DisposeResult> {
 
                 override fun onSuccess(data: DisposeResult) {
