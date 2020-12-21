@@ -191,15 +191,15 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                 .callBack(object : PickCallBack {
 
                     override fun onFinish(result: PickResult) {
-                        Log.d(MainActivity.TAG, "take onFinish${result}")
+                        Log.d(MainActivity.TAG, "pick onFinish${result}")
                     }
 
                     override fun onCancel() {
-                        Log.d(MainActivity.TAG, "take onCancel")
+                        Log.d(MainActivity.TAG, "pick onCancel")
                     }
 
                     override fun onStart() {
-                        Log.d(MainActivity.TAG, "take onStart")
+                        Log.d(MainActivity.TAG, "pick onStart")
                     }
 
                 }).start(object : CoCoCallBack<PickResult> {
@@ -213,6 +213,10 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
 ```
 - UML：
 ![image](https://img-blog.csdnimg.cn/20201205192149134.png)
+
+更多功能可参考Demo
+
+#### [原理和详细设计分享可参考这里](https://juejin.cn/post/6907620425837051917)
 
 更多功能可参考Demo
 
