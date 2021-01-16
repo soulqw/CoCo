@@ -7,8 +7,8 @@ import android.view.View
 import android.widget.SeekBar
 import android.widget.TextView
 import com.qw.curtain.lib.Curtain
-import com.qw.curtain.lib.shape.CircleShape
-import com.qw.curtain.lib.shape.RoundShape
+import com.qw.curtain.lib.CurtainFlow
+import com.qw.curtain.lib.flow.CurtainFlowInterface
 import com.qw.photo.CoCo
 import com.qw.photo.callback.CoCoCallBack
 import com.qw.photo.constant.CompressStrategy
@@ -26,11 +26,6 @@ class DebugDefaultDisposerActivity : BaseToolbarActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_funtion_detail)
-
-        cb_compress.setOnCheckedChangeListener { _, isChecked ->
-            findViewById<View>(R.id.ly_compress).visibility =
-                if (isChecked) View.VISIBLE else View.GONE
-        }
 
         sb_degree.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
@@ -52,18 +47,11 @@ class DebugDefaultDisposerActivity : BaseToolbarActivity() {
             } else {
                 CompressStrategy.QUALITY
             }
-            val degree = if (cb_compress.isChecked) {
-                sb_degree.progress
-            } else {
-                -1
-            }
+            val degree = sb_degree.progress
             start(compressStrategy, degree)
         }
 
-        Curtain(this)
-            .withShape(sb_degree,RoundShape(6f))
-            .withPadding(sb_degree,20)
-            .show()
+        showGuide()
     }
 
     private fun start(compressStrategy: CompressStrategy, degree: Int) {
@@ -93,6 +81,42 @@ class DebugDefaultDisposerActivity : BaseToolbarActivity() {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
         return "图片：with: ${bitmap.width} height: ${bitmap.height}size: ${data.size}"
+    }
+
+    /**
+     * https://github.com/soulqw/Curtain
+     */
+    private fun showGuide() {
+
+        val STEP1 = 1
+
+        val STEP2 = 2
+
+        CurtainFlow
+            .Builder()
+            .with(STEP1, Curtain(this)
+                    .with(rg_strategy)
+                    .setTopView(R.layout.view_guide_1))
+            .with(STEP2, Curtain(this)
+                    .with(sb_degree)
+                    .setTopView(R.layout.view_guide_2))
+            .create()
+            .start(object : CurtainFlow.CallBack {
+
+                override fun onProcess(currentId: Int, curtainFlow: CurtainFlowInterface?) {
+                    curtainFlow!!.findViewInCurrentCurtain<View>(R.id.tv_i_know)
+                        .setOnClickListener {
+                            if (currentId == STEP1) {
+                                curtainFlow.push()
+                            } else {
+                                curtainFlow.finish()
+                            }
+                        }
+                }
+
+                override fun onFinish() {
+                }
+            })
     }
 
 }
