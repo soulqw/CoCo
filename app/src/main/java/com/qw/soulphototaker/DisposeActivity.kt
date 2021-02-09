@@ -146,7 +146,7 @@ class DisposeActivity : BaseToolbarActivity() {
         }
 
         debug_for_default_disposer.setOnClickListener {
-            startActivity(Intent(this, DebugDisposerActivity::class.java))
+            startActivity(Intent(this, DebugDefaultDisposerActivity::class.java))
         }
     }
 

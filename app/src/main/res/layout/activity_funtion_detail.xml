@@ -11,13 +11,6 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-        <CheckBox
-            android:id="@+id/cb_compress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="压缩" />
-
         <LinearLayout
             android:id="@+id/ly_compress"
             android:layout_width="match_parent"

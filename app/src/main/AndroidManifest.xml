@@ -34,10 +34,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".DebugDisposerActivity"
+            android:name=".DebugDefaultDisposerActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".CropActivity" />
+        <activity
+            android:name=".CropActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
