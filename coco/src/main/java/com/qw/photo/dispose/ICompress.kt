@@ -11,8 +11,8 @@ import androidx.annotation.IntRange
 interface ICompress {
 
     /**
-     * @param path 压缩文件路径
-     * @param degree 压缩程度 0~100
+     * @param path the path of the origin file
+     * @param degree the degree of the comprepss 0~100
      */
     @Throws(Exception::class)
     fun compress(path: String, @IntRange(from = 1, to = 100) degree: Int): Bitmap?

@@ -10,17 +10,17 @@ import com.qw.photo.pojo.DisposeResult
 internal interface CompressListener {
 
     /**
-     * 开始压缩
+     * start compress pic
      */
     fun onStart(path: String)
 
     /**
-     * 任务结束
+     * when the dispose finished
      */
     fun onFinish(disposeResult: DisposeResult)
 
     /**
-     * 发生错误
+     * when the error
      */
     fun onError(e: Exception)
 
