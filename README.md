@@ -3,7 +3,7 @@
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
-### [中文版说明](https://github.com/soulqw/CoCo/blob/master/README_OLD.md)
+### [中文版说明](https://github.com/soulqw/CoCo/blob/master/README_CN.md)
 #### An delicate lib for System Capture, Pick and Crop in Android 🐵
  - Provided an function the system camera to take a picture, system photo album selection, system cropping just need one code
  - The inner adjust the FileProvider in Android 7.0 above
