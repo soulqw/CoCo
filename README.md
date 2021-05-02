@@ -3,14 +3,15 @@
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
-#### 一款小而美的的Android系统相机拍照、系统相册选择、裁剪库🐵
- - 一行代码完成从系统相机拍照、系统相册选择图片、系统裁剪
- - 内部适配 7.0 FileProvider文件处理，无需自己额外处理
- - 默认图片处理器自带两种图片压缩策略，并可按需自定义图片处理器
- - 支持Activity、Fragment,图片异步处理自动绑定相关容器生命周期
- - 全新设计的APi-更灵活-更易于理解
- - 完全基于Kotlin编写，与Java兼容
- - 全面适配AndroidX、配置简单，导入方便
+### [中文版说明](https://github.com/soulqw/CoCo/blob/master/README_OLD.md)
+#### An delicate lib for System Capture, Pick and Crop in Android 🐵
+ - Provided an function the system camera to take a picture, system photo album selection, system cropping just need one code
+ - The inner adjust the FileProvider in Android 7.0 above
+ - The default image disposer provided two strategy to compress the image, it can also use custom disposer
+ - Both Activity and Fragment supported，the asynchronous image dispose will bind their lifecycle automatic
+ - The new designed api, easy to understand
+ - Fully based on kotlin, also can worked with java
+ - Already migrated to AndroidX, simplify to use
 ## Installation：
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
@@ -20,18 +21,14 @@ dependencies {
     implementation 'com.qw:coco:1.1.2'
 }
 ```
-###### 最新Release 改动：
-- Pick 选图在 Range.PICK_CONTENT 模式下可以指定过滤文件类型，如PNG、JPG、GIF等，默认所有格式
-- CoCo 默认回调增加抽象类实现 CoCoAdapter
-
- CoCo 1.0.0 + 将迎来历史上最大的更新：
-
- 强烈建议您迁移到最新的APi，方便后续新功能的拓展，老版本最后Release 版本将维护至[0.3.1](https://github.com/soulqw/CoCo/blob/developer/README_OLD.md)，后续不再更新(分支master_1.0.0_below)。
+###### The new in Release ：
+- The Pick function in the Range.PICK_CONTENT model can filter the specific file type such as PNG、JPG、GIF and so on, the default config is no filter
+- Add the default abstract class CoCoAdapter
 
 ## Usage：
-#### 基本用法
+#### basic usage
 
-- 调用系统相机拍照
+- Capture image in system camera
 ```kotlin
        CoCo.with(this@MainActivity)
                        .take(createSDCardFile())
@@ -42,11 +39,11 @@ dependencies {
                            }
                        })
 ```
-效果图：
+image sample：
 
 ![image](https://cdn.nlark.com/yuque/0/2020/gif/1502571/1601093298091-b091b479-05d0-435e-a650-ba5e07850d72.gif)
 
-- 调用系统相册选择图片：
+- Pic image in system Gallery：
 
 ```kotlin
         CoCo.with(this@MainActivity)
@@ -59,18 +56,17 @@ dependencies {
                         }
                     })
 ```
-##### 效果图:
+##### image sample:
 
 ![image](https://cdn.nlark.com/yuque/0/2020/gif/1502571/1601093668141-533ce509-9f4e-45fa-99c7-57a9a3d31335.gif)
 
-- 处理我们拿到的原图：
-
-上述以上是原图的情形，通常情况下，我们常常要对原图做一些处理，比如压缩等，所以CoCo 提供了dispose操作符，方便获得图片之后做一些处理：
+- dispose the origin image：
+Generally speaking, we may need dispose the origin image such as compress and so on, so CoCo provide the operator of dispose, we can use it to dispose the image
 ```kotlin
-        //选择图片后压缩
+        //pick then dispose
          CoCo.with(this)
                 .pick()
-                //切换操作符
+                //switch the operator
                 .then()
                 .dispose()
                 .start(object : CoCoAdapter<DisposeResult>() {
@@ -80,13 +76,13 @@ dependencies {
                 })
 
 ```
-我们通过 then 操作符来完成操作符的组合，可以进行一些列操作符的串联流式处理。
+We use the then method to switch the operator, it can combination the another operators
 
-##### dispose 操作符：
+##### dispose operator：
 
-dispose操作符可以自动在子线程处理我们要处理的文件，并且自动绑定with()容器中的生命周期
+dispose operator can dispose the file in background thread automatic, it can also bind the related container,s lifecycle in method "with()"
 
-###### 它不仅可以和其它操作符组合使用：
+###### It not only can works with other operators：
 ```kotlin
  CoCo.with(this)
                 .take(createSDCardFile())
@@ -99,7 +95,7 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                     }
                 })
 ```
-###### 它还可以单独使用：
+###### It also can works separately：
 ```kotlin
         CoCo.with(this)
                 .dispose()
@@ -111,7 +107,7 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                     }
                 })
 ```
-###### 系统默认Default 图片处理器可以帮我们完成图片处理，也可自定义处理逻辑：
+###### We can use customDisposer to dispose the image,we can also custom the disposer：
 
 ```kotlin
               CoCo.with(this)
@@ -148,8 +144,8 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
             }
 
 ```
-#### Crop操作符：
-让我可以指定一个图片文件提供给系统裁剪处理：
+#### The Crop operator：
+We can provide an image to system Crop:
 
 ```kotlin
     CoCo.with(this@CropActivity)
@@ -162,7 +158,7 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
 
                 })
 ```
-当然，也可以组合原有操作符一起使用：
+Of course, it can works with other combinations：
 
 ```kotlin
   CoCo.with(this@MainActivity)
@@ -176,12 +172,12 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                         }
                     })
 ```
-效果图：
+image sample：
 
 ![image](https://upload-images.jianshu.io/upload_images/11595074-7fba783db175f9ed.gif?imageMogr2/auto-orient/strip)
 
-- 其它功能：
-###### 每个操作符都可以添加回调监听：
+- Another functions：
+###### every operator can add the call backs：
 
 ```kotlin
   CoCo.with(this@PickPictureActivity)
@@ -211,16 +207,16 @@ dispose操作符可以自动在子线程处理我们要处理的文件，并且�
                     override fun onFailed(exception: Exception) {}
                 })
 ```
-- 半流程图：
+- the flow image：
 ![image](https://img-blog.csdnimg.cn/20201205192149134.png)
 
-更多功能可参考Demo
+More detail can use the demo
 
-### 截图：
+### The screenshot：
 ![image](https://cdn.nlark.com/yuque/0/2020/png/1502571/1601094243032-2d14deb1-e487-4d6e-906e-fafe6845c654.png)
 
-#### [原理和详细设计分享可参考这里](https://juejin.cn/post/6907620425837051917)
+#### [The blog for this lib](https://juejin.cn/post/6907620425837051917)
 
-##### 联系我（注明来意）：
+##### Contact me（tell me why）：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210209234455912.png)
 
