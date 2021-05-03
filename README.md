@@ -28,7 +28,7 @@ dependencies {
 ## Usage：
 #### basic usage
 
-- Capture image in system camera
+- Capture an image from system camera
 ```kotlin
        CoCo.with(this@MainActivity)
                        .take(createSDCardFile())
@@ -43,7 +43,7 @@ image sample：
 
 ![image](https://cdn.nlark.com/yuque/0/2020/gif/1502571/1601093298091-b091b479-05d0-435e-a650-ba5e07850d72.gif)
 
-- Pic image in system Gallery：
+- Pick an image from system Gallery：
 
 ```kotlin
         CoCo.with(this@MainActivity)
@@ -60,7 +60,7 @@ image sample：
 
 ![image](https://cdn.nlark.com/yuque/0/2020/gif/1502571/1601093668141-533ce509-9f4e-45fa-99c7-57a9a3d31335.gif)
 
-- dispose the origin image：
+- Dispose the origin image：
 Generally speaking, we may need dispose the origin image such as compress and so on, so CoCo provide the operator of dispose, we can use it to dispose the image
 ```kotlin
         //pick then dispose
@@ -76,7 +76,7 @@ Generally speaking, we may need dispose the origin image such as compress and so
                 })
 
 ```
-We use the then method to switch the operator, it can combination the another operators
+We use the "then" method to switch the operator, it can also combination the another operators
 
 ##### dispose operator：
 
