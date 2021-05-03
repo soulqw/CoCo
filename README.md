@@ -5,10 +5,10 @@
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
 ### [中文版说明](https://github.com/soulqw/CoCo/blob/master/README_CN.md)
 #### An delicate lib for System Capture, Pick and Crop in Android 🐵
- - Provided an function the system camera to take a picture, system photo album selection, system cropping just need one code
- - The inner adjust the FileProvider in Android 7.0 above
- - The default image disposer provided two strategy to compress the image, it can also use custom disposer
- - Both Activity and Fragment supported，the asynchronous image dispose will bind their lifecycle automatic
+ - Provided the function of image capture or album selection or cropping from system application just need one code
+ - The inner adjust the FileProvider in Android 7.0 and above
+ - The default image disposer provided two strategy to compress the image, it can also can be customed
+ - Both Activity and Fragment supported，the asynchronous dispose of image will bind their lifecycle automatic
  - The new designed api, easy to understand
  - Fully based on kotlin, also can worked with java
  - Already migrated to AndroidX, simplify to use
