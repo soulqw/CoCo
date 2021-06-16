@@ -11,7 +11,6 @@ import com.qw.photo.Utils
 import com.qw.photo.callback.CoCoAdapter
 import com.qw.photo.constant.Range
 import com.qw.photo.constant.Type
-import com.qw.photo.pojo.CropResult
 
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult

@@ -18,7 +18,7 @@
 
 ```java
 dependencies {
-    implementation 'com.qw:coco:1.1.2'
+    implementation 'com.github.soulqw:CoCo:1.1.2'
 }
 ```
 ###### The new in Release ：
