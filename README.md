@@ -217,6 +217,6 @@ More detail can use the demo
 
 #### [The blog for this lib](https://juejin.cn/post/6907620425837051917)
 
-##### Contact me（tell me why）：
+##### Contact me（annotate the reason）：
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20210209234455912.png)
 
