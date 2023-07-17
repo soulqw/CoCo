@@ -11,6 +11,7 @@ import com.qw.photo.Utils
 import com.qw.photo.callback.CoCoAdapter
 import com.qw.photo.constant.Range
 import com.qw.photo.constant.Type
+import com.qw.photo.pojo.CropResult
 
 import com.qw.photo.pojo.DisposeResult
 import com.qw.photo.pojo.PickResult
@@ -106,15 +107,13 @@ class MainActivity : BaseToolbarActivity() {
                             override fun onPermissionOk(permission: Permission?) {
 
                                 CoCo.with(this@MainActivity)
-                                    .pick()
+                                    .take(createSDCardFile())
                                     .then()
                                     .crop()
-                                    .then()
-                                    .dispose()
-                                    .start(object : CoCoAdapter<DisposeResult>() {
+                                    .start(object : CoCoAdapter<CropResult>() {
 
-                                        override fun onSuccess(data: DisposeResult) {
-                                            iv_image.setImageBitmap(data.compressBitmap)
+                                        override fun onSuccess(data: CropResult) {
+                                            iv_image.setImageBitmap(data.cropBitmap)
                                         }
                                     })
                             }

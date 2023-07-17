@@ -1,8 +1,10 @@
 package com.qw.photo.work
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.provider.MediaStore
@@ -48,7 +50,7 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         }
         val activity = iContainer.provideActivity()
         activity ?: return
-        var intent: Intent?
+        val intent: Intent?
         val uri =
             Utils.createUriFromFile(iContainer.provideActivity() as Context, mParams.originFile!!)
         try {
@@ -72,8 +74,8 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         iContainer.startActivityResult(
             intent,
             Constant.REQUEST_CODE_CORP_IMAGE
-        ) { _: Int, resultCode: Int, _: Intent? ->
-            handleResult(resultCode, callBack)
+        ) { _: Int, resultCode: Int, resultData: Intent? ->
+            handleResult(resultCode, resultData, callBack)
         }
     }
 
@@ -85,7 +87,8 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
 
     private fun handleResult(
         resultCode: Int,
-        callBack: CoCoCallBack<CropResult>
+        resultData: Intent?,
+        callBack: CoCoCallBack<CropResult>,
     ) {
         if (resultCode == Activity.RESULT_CANCELED) {
             if (null != mParams.cropCallBack) {
@@ -95,8 +98,17 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         }
         val result = CropResult()
         result.originFile = mParams.originFile
-        result.savedFile = mParams.savedResultFile
-        result.cropBitmap = Utils.getBitmapFromFile(mParams.savedResultFile!!.absolutePath)!!
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            val imageBitmap = resultData?.data.let {
+                val inputStream =
+                    iContainer.provideActivity()!!.contentResolver.openInputStream(it!!)
+                BitmapFactory.decodeStream(inputStream)
+            }
+            result.cropBitmap = imageBitmap
+        } else {
+            result.savedFile = mParams.savedResultFile
+            result.cropBitmap = Utils.getBitmapFromFile(mParams.savedResultFile!!.absolutePath)!!
+        }
         if (null != mParams.cropCallBack) {
             mParams.cropCallBack!!.onFinish(result)
         }
@@ -129,9 +141,17 @@ class CropWorker(handler: IContainer, builder: CropBuilder) :
         if (null == mParams.savedResultFile) {
             mParams.savedResultFile = Utils.createSDCardFile(context)
         }
+        val outPutUri =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                context.contentResolver.insert(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    ContentValues()
+                )
+            } else {
+                Uri.fromFile(mParams.savedResultFile)
+            }
         intent.putExtra(
-            MediaStore.EXTRA_OUTPUT,
-            Uri.fromFile(mParams.savedResultFile)
+            MediaStore.EXTRA_OUTPUT, outPutUri
         )
         DevUtil.d(Constant.TAG, mParams.savedResultFile!!.absolutePath)
         return intent
