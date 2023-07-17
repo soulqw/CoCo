@@ -36,10 +36,6 @@ class TakePhotoWorker(handler: IContainer, builder: TakeBuilder) :
     private fun takePhoto(activity: Activity, callBack: CoCoCallBack<TakeResult>) {
         val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         setCameraFace(takePictureIntent)
-        if (null === takePictureIntent.resolveActivity(activity.packageManager)) {
-            callBack.onFailed(BaseException("activity status error"))
-            return
-        }
         //用户指定了目标文件路径
         if (null != mParams.fileToSave) {
             val uri = Utils.createUriFromFile((activity) as Context, mParams.fileToSave!!)

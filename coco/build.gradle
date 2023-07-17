@@ -8,8 +8,6 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 28
-        versionCode 28
-        versionName "1.1.2"
     }
 
     buildTypes {
@@ -17,6 +15,7 @@ android {
             minifyEnabled false
         }
     }
+    namespace 'com.qw.photo'
 
 }
 

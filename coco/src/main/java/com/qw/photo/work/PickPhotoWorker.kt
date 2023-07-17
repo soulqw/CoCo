@@ -55,10 +55,10 @@ class PickPhotoWorker(iContainer: IContainer, builder: PickBuilder) :
                 }
             }
         }
-        if (null === pickIntent.resolveActivity(activity.packageManager)) {
-            callBack.onFailed(BaseException("activity status error"))
-            return
-        }
+//        if (null === pickIntent.resolveActivity(activity.packageManager)) {
+//            callBack.onFailed(BaseException("activity status error"))
+//            return
+//        }
         try {
             iContainer.startActivityResult(
                 pickIntent, Constant.REQUEST_CODE_IMAGE_PICK

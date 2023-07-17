@@ -117,19 +117,6 @@ class MainActivity : BaseToolbarActivity() {
                                             iv_image.setImageBitmap(data.compressBitmap)
                                         }
                                     })
-//                                CoCo.with(this@MainActivity)
-//                                    .pick()
-//                                    .then()
-//                                    .dispose()
-//                                    .fileToSaveResult(createSDCardFile())
-//                                    .then()
-//                                    .crop()
-//                                    .start(object : CoCoAdapter<CropResult>() {
-//
-//                                        override fun onSuccess(data: CropResult) {
-//                                            iv_image.setImageBitmap(data.cropBitmap)
-//                                        }
-//                                    })
                             }
 
                             override fun onPermissionDenied(permission: Permission?) {
