@@ -1,5 +1,5 @@
 # CoCo
- [![Hex.pm](https://img.shields.io/badge/download-1.1.2-green)](https://www.apache.org/licenses/LICENSE-2.0)
+ [![Hex.pm](https://img.shields.io/badge/download-1.1.6-green)](https://www.apache.org/licenses/LICENSE-2.0)
  [![Hex.pm](https://img.shields.io/badge/Api-4.0%2B-yellow)]()
  [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)]()
  [![Hex.pm](https://img.shields.io/badge/Jetpack-AndroidX-red)]()
@@ -18,7 +18,7 @@
 
 ```java
 dependencies {
-    implementation 'com.github.soulqw:CoCo:1.1.2'
+    implementation 'com.github.soulqw:CoCo:1.1.6'
 }
 ```
 ###### The new in Release ：
