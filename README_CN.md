@@ -11,6 +11,7 @@
  - 全新设计的APi-更灵活-更易于理解
  - 完全基于Kotlin编写，与Java兼容
  - 全面适配AndroidX、配置简单，导入方便
+ - 适配范围存储，也可以运行在Android 11 以及更高版本上
 ## Installation：
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
