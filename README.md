@@ -12,6 +12,7 @@
  - The new designed api, easy to understand
  - Fully based on kotlin, also can worked with java
  - Already migrated to AndroidX, simplify to use
+ - Android Scoped-Storage Support and can work on Android 11 and higher
 ## Installation：
 
  ![image](https://img-blog.csdnimg.cn/20191009181659912.png)
